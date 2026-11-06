@@ -18,6 +18,22 @@
       </div>
     </div>
   </div>
+} @else if (timerFinished() && timer.focus(); as f) {
+  <!-- Fin de una sesión de enfoque: ¿ya terminaste el pendiente? -->
+  <div class="ringing-overlay" role="alertdialog" aria-labelledby="ringing-title">
+    <div class="ringing-overlay__box">
+      <p class="ringing-overlay__icon" aria-hidden="true">🎯</p>
+      <h2 class="ringing-overlay__title" id="ringing-title">¡Se acabó el tiempo!</h2>
+      <p class="ringing-overlay__text">¿Terminaste "{{ f.title }}"?</p>
+      <div class="ringing-overlay__actions">
+        <button class="ringing-overlay__done button-primary" type="button" (click)="focusDone(f.id, f.title)">
+          Sí, ya lo terminé
+        </button>
+        <button class="ringing-overlay__snooze" type="button" (click)="timer.addMinutes(5)">+5 min</button>
+        <button class="ringing-overlay__stop" type="button" (click)="focusNotYet()">Todavía no</button>
+      </div>
+    </div>
+  </div>
 } @else if (timerFinished()) {
   <div class="ringing-overlay" role="alertdialog" aria-labelledby="ringing-title">
     <div class="ringing-overlay__box">

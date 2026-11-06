@@ -54,6 +54,12 @@
               </div>
             </div>
             <div class="task-item__actions">
+              @if (!task.completed) {
+                <!-- Modo enfoque: abre el temporizador ligado a este pendiente -->
+                <button class="task-item__focus" type="button" [attr.aria-label]="'Enfocarme en ' + task.title" (click)="focusRequested.emit(task)">
+                  🎯 Enfocar
+                </button>
+              }
               <button class="task-item__edit" type="button" (click)="startEdit(task)">Editar</button>
               <button class="task-item__delete button-danger" type="button" (click)="remove(task)">Eliminar</button>
             </div>

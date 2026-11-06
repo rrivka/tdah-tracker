@@ -3,10 +3,17 @@
     ✕
   </button>
 
+  <!-- Modo enfoque: en qué pendiente estás trabajando -->
+  @if (timer.focus(); as f) {
+    <p class="floating-timer__focus">🎯 {{ f.title }}</p>
+  }
+
   <p class="floating-timer__display" role="timer">{{ display() }}</p>
 
   @if (timer.state() === 'finished') {
-    <p class="floating-timer__finished-text">¡Se acabó el tiempo!</p>
+    <p class="floating-timer__finished-text">
+      {{ timer.focus() ? '¿Ya lo terminaste?' : '¡Se acabó el tiempo!' }}
+    </p>
   }
 
   <div class="floating-timer__actions">
@@ -21,10 +28,19 @@
         <button class="floating-timer__resume button-primary" type="button" (click)="timer.resume()">Continuar</button>
       }
       @case ('finished') {
-        <button class="floating-timer__stop button-primary" type="button" (click)="timer.reset()">Detener</button>
+        @if (timer.focus(); as f) {
+          <button class="floating-timer__done button-primary" type="button" (click)="focusDone(f.id, f.title)">✓ Sí</button>
+          <button class="floating-timer__not-yet" type="button" (click)="timer.endFocus()">Todavía no</button>
+        } @else {
+          <button class="floating-timer__stop button-primary" type="button" (click)="timer.reset()">Detener</button>
+        }
       }
     }
-    <button class="floating-timer__add" type="button" (click)="timer.addMinute()">+1 min</button>
+    @if (timer.focus() && timer.state() === 'finished') {
+      <button class="floating-timer__add" type="button" (click)="timer.addMinutes(5)">+5 min</button>
+    } @else {
+      <button class="floating-timer__add" type="button" (click)="timer.addMinute()">+1 min</button>
+    }
     @if (timer.state() === 'running' || timer.state() === 'paused') {
       <button class="floating-timer__reset" type="button" (click)="timer.reset()">Reiniciar</button>
     }

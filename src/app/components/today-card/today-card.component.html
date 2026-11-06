@@ -67,6 +67,9 @@
               @if (isOverdue(task)) {
                 <button class="today-item__move" type="button" (click)="moveToToday(task)">→ Hoy</button>
               }
+              <button class="today-item__focus" type="button" [attr.aria-label]="'Enfocarme en ' + task.title" title="Enfocarme en esto" (click)="focusRequested.emit(task)">
+                🎯
+              </button>
             </li>
           }
         </ul>

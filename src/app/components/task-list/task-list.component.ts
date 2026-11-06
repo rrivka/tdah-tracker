@@ -22,6 +22,8 @@ export class TaskListComponent {
 
   /** Botón "+": pide al layout abrir la ventana "Agregar". */
   readonly createRequested = output<void>();
+  /** Botón "🎯 Enfocar": pide al layout abrir el temporizador ligado a este pendiente. */
+  readonly focusRequested = output<Task>();
 
   readonly filters = TASK_FILTERS;
   readonly filter = this.taskService.filter;

@@ -1,4 +1,18 @@
 <div class="timer" [class]="'timer timer--' + timer.state()">
+  <!-- Modo enfoque: pendiente ligado al temporizador -->
+  @if (timer.focus(); as f) {
+    <div class="timer__focus">
+      <span class="timer__focus-label">🎯 Enfocándote en</span>
+      <strong class="timer__focus-title">{{ f.title }}</strong>
+      <button class="timer__focus-clear" type="button" aria-label="Quitar el pendiente del temporizador" (click)="timer.clearFocus()">
+        ✕
+      </button>
+    </div>
+    @if (timer.state() === 'idle') {
+      <p class="timer__focus-help">Elige cuánto tiempo y empieza. Al terminar te preguntaré si ya lo completaste.</p>
+    }
+  }
+
   <p class="timer__display" role="timer" aria-live="off">{{ display() }}</p>
 
   @switch (timer.state()) {

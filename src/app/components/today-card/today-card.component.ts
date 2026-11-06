@@ -28,6 +28,8 @@ export class TodayCardComponent {
 
   /** Botón "+": pide al layout abrir la ventana "Agregar". */
   readonly createRequested = output<void>();
+  /** Botón "🎯": pide al layout abrir el temporizador ligado a este pendiente. */
+  readonly focusRequested = output<Task>();
 
   readonly today = this.taskService.today;
   readonly loading = computed(() => this.taskService.loading() || this.routineService.loading());

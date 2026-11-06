@@ -11,7 +11,7 @@
           [attr.aria-label]="'Temporizador: ' + timerLabel()"
           (click)="showTool('timer')"
         >
-          ⏱ {{ timerLabel() }}
+          {{ timer.focus() ? '🎯' : '⏱' }} {{ timerLabel() }}
         </button>
       }
       <!-- Avatar + nombre: abre "Personalización" (perfil, apariencia, acomodo, ajustes y cerrar sesión). -->
@@ -43,7 +43,7 @@
           <div [class]="'layout__card layout__card--' + card" [class.is-active]="sectionOf(card) === section()">
             @switch (card) {
               @case ('today') {
-                <app-today-card (createRequested)="requestCreate('task')" />
+                <app-today-card (createRequested)="requestCreate('task')" (focusRequested)="startFocus($event)" />
               }
               @case ('clock') {
                 <app-clock (openTools)="showTool(tool())" />
@@ -58,7 +58,7 @@
                 <app-routine-list />
               }
               @case ('tasks') {
-                <app-task-list (createRequested)="requestCreate('task')" />
+                <app-task-list (createRequested)="requestCreate('task')" (focusRequested)="startFocus($event)" />
               }
             }
           </div>

@@ -1,6 +1,8 @@
 import { Component, DestroyRef, ElementRef, afterNextRender, computed, effect, inject } from '@angular/core';
 import { TimerService } from '../../services/timer.service';
 import { ThemeService } from '../../services/theme.service';
+import { TaskService } from '../../services/task.service';
+import { UndoService } from '../../services/undo.service';
 import { formatDuration } from '../../utils/time.utils';
 
 /**
@@ -28,8 +30,18 @@ export class FloatingTimerComponent {
   private readonly theme = inject(ThemeService);
   private readonly host = inject(ElementRef<HTMLElement>).nativeElement as HTMLElement;
 
+  private readonly tasks = inject(TaskService);
+  private readonly undo = inject(UndoService);
+
   readonly inPip = computed(() => this.timer.pipWindow() !== null);
   readonly display = computed(() => formatDuration(this.timer.remaining()));
+
+  /** Modo enfoque: "✓ Sí, ya lo terminé" desde la ventana flotante. */
+  focusDone(taskId: string, title: string): void {
+    this.tasks.complete(taskId);
+    this.timer.endFocus();
+    this.undo.show(`✓ ${title}`, () => this.tasks.toggle(taskId));
+  }
 
   constructor() {
     afterNextRender(() => {

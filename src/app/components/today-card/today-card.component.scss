@@ -146,3 +146,10 @@
   flex-shrink: 0;
   font-size: var(--font-size-sm);
 }
+
+.today-item__focus {
+  flex-shrink: 0;
+  width: var(--size-touch);
+  padding: 0;
+  border-radius: var(--radius-full);
+}

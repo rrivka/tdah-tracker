@@ -71,6 +71,17 @@
   font-weight: var(--font-weight-bold);
 }
 
+// Pendiente en enfoque (una línea, con "…" si es largo).
+.floating-timer__focus {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .floating-timer__actions {
   display: flex;
   flex-wrap: wrap;

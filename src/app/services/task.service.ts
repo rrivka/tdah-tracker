@@ -151,6 +151,12 @@ export class TaskService {
     );
   }
 
+  /** Marca como completado (si ya lo estaba, no hace nada). */
+  complete(id: string): void {
+    const task = this.find(id);
+    if (task && !task.completed) this.toggle(id);
+  }
+
   remove(id: string): void {
     this.persist(this.storage.deleteTask(this.uid(), id));
   }

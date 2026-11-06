@@ -50,6 +50,14 @@ Las **alarmas** se guardan en el dispositivo pero **separadas por usuario**, as�
   se borra al instante y aparece un aviso con **Deshacer** durante 6 segundos. También al marcar algo en "Hoy".
   Para usarlo en otro lugar: `undo.show("mensaje", () => { /* cómo revertir */ })`.
 
+## Modo enfoque
+
+- Botón **🎯 Enfocar** en cada pendiente (tarjeta Pendientes y tarjeta Hoy): abre el temporizador ligado a ese
+  pendiente; eliges los minutos y empieza. El encabezado y la ventana flotante muestran 🎯 y el nombre.
+- Al terminar, el aviso pregunta **"¿Terminaste …?"**: *Sí, ya lo terminé* (lo completa, con Deshacer),
+  *+5 min* o *Todavía no*. También se puede responder desde la ventana flotante.
+- Código: `focus`, `setFocus()`, `endFocus()` en `services/timer.service.ts`.
+
 ## Calendario
 
 - Cada día puede tener hasta 3 marcas: 🟡 pendientes sin terminar · 🟣 constantes (hueco = faltan, relleno = todas

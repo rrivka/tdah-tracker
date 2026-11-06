@@ -167,6 +167,15 @@ export class LayoutComponent {
     this.section.set(section);
   }
 
+  /**
+   * Modo enfoque: liga el temporizador a un pendiente y lo abre para elegir los minutos.
+   * Al terminar, el aviso pregunta si ya se completó.
+   */
+  startFocus(task: { id: string; title: string }): void {
+    this.timer.setFocus(task);
+    this.showTool('timer');
+  }
+
   /** Abre la ventana de temporizador/alarmas en la pestaña indicada. */
   showTool(tool: TimeTool): void {
     this.tool.set(tool);
@@ -175,7 +184,7 @@ export class LayoutComponent {
 
   async logout(): Promise<void> {
     // Que el temporizador no siga corriendo para la siguiente persona que entre.
-    this.timer.reset();
+    this.timer.endFocus(); // reinicia y suelta el pendiente en enfoque
     this.timer.closeFloating();
     this.profileOpen.set(false);
     await this.auth.logout();
