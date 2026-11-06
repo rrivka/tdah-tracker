@@ -42,6 +42,9 @@
         @for (card of col.cards; track card) {
           <div [class]="'layout__card layout__card--' + card" [class.is-active]="sectionOf(card) === section()">
             @switch (card) {
+              @case ('today') {
+                <app-today-card (createRequested)="requestCreate('task')" />
+              }
               @case ('clock') {
                 <app-clock (openTools)="showTool(tool())" />
               }
@@ -121,6 +124,9 @@
 
   <!-- Ventana "Agregar" (pendiente / constante / racha). Fuera de las secciones para abrirse desde cualquiera. -->
   <app-create-dialog [request]="createRequest()" />
+
+  <!-- Aviso "Se eliminó … · Deshacer" -->
+  <app-undo-toast />
 
   <!-- Aviso de alarma / fin del temporizador -->
   <app-ringing-overlay />

@@ -6,6 +6,8 @@ import { frequencyLabel, nextDueDate, routineTimes } from '../../utils/routine.u
 import { formatDateKey, fromDateKey, toDateKey } from '../../utils/date.utils';
 import { ModalComponent } from '../modal/modal.component';
 import { RoutineFormComponent } from '../routine-form/routine-form.component';
+import { UndoService } from '../../services/undo.service';
+
 
 /**
  * Apartado "Actividades constantes":
@@ -21,6 +23,7 @@ import { RoutineFormComponent } from '../routine-form/routine-form.component';
 })
 export class RoutineListComponent {
   private readonly routineService = inject(RoutineService);
+  private readonly undo = inject(UndoService);
   private readonly taskService = inject(TaskService);
 
   readonly today = this.routineService.today;
@@ -55,7 +58,9 @@ export class RoutineListComponent {
   }
 
   remove(routine: Routine): void {
-    if (confirm(`¿Eliminar la actividad "${routine.title}"?`)) this.routineService.remove(routine.id);
+    // Borra al instante y ofrece "Deshacer".
+    this.routineService.remove(routine.id);
+    this.undo.show(`Se eliminó "${routine.title}"`, () => this.routineService.restore(routine));
   }
 
   /** "Hoy", "mañana" o la fecha de la próxima vez que toca. */

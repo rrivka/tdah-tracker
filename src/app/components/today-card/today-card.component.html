@@ -1,0 +1,96 @@
+<div class="today-card card">
+  <div class="today-card__header">
+    <h2 class="today-card__title card-title">Hoy</h2>
+    <span class="today-card__date">{{ dateLabel() }}</span>
+  </div>
+
+  <!-- Progreso del día -->
+  @if (!loading()) {
+    <div class="today-card__progress">
+      <p class="today-card__count">
+        @if (pending() > 0) {
+          Te faltan <strong>{{ pending() }}</strong>
+        } @else if (done() > 0) {
+          ¡Todo listo por hoy! 🎉
+        } @else {
+          Nada programado para hoy.
+        }
+      </p>
+      @if (pending() + done() > 0) {
+        <div
+          class="today-card__bar"
+          role="progressbar"
+          aria-label="Avance de hoy"
+          [attr.aria-valuenow]="progress()"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <span class="today-card__bar-fill" [style.width.%]="progress()"></span>
+        </div>
+      }
+    </div>
+  }
+
+  @if (loading()) {
+    <p class="today-card__empty">Cargando…</p>
+  } @else {
+    <!-- 💊 Constantes de hoy -->
+    @if (routines().length > 0) {
+      <section class="today-card__group">
+        <h3 class="today-card__group-title">💊 Constantes</h3>
+        <ul class="today-card__list">
+          @for (item of routines(); track routineKey(item)) {
+            <li class="today-item today-item--routine">
+              <button class="today-item__check" type="button" [attr.aria-label]="'Marcar como hecho: ' + item.routine.title" (click)="completeRoutine(item)">○</button>
+              <span class="today-item__time">{{ item.slot ?? '—' }}</span>
+              <span class="today-item__title">{{ item.routine.title }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    <!-- ✅ Pendientes de hoy y vencidos -->
+    @if (tasks().length > 0) {
+      <section class="today-card__group">
+        <h3 class="today-card__group-title">✅ Pendientes</h3>
+        <ul class="today-card__list">
+          @for (task of tasks(); track task.id) {
+            <li class="today-item today-item--task" [class.today-item--overdue]="isOverdue(task)">
+              <button class="today-item__check" type="button" [attr.aria-label]="'Completar: ' + task.title" (click)="completeTask(task)">○</button>
+              <span class="today-item__content">
+                <span class="today-item__title">{{ task.title }}</span>
+                @if (isOverdue(task)) {
+                  <span class="today-item__meta">vencido · {{ formatDate(task.dueDate!) }}</span>
+                }
+              </span>
+              @if (isOverdue(task)) {
+                <button class="today-item__move" type="button" (click)="moveToToday(task)">→ Hoy</button>
+              }
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    <!-- 🔥 Rachas de hoy -->
+    @if (streaks().length > 0) {
+      <section class="today-card__group">
+        <h3 class="today-card__group-title">🔥 Rachas</h3>
+        <ul class="today-card__list">
+          @for (s of streaks(); track s.id) {
+            <li class="today-item today-item--streak">
+              <button class="today-item__check" type="button" [attr.aria-label]="'Hecho hoy: ' + s.title" (click)="completeStreak(s)">○</button>
+              <span class="today-item__emoji" aria-hidden="true">{{ s.emoji }}</span>
+              <span class="today-item__title">{{ s.title }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    @if (pending() === 0 && done() === 0) {
+      <button class="today-card__add" type="button" (click)="createRequested.emit()">+ Agregar algo para hoy</button>
+    }
+  }
+</div>

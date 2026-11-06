@@ -55,6 +55,7 @@ export class ProfileComponent {
   readonly emojis = ['😊', '😎', '🦊', '🐱', '🐶', '🐼', '🦄', '🌸', '🌻', '⭐', '🚀', '🎧', '🐠', '💧'];
 
   readonly startSections: { id: StartSection; label: string }[] = [
+    { id: 'today', label: 'Hoy' },
     { id: 'tasks', label: 'Pendientes' },
     { id: 'streaks', label: 'Rachas' },
     { id: 'calendar', label: 'Calendario' },

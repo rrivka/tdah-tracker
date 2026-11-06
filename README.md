@@ -41,6 +41,15 @@ Las **alarmas** se guardan en el dispositivo pero **separadas por usuario**, as�
 **Agregar un color de acento:** en `_tokens.scss` copia un par de bloques `[data-accent='...']` (claro) y
 `[data-theme='dark'][data-accent='...']` (oscuro), y agrégalo a `ACCENTS` en `src/app/themes.ts`.
 
+## Vista "Hoy" y Deshacer
+
+- **Tarjeta Hoy** (`components/today-card/`): junta lo que te toca hoy y aún no está hecho — constantes de hoy
+  (por horario), pendientes de hoy y vencidos (con botón **→ Hoy**) y rachas que tocan hoy. Muestra
+  "Te faltan N" y una barra de progreso. Se puede mover u ocultar en Acomodo y elegir como pantalla de inicio.
+- **Deshacer** (`services/undo.service.ts` + `components/undo-toast/`): borrar ya no pregunta "¿Seguro?";
+  se borra al instante y aparece un aviso con **Deshacer** durante 6 segundos. También al marcar algo en "Hoy".
+  Para usarlo en otro lugar: `undo.show("mensaje", () => { /* cómo revertir */ })`.
+
 ## Los tres tipos de cosas
 
 Todo se crea con el botón **+** (ventana "Agregar", `components/create-dialog/`), que tiene tres pestañas:

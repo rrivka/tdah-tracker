@@ -9,12 +9,14 @@
  * sigue el orden de las tarjetas (primero la columna izquierda, luego la derecha).
  */
 
-export type CardId = 'clock' | 'calendar' | 'streaks' | 'routines' | 'tasks';
+export type CardId = 'today' | 'clock' | 'calendar' | 'streaks' | 'routines' | 'tasks';
 
 /** Secciones del teléfono (una pestaña cada una). Ajustes vive en Personalización (avatar). */
-export type Section = 'clock' | 'calendar' | 'streaks' | 'tasks';
+export type Section = 'today' | 'clock' | 'calendar' | 'streaks' | 'tasks';
 
 export const CARDS: { id: CardId; label: string; icon: string; section: Section }[] = [
+  // "Hoy" junta lo que te toca hoy (constantes, pendientes de hoy/vencidos y rachas).
+  { id: 'today', label: 'Hoy', icon: '🌟', section: 'today' },
   { id: 'clock', label: 'Reloj', icon: '🕒', section: 'clock' },
   { id: 'calendar', label: 'Calendario', icon: '📅', section: 'calendar' },
   { id: 'streaks', label: 'Rachas', icon: '🔥', section: 'streaks' },
@@ -25,6 +27,7 @@ export const CARDS: { id: CardId; label: string; icon: string; section: Section 
 
 /** Nombre de cada pestaña del teléfono. */
 export const SECTION_LABELS: Record<Section, string> = {
+  today: 'Hoy',
   clock: 'Reloj',
   calendar: 'Calendario',
   streaks: 'Rachas',
@@ -42,7 +45,7 @@ export interface DashboardLayout {
 
 export const DEFAULT_LAYOUT: DashboardLayout = {
   left: ['clock', 'calendar'],
-  right: ['streaks', 'routines', 'tasks'],
+  right: ['today', 'streaks', 'routines', 'tasks'],
   hidden: [],
 };
 
@@ -66,8 +69,13 @@ export function sanitizeLayout(raw: Partial<DashboardLayout> | null | undefined)
 
   const left = clean(raw?.left);
   const right = clean(raw?.right);
-  for (const id of DEFAULT_LAYOUT.left) if (!seen.has(id)) left.push(id), seen.add(id);
-  for (const id of DEFAULT_LAYOUT.right) if (!seen.has(id)) right.push(id), seen.add(id);
+  // Tarjetas que faltan (p. ej. una tarjeta nueva como "Hoy"): van en su lugar por defecto.
+  DEFAULT_LAYOUT.left.forEach((id, i) => {
+    if (!seen.has(id)) left.splice(Math.min(i, left.length), 0, id), seen.add(id);
+  });
+  DEFAULT_LAYOUT.right.forEach((id, i) => {
+    if (!seen.has(id)) right.splice(Math.min(i, right.length), 0, id), seen.add(id);
+  });
 
   let hidden = (Array.isArray(raw?.hidden) ? raw.hidden : []).filter((id) => valid.has(id));
   if (hidden.length >= CARDS.length) hidden = []; // nunca todo oculto

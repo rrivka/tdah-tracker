@@ -1,0 +1,148 @@
+// La caja de la tarjeta viene de la clase global .card (styles.scss).
+.today-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.today-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.today-card__date {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  &::first-letter {
+    text-transform: uppercase;
+  }
+}
+
+// ---- Progreso ----
+
+.today-card__progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.today-card__count {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.today-card__bar {
+  height: var(--size-progress);
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--bg-input);
+  box-shadow: var(--input-shadow);
+}
+
+.today-card__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--bg-button-primary);
+}
+
+// ---- Grupos ----
+
+.today-card__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.today-card__group-title {
+  font-family: var(--font-family-label);
+  font-size: var(--font-size-sm);
+}
+
+.today-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.today-card__empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.today-card__add {
+  align-self: flex-start;
+}
+
+// ---- Una fila ----
+
+.today-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+
+.today-item--routine {
+  border-left: var(--border-width-strong) solid var(--color-routine);
+}
+
+.today-item--streak {
+  background: var(--bg-streak-row);
+}
+
+.today-item--overdue {
+  border-color: var(--color-danger);
+}
+
+.today-item__check {
+  flex-shrink: 0;
+  width: var(--size-touch);
+  padding: 0;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-lg);
+}
+
+.today-item__time {
+  color: var(--color-text-muted);
+  font-family: var(--font-family-clock);
+  font-size: var(--font-size-xs);
+}
+
+.today-item__emoji {
+  font-size: var(--font-size-lg);
+}
+
+.today-item__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.today-item__title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.today-item__meta {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+}
+
+.today-item__move {
+  flex-shrink: 0;
+  font-size: var(--font-size-sm);
+}

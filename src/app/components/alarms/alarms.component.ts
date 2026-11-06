@@ -4,6 +4,8 @@ import { AlarmService } from '../../services/alarm.service';
 import { TickService } from '../../services/tick.service';
 import { Alarm } from '../../models/alarm.model';
 import { formatTimeUntil } from '../../utils/time.utils';
+import { UndoService } from '../../services/undo.service';
+
 
 /** Lista de alarmas: crear, activar/desactivar y eliminar. */
 @Component({
@@ -14,6 +16,7 @@ import { formatTimeUntil } from '../../utils/time.utils';
 })
 export class AlarmsComponent {
   private readonly alarmService = inject(AlarmService);
+  private readonly undo = inject(UndoService);
   private readonly tick = inject(TickService);
 
   readonly alarms = this.alarmService.alarms;
@@ -35,7 +38,9 @@ export class AlarmsComponent {
   }
 
   remove(alarm: Alarm): void {
-    if (confirm(`¿Eliminar la alarma de las ${alarm.time}?`)) this.alarmService.remove(alarm.id);
+    // Borra al instante y ofrece "Deshacer".
+    this.alarmService.remove(alarm.id);
+    this.undo.show(`Se eliminó la alarma de las ${alarm.time}`, () => this.alarmService.restore(alarm));
   }
 
   /** "en 2 h 15 min" (se actualiza solo porque lee tick.now()). */

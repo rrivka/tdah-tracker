@@ -131,6 +131,11 @@ export class RoutineService {
     this.persist(this.storage.deleteRoutine(this.uid(), id));
   }
 
+  /** Vuelve a guardar una actividad tal como estaba (para "Deshacer"). */
+  restore(routine: Routine): void {
+    this.persist(this.storage.saveRoutine(this.uid(), routine));
+  }
+
   /** Marca o desmarca como hecha en un día y, si se indica, en un horario concreto. */
   toggleDone(id: string, dateKey: string, slot?: string): void {
     const r = this.find(id);

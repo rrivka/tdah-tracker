@@ -71,7 +71,8 @@
   --size-avatar-lg: 4rem; // avatar grande en "Mi perfil"
   --size-theme-preview: 6.5rem; // ancho de cada vista previa de tema
   --size-theme-preview-height: 4.5rem; // alto de la miniatura del tema
-  --size-layout-tile: 3rem; // alto de cada tarjeta en la cuadrícula de Acomodo
+  --size-layout-tile: 3rem;
+  --size-progress: 0.75rem; // alto de la barra de progreso de "Hoy" // alto de cada tarjeta en la cuadrícula de Acomodo
 
   // ---- Capas (qué queda encima de qué) ----
   --z-floating: 900; // temporizador flotante dentro de la app

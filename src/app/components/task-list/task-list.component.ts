@@ -3,6 +3,8 @@ import { TASK_FILTERS, TaskService } from '../../services/task.service';
 import { Task, TaskFilter, TaskInput } from '../../models/task.model';
 import { formatDateKey } from '../../utils/date.utils';
 import { TaskFormComponent } from '../task-form/task-form.component';
+import { UndoService } from '../../services/undo.service';
+
 
 /**
  * Lista de pendientes: filtros, la lista (marcar como completado, editar y eliminar)
@@ -16,6 +18,7 @@ import { TaskFormComponent } from '../task-form/task-form.component';
 })
 export class TaskListComponent {
   private readonly taskService = inject(TaskService);
+  private readonly undo = inject(UndoService);
 
   /** Botón "+": pide al layout abrir la ventana "Agregar". */
   readonly createRequested = output<void>();
@@ -49,11 +52,10 @@ export class TaskListComponent {
     this.taskService.toggle(id);
   }
 
+  /** Borra al instante y ofrece "Deshacer" (en vez de preguntar "¿Seguro?"). */
   remove(task: Task): void {
-    // Confirmación para evitar borrar algo por accidente.
-    if (confirm(`¿Eliminar "${task.title}"?`)) {
-      this.taskService.remove(task.id);
-    }
+    this.taskService.remove(task.id);
+    this.undo.show(`Se eliminó "${task.title}"`, () => this.taskService.restore(task));
   }
 
   isOverdue(task: Task): boolean {

@@ -8,6 +8,8 @@ import { WEEKDAYS } from '../../utils/routine.utils';
 import { ModalComponent } from '../modal/modal.component';
 import { StreakCalendarComponent } from '../streak-calendar/streak-calendar.component';
 import { StreakFormComponent } from '../streak-form/streak-form.component';
+import { UndoService } from '../../services/undo.service';
+
 
 /**
  * Apartado "Rachas" (estilo Duolingo).
@@ -24,6 +26,7 @@ import { StreakFormComponent } from '../streak-form/streak-form.component';
 })
 export class StreakBoardComponent {
   private readonly streakService = inject(StreakService);
+  private readonly undo = inject(UndoService);
   private readonly taskService = inject(TaskService);
 
   /** Pide al padre abrir la ventana "Agregar" en la pestaña Racha. */
@@ -93,10 +96,10 @@ export class StreakBoardComponent {
   }
 
   remove(s: Streak): void {
-    if (confirm(`¿Eliminar la racha "${s.title}" y todo su historial?`)) {
-      this.streakService.remove(s.id);
-      this.detailId.set(null);
-    }
+    // Borra al instante (con todo su historial) y ofrece "Deshacer".
+    this.streakService.remove(s.id);
+    this.detailId.set(null);
+    this.undo.show(`Se eliminó la racha "${s.title}"`, () => this.streakService.restore(s));
   }
 
   /** Mensaje del festejo según la cantidad de días. */

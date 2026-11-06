@@ -1,0 +1,47 @@
+@use 'breakpoints' as bp;
+
+// Abajo al centro; en el teléfono, por encima de la barra de pestañas.
+.undo-toast {
+  position: fixed;
+  bottom: calc(var(--size-touch) + var(--space-4));
+  left: 50%;
+  z-index: var(--z-floating);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: max-content;
+  max-width: calc(100% - var(--space-6));
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--card-border-color);
+  border-radius: var(--radius-full);
+  background: var(--bg-card-solid);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: var(--card-backdrop);
+  transform: translateX(-50%);
+}
+
+.undo-toast__message {
+  overflow: hidden;
+  font-size: var(--font-size-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.undo-toast__undo {
+  flex-shrink: 0;
+}
+
+.undo-toast__close {
+  flex-shrink: 0;
+  min-width: var(--size-touch);
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (min-width: bp.$desktop) {
+  .undo-toast {
+    bottom: var(--space-5);
+  }
+}

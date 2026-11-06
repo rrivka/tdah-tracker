@@ -155,6 +155,11 @@ export class TaskService {
     this.persist(this.storage.deleteTask(this.uid(), id));
   }
 
+  /** Vuelve a guardar un pendiente tal como estaba (para "Deshacer"). */
+  restore(task: Task): void {
+    this.persist(this.storage.saveTask(this.uid(), task));
+  }
+
   /**
    * Importa pendientes de un respaldo (la lectura del archivo la hace BackupService).
    * Los pendientes con el mismo id se reemplazan; los demás se agregan. Nunca borra nada.

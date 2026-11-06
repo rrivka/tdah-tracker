@@ -22,6 +22,8 @@ import { CreateDialogComponent, CreateRequest, CreateType } from '../create-dial
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ProfileComponent } from '../profile/profile.component';
 import { ProfileService } from '../../services/profile.service';
+import { TodayCardComponent } from '../today-card/today-card.component';
+import { UndoToastComponent } from '../undo-toast/undo-toast.component';
 import { CardId, SECTION_LABELS, Section, cardInfo } from '../../cards';
 
 /** Herramientas debajo del reloj. */
@@ -58,6 +60,8 @@ export type TimeTool = 'timer' | 'alarms';
     CreateDialogComponent,
     AvatarComponent,
     ProfileComponent,
+    TodayCardComponent,
+    UndoToastComponent,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',

@@ -2,7 +2,7 @@ import { AccentId, ThemeId } from '../themes';
 import { DEFAULT_LAYOUT, DashboardLayout } from '../cards';
 
 /** Secciones que se pueden elegir como pantalla de inicio en el teléfono. */
-export type StartSection = 'tasks' | 'streaks' | 'calendar' | 'clock';
+export type StartSection = 'today' | 'tasks' | 'streaks' | 'calendar' | 'clock';
 
 /**
  * Perfil del usuario: cómo quiere ver la app.
@@ -31,7 +31,7 @@ export const DEFAULT_PROFILE: Profile = {
   displayName: '',
   avatarEmoji: '',
   accent: 'blue',
-  startSection: 'tasks',
+  startSection: 'today',
   showGreeting: true,
   layout: DEFAULT_LAYOUT,
 };

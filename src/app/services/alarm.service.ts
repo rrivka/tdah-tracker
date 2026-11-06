@@ -86,6 +86,11 @@ export class AlarmService {
     this._alarms.update((list) => list.map((a) => (a.id === id ? { ...a, enabled: !a.enabled } : a)));
   }
 
+  /** Vuelve a agregar una alarma borrada (para "Deshacer"). */
+  restore(alarm: Alarm): void {
+    this._alarms.update((list) => [...list.filter((a) => a.id !== alarm.id), alarm]);
+  }
+
   remove(id: string): void {
     this._alarms.update((list) => list.filter((a) => a.id !== id));
     if (this.snoozed?.alarm.id === id) this.snoozed = null;

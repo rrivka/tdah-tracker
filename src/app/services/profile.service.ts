@@ -93,7 +93,7 @@ function sanitize(data: Partial<Profile> | null): Profile {
     avatarEmoji: String(p.avatarEmoji ?? '').slice(0, 8),
     accent: ACCENTS.some((a) => a.id === p.accent) ? (p.accent as AccentId) : DEFAULT_PROFILE.accent,
     theme: THEMES.some((t) => t.id === p.theme) ? (p.theme as ThemeId) : undefined,
-    startSection: ['tasks', 'streaks', 'calendar', 'clock'].includes(p.startSection)
+    startSection: ['today', 'tasks', 'streaks', 'calendar', 'clock'].includes(p.startSection)
       ? p.startSection
       : DEFAULT_PROFILE.startSection,
     showGreeting: p.showGreeting !== false,

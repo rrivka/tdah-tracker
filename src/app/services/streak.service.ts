@@ -75,6 +75,11 @@ export class StreakService {
     this.persist(this.storage.deleteStreak(this.uid(), id));
   }
 
+  /** Vuelve a guardar una racha con todo su historial (para "Deshacer"). */
+  restore(streak: Streak): void {
+    this.save(streak);
+  }
+
   /**
    * Marca o desmarca un día como cumplido (por defecto hoy).
    * Devuelve la racha actual resultante (para el festejo).
