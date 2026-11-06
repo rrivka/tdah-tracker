@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { StorageService } from './storage.service';
 import { ThemeService } from './theme.service';
 import { ACCENTS, AccentId, THEMES, ThemeId } from '../themes';
+import { sanitizeLayout } from '../cards';
 
 /** Qué mostrar como avatar. */
 export type Avatar = { kind: 'emoji'; value: string } | { kind: 'photo'; value: string } | { kind: 'initial'; value: string };
@@ -96,6 +97,7 @@ function sanitize(data: Partial<Profile> | null): Profile {
       ? p.startSection
       : DEFAULT_PROFILE.startSection,
     showGreeting: p.showGreeting !== false,
+    layout: sanitizeLayout(p.layout),
     updatedAt: p.updatedAt,
   };
 }

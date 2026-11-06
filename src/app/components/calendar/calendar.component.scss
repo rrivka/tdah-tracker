@@ -1,9 +1,6 @@
+// La caja de la tarjeta viene de la clase global .card (styles.scss).
 .calendar {
-  padding: var(--space-4);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
+  min-width: 0;
 }
 
 .calendar__header {

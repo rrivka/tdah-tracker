@@ -1,5 +1,5 @@
 import { DOCUMENT, Injectable, effect, inject, signal } from '@angular/core';
-import { ACCENTS, AccentId, THEMES, ThemeId } from '../themes';
+import { ACCENTS, AccentId, THEMES, ThemeId, usesAccent } from '../themes';
 
 const THEME_KEY = 'tdah-tracker:theme';
 const ACCENT_KEY = 'tdah-tracker:accent';
@@ -29,7 +29,9 @@ export class ThemeService {
       const accent = this.accent();
       const root = this.document.documentElement;
       root.dataset['theme'] = theme;
-      root.dataset['accent'] = accent;
+      // Los temas Aero traen su propio color: ahí no se aplica el acento.
+      if (usesAccent(theme)) root.dataset['accent'] = accent;
+      else delete root.dataset['accent'];
       save(THEME_KEY, theme);
       save(ACCENT_KEY, accent);
       // Color de la barra del navegador/teléfono = color de fondo del tema.

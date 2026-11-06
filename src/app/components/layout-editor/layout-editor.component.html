@@ -1,0 +1,90 @@
+<div class="layout-editor">
+  <p class="layout-editor__help">
+    Así se acomodan las tarjetas en la computadora. Arrastra una tarjeta por su asa ⠿ (con el mouse o el dedo) o usa
+    los botones. Nada cambia hasta que guardes.
+  </p>
+
+  <!-- Cuadrícula de prueba: dos columnas como en la computadora -->
+  <div class="layout-editor__grid" [class.is-dragging]="dragging() !== null">
+    @for (col of columns; track col.id) {
+      <div class="layout-editor__column" [attr.data-col]="col.id">
+        <span class="layout-editor__column-label">{{ col.label }}</span>
+
+        @for (id of visibleTiles(col.id); track id; let i = $index) {
+          @if (dropIndex(col.id) === i && dragging() !== id) {
+            <div class="layout-editor__drop" aria-hidden="true"></div>
+          }
+          <div
+            class="layout-tile"
+            [attr.data-card]="id"
+            [class.layout-tile--hidden]="isHidden(id)"
+            [class.layout-tile--dragging]="dragging() === id"
+          >
+            <!-- Asa para arrastrar. touch-action: none (en el CSS) evita que el dedo haga scroll. -->
+            <span
+              class="layout-tile__handle"
+              role="button"
+              tabindex="-1"
+              aria-label="Arrastrar"
+              (pointerdown)="startDrag($event, id)"
+              (pointermove)="moveDrag($event)"
+              (pointerup)="endDrag()"
+              (pointercancel)="endDrag()"
+              >⠿</span
+            >
+            <span class="layout-tile__icon" aria-hidden="true">{{ info(id).icon }}</span>
+            <span class="layout-tile__label">
+              {{ info(id).label }}
+              @if (isHidden(id)) {
+                <span class="layout-tile__state">(oculta)</span>
+              }
+            </span>
+            <span class="layout-tile__actions">
+              <button class="layout-tile__btn" type="button" [disabled]="isFirst(id)" [attr.aria-label]="'Subir ' + info(id).label" (click)="moveBy(id, -1)">↑</button>
+              <button class="layout-tile__btn" type="button" [disabled]="isLast(id)" [attr.aria-label]="'Bajar ' + info(id).label" (click)="moveBy(id, 1)">↓</button>
+              <button class="layout-tile__btn" type="button" [attr.aria-label]="'Cambiar de columna ' + info(id).label" (click)="switchColumn(id)">⇄</button>
+              <button
+                class="layout-tile__btn"
+                type="button"
+                [disabled]="!canHide(id)"
+                [attr.aria-pressed]="isHidden(id)"
+                [attr.aria-label]="(isHidden(id) ? 'Mostrar ' : 'Ocultar ') + info(id).label"
+                (click)="toggleHidden(id)"
+              >
+                {{ isHidden(id) ? '🙈' : '👁' }}
+              </button>
+            </span>
+          </div>
+        }
+        @if (dropIndex(col.id) === visibleTiles(col.id).length || (dropIndex(col.id) >= 0 && visibleTiles(col.id).length === 0)) {
+          <div class="layout-editor__drop" aria-hidden="true"></div>
+        }
+        @if (visibleTiles(col.id).length === 0) {
+          <span class="layout-editor__empty">Suelta aquí</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- "Fantasma" que sigue al puntero mientras arrastras -->
+  @if (dragging() && pointer(); as p) {
+    <div class="layout-editor__ghost" aria-hidden="true" [style.left.px]="p.x" [style.top.px]="p.y">
+      {{ info(dragging()!).icon }} {{ info(dragging()!).label }}
+    </div>
+  }
+
+  <p class="layout-editor__phone">
+    <strong>Pestañas en el teléfono:</strong> {{ phoneTabs().join(' · ') }}
+  </p>
+
+  <div class="layout-editor__actions">
+    <button class="layout-editor__save button-primary" type="button" [disabled]="!dirty()" (click)="save()">
+      Guardar acomodo
+    </button>
+    <button class="layout-editor__discard" type="button" [disabled]="!dirty()" (click)="discard()">Descartar</button>
+    <button class="layout-editor__reset" type="button" (click)="reset()">Restablecer</button>
+  </div>
+  @if (saved() && !dirty()) {
+    <p class="layout-editor__saved" role="status">¡Acomodo guardado!</p>
+  }
+</div>

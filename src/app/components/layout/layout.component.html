@@ -22,15 +22,15 @@
       >
         Ajustes
       </button>
-      <!-- Perfil: avatar + nombre. Abre "Mi perfil" (ahí está también Cerrar sesión). -->
-      <button class="layout__profile-button" type="button" aria-label="Mi perfil" (click)="profileOpen.set(true)">
+      <!-- Perfil: avatar + nombre. Abre "Personalización" (ahí está también Cerrar sesión). -->
+      <button class="layout__profile-button" type="button" aria-label="Personalización" (click)="profileOpen.set(true)">
         <app-avatar />
         <span class="layout__user-name">{{ userName() }}</span>
       </button>
     </div>
   </header>
 
-  <app-modal [open]="profileOpen()" title="Mi perfil" (closed)="profileOpen.set(false)">
+  <app-modal [open]="profileOpen()" title="Personalización" (closed)="profileOpen.set(false)">
     @if (profileOpen()) {
       <app-profile (logout)="logout()" />
     }
@@ -40,34 +40,38 @@
     <p class="layout__error" role="alert">{{ error() }}</p>
   }
 
-  <main class="layout__main">
-    <!-- Columna lateral (escritorio): reloj y calendario -->
-    <div class="layout__column layout__column--side">
-      <section class="layout__section layout__section--clock" [class.is-active]="section() === 'clock'">
-        <app-clock (openTools)="showTool(tool())" />
-      </section>
+  <!--
+    Tablero: las tarjetas se pintan según el acomodo del perfil (Personalización → Acomodo).
+    Computadora: dos columnas. Teléfono: solo las tarjetas de la pestaña activa.
+  -->
+  <main class="layout__main" [class.layout__main--single]="columns().length === 1">
+    @for (col of columns(); track col.id) {
+      <div [class]="'layout__column layout__column--' + col.id">
+        @for (card of col.cards; track card) {
+          <div [class]="'layout__card layout__card--' + card" [class.is-active]="sectionOf(card) === section()">
+            @switch (card) {
+              @case ('clock') {
+                <app-clock (openTools)="showTool(tool())" />
+              }
+              @case ('calendar') {
+                <app-calendar />
+              }
+              @case ('streaks') {
+                <app-streak-board (createRequested)="requestCreate('streak')" />
+              }
+              @case ('routines') {
+                <app-routine-list />
+              }
+              @case ('tasks') {
+                <app-task-list (createRequested)="requestCreate('task')" />
+              }
+            }
+          </div>
+        }
+      </div>
+    }
 
-      <section class="layout__section layout__section--calendar" [class.is-active]="section() === 'calendar'">
-        <app-calendar />
-      </section>
-    </div>
-
-    <!-- Columna principal (escritorio): rachas, actividades constantes y pendientes -->
-    <div class="layout__column layout__column--main">
-      <section class="layout__section layout__section--streaks" [class.is-active]="section() === 'streaks'">
-        <app-streak-board (createRequested)="requestCreate('streak')" />
-      </section>
-
-      <section class="layout__section layout__section--tasks" [class.is-active]="section() === 'tasks'">
-        <app-routine-list />
-        <app-task-list (createRequested)="requestCreate('task')" />
-      </section>
-    </div>
-
-    <section
-      class="layout__section layout__section--settings"
-      [class.is-active]="section() === 'settings'"
-    >
+    <section class="layout__section layout__section--settings" [class.is-active]="section() === 'settings'">
       <app-settings (openProfile)="profileOpen.set(true)" />
     </section>
   </main>
@@ -109,7 +113,7 @@
 
   <!-- Navegación inferior: solo se ve en el teléfono -->
   <nav class="layout__bottom-nav" aria-label="Secciones">
-    @for (item of navItems; track item.id) {
+    @for (item of navItems(); track item.id) {
       <button
         class="layout__nav-button"
         type="button"

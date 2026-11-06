@@ -1,0 +1,145 @@
+.layout-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.layout-editor__help,
+.layout-editor__phone,
+.layout-editor__saved {
+  margin: 0;
+  font-size: var(--font-size-xs);
+}
+
+.layout-editor__help,
+.layout-editor__phone {
+  color: var(--color-text-muted);
+}
+
+.layout-editor__saved {
+  color: var(--color-success);
+  font-weight: var(--font-weight-bold);
+}
+
+// Dos columnas con la proporción de la computadora (angosta | ancha).
+.layout-editor__grid {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border: var(--border-width) dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--bg-page);
+}
+
+.layout-editor__grid.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.layout-editor__column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  min-height: var(--size-layout-tile);
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+}
+
+.layout-editor__column-label,
+.layout-editor__empty {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  text-align: center;
+}
+
+// Línea que marca dónde caerá la tarjeta.
+.layout-editor__drop {
+  height: var(--border-width-strong);
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  box-shadow: 0 0 0 var(--border-width-strong) var(--color-selected-bg);
+}
+
+.layout-editor__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+// Copia que sigue al puntero mientras arrastras.
+.layout-editor__ghost {
+  position: fixed;
+  z-index: var(--z-overlay);
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-width) solid var(--color-primary);
+  border-radius: var(--radius-full);
+  background: var(--bg-card-solid);
+  box-shadow: var(--shadow-md);
+  font-size: var(--font-size-sm);
+  pointer-events: none; // que no estorbe para saber qué hay debajo
+  transform: translate(-50%, -120%);
+}
+
+// ---- Una tarjeta de la cuadrícula ----
+
+.layout-tile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--size-layout-tile);
+  padding: var(--space-1);
+  border: var(--border-width) solid var(--card-border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+.layout-tile--dragging {
+  opacity: var(--opacity-disabled);
+}
+
+.layout-tile--hidden {
+  border-style: dashed;
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-text-muted);
+}
+
+.layout-tile__handle {
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-tight);
+  cursor: grab;
+  touch-action: none; // el dedo arrastra en vez de hacer scroll
+  user-select: none;
+}
+
+.layout-tile__label {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  overflow-wrap: anywhere;
+}
+
+.layout-tile__state {
+  font-weight: var(--font-weight-normal);
+}
+
+.layout-tile__actions {
+  display: flex;
+  flex-wrap: wrap; // en la columna angosta los botones bajan de renglón
+  gap: var(--space-1);
+  max-width: 100%;
+}
+
+.layout-tile__btn {
+  min-width: var(--size-touch);
+  min-height: var(--size-touch);
+  padding: 0;
+  font-size: var(--font-size-sm);
+}

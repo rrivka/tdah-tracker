@@ -16,7 +16,8 @@
   max-width: var(--size-modal-width);
   max-height: 100%;
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  background: var(--bg-card-solid);
+  backdrop-filter: var(--card-backdrop);
   box-shadow: var(--shadow-md);
 }
 
@@ -36,6 +37,7 @@
 .modal__close {
   border: none;
   background: transparent;
+  box-shadow: none;
 }
 
 // El contenido largo hace scroll dentro de la ventana.

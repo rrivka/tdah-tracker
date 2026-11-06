@@ -18,7 +18,10 @@ body {
 }
 
 body {
-  background: var(--color-bg);
+  min-height: 100dvh;
+  // --bg-page puede ser un color o un degradado/imagen (p. ej. el cielo de Frutiger Aero).
+  background: var(--bg-page);
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-family-base);
   font-size: var(--font-size-md);
@@ -29,6 +32,7 @@ h1,
 h2,
 h3 {
   margin: 0;
+  font-family: var(--font-family-heading);
   line-height: var(--line-height-tight);
 }
 
@@ -44,8 +48,9 @@ button {
   min-height: var(--size-touch);
   padding: var(--space-2) var(--space-4);
   border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
+  border-radius: var(--button-radius);
+  background: var(--bg-button);
+  box-shadow: var(--button-shadow);
   cursor: pointer;
 }
 
@@ -82,7 +87,7 @@ input[type='radio'] {
 
 // Botón principal y botón de peligro (se pueden usar en cualquier componente).
 .button-primary {
-  background: var(--color-primary);
+  background: var(--bg-button-primary);
   border-color: var(--color-primary);
   color: var(--color-on-primary);
 }
@@ -99,4 +104,30 @@ input[type='radio'] {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+// =============================================================================
+// TARJETAS
+// Todas las tarjetas del tablero (Reloj, Calendario, Rachas, Constantes,
+// Pendientes, Ajustes) usan .card para su caja y .card-title para su título.
+// El tema decide cómo se ven (plano, vidrio, barra con brillo…).
+// =============================================================================
+.card {
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--card-border-color);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: var(--card-backdrop);
+}
+
+.card-title {
+  align-self: flex-start;
+  padding: var(--card-title-padding);
+  border-radius: var(--card-title-radius);
+  background: var(--bg-card-title);
+  color: var(--color-card-title);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-lg);
+  text-shadow: var(--heading-shadow);
 }

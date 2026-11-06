@@ -41,9 +41,11 @@ export class SoundService {
 
   stopRinging(): void {
     if (this.ringInterval) clearInterval(this.ringInterval);
+    const wasRinging = this.ringInterval !== null;
     if (this.ringTimeout) clearTimeout(this.ringTimeout);
     this.ringInterval = this.ringTimeout = null;
-    navigator.vibrate?.(0);
+    // Solo cancelar la vibración si estaba sonando (si no, el navegador se queja).
+    if (wasRinging) navigator.vibrate?.(0);
   }
 
   /** Un pitido corto, `delay` segundos en el futuro. */

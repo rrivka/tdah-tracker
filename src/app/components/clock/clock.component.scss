@@ -1,9 +1,5 @@
+// La caja de la tarjeta viene de la clase global .card (styles.scss).
 .clock {
-  padding: var(--space-4);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
   text-align: center;
 }
 
@@ -19,6 +15,7 @@
   padding: 0;
   border: none;
   background: transparent;
+  box-shadow: none;
 }
 
 .clock__time {

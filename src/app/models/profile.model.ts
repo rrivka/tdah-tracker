@@ -1,4 +1,5 @@
 import { AccentId, ThemeId } from '../themes';
+import { DEFAULT_LAYOUT, DashboardLayout } from '../cards';
 
 /** Secciones que se pueden elegir como pantalla de inicio en el teléfono. */
 export type StartSection = 'tasks' | 'streaks' | 'calendar' | 'clock';
@@ -21,6 +22,8 @@ export interface Profile {
   startSection: StartSection;
   /** ¿Mostrar el saludo ("Buenas noches, Ana") en el reloj? */
   showGreeting: boolean;
+  /** Acomodo de las tarjetas del tablero (Personalización → Acomodo). */
+  layout: DashboardLayout;
   updatedAt?: string;
 }
 
@@ -30,4 +33,5 @@ export const DEFAULT_PROFILE: Profile = {
   accent: 'blue',
   startSection: 'tasks',
   showGreeting: true,
+  layout: DEFAULT_LAYOUT,
 };

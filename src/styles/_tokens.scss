@@ -69,6 +69,9 @@
   --size-streak-dot: 0.875rem; // puntitos de los últimos 7 días
   --size-avatar: 2rem; // avatar del encabezado
   --size-avatar-lg: 4rem; // avatar grande en "Mi perfil"
+  --size-theme-preview: 6.5rem; // ancho de cada vista previa de tema
+  --size-theme-preview-height: 4.5rem; // alto de la miniatura del tema
+  --size-layout-tile: 3rem; // alto de cada tarjeta en la cuadrícula de Acomodo
 
   // ---- Capas (qué queda encima de qué) ----
   --z-floating: 900; // temporizador flotante dentro de la app
@@ -210,4 +213,226 @@
   --color-primary: #2dd4bf;
   --color-today: #2dd4bf;
   --color-selected-bg: #134e4a;
+}
+
+// =============================================================================
+// TOKENS DE ESTRUCTURA (fondos, vidrio, brillos, títulos)
+// -----------------------------------------------------------------------------
+// Por defecto son "planos" (usan los colores del tema). Temas con más estilo,
+// como Frutiger Aero, los cambian por degradados, vidrio y brillos.
+// Se declaran en [data-theme] para que se calculen con los colores de cada tema.
+// =============================================================================
+:root,
+[data-theme] {
+  --bg-page: var(--color-bg); // fondo de toda la página (puede ser una imagen/degradado)
+  --bg-header: var(--color-bg); // encabezado y barra inferior
+  --bg-card: var(--color-surface); // fondo de las tarjetas
+  --bg-card-solid: var(--color-surface); // ventanas emergentes (más opacas)
+  --card-border-color: var(--color-border);
+  --card-backdrop: none; // efecto vidrio (p. ej. blur(10px))
+  --bg-card-title: transparent; // barra de título de las tarjetas
+  --color-card-title: var(--color-text);
+  --card-title-padding: 0;
+  --card-title-radius: 0;
+  --bg-button: var(--color-surface);
+  --bg-button-primary: var(--color-primary);
+  --button-shadow: none;
+  --button-radius: var(--radius-md);
+  --font-family-heading: var(--font-family-base);
+  --heading-shadow: none;
+}
+
+// =============================================================================
+// TEMA FRUTIGER AERO
+// -----------------------------------------------------------------------------
+// Cielo con burbujas, tarjetas de vidrio, barras con brillo y botones tipo píldora.
+// Hay una base común ([data-theme^="aero"] = "empieza con aero") y un bloque corto
+// por variante que solo define su paleta (--aero-*).
+//
+// AGREGAR UNA VARIANTE AERO: copia un bloque de variante (p. ej. aero-sky), cambia
+// el nombre y los colores, y agrégalo a THEMES en src/app/themes.ts con group: "aero".
+// =============================================================================
+
+[data-theme^="aero"] {
+  color-scheme: light;
+
+  // Paleta por defecto de tarjetas y botones (las variantes oscuras la cambian).
+  --aero-card-top: rgb(255 255 255 / 0.92);
+  --aero-card-bottom: rgb(255 255 255 / 0.7);
+  --aero-glass-edge: rgb(255 255 255 / 0.95);
+  --aero-btn-1: #ffffff;
+  --aero-btn-2: #f2f8fd;
+  --aero-btn-3: #dce9f3;
+  --aero-btn-4: #f7fbff;
+  --aero-bubble: rgb(255 255 255 / 0.85);
+
+  // Colores generales (salen de la paleta de la variante)
+  --color-bg: var(--aero-pale);
+  --color-surface: rgb(255 255 255 / 0.75);
+  --color-text: var(--aero-ink);
+  --color-text-muted: var(--aero-ink-muted);
+  --color-border: var(--aero-border);
+  --color-primary: var(--aero-deep);
+  --color-on-primary: #ffffff;
+  --color-today: var(--aero-deep);
+  --color-selected-bg: var(--aero-glow);
+  --color-backdrop: rgb(10 40 80 / 0.35);
+
+  // Fuentes redondeadas (se cargan en src/index.html)
+  --font-family-base: "Nunito", "Segoe UI", system-ui, sans-serif;
+  --font-family-heading: "Fredoka", "Nunito", "Segoe UI", sans-serif;
+
+  // Formas más redondas
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  // Fondo: burbujas con brillo sobre un cielo en degradado
+  --bg-page:
+    radial-gradient(circle at 12% 18%, var(--aero-bubble) 0, rgb(255 255 255 / 0.15) 2.2%, transparent 2.6%),
+    radial-gradient(circle at 88% 26%, var(--aero-bubble) 0, rgb(255 255 255 / 0.12) 3.5%, transparent 4%),
+    radial-gradient(circle at 72% 82%, var(--aero-bubble) 0, rgb(255 255 255 / 0.1) 5%, transparent 5.6%),
+    radial-gradient(circle at 28% 70%, var(--aero-bubble) 0, rgb(255 255 255 / 0.15) 1.5%, transparent 1.9%),
+    radial-gradient(circle at 50% 40%, rgb(255 255 255 / 0.5) 0, transparent 45%),
+    linear-gradient(180deg, var(--aero-sky-top) 0%, var(--aero-sky-bottom) 55%, var(--aero-ground) 100%);
+  --bg-header: linear-gradient(180deg, rgb(255 255 255 / 0.85), rgb(255 255 255 / 0.55));
+
+  // Tarjetas de vidrio
+  --bg-card: linear-gradient(180deg, var(--aero-card-top), var(--aero-card-bottom));
+  --bg-card-solid: linear-gradient(180deg, var(--aero-card-top), var(--aero-pale));
+  --card-border-color: var(--aero-glass-edge);
+  --card-backdrop: blur(10px) saturate(1.4);
+  --shadow-sm: 0 4px 14px rgb(0 50 100 / 0.18), inset 0 1px 0 rgb(255 255 255 / 0.9);
+  --shadow-md: 0 12px 32px rgb(0 50 100 / 0.28);
+
+  // Barra de título con brillo (mitad superior más clara)
+  --bg-card-title: linear-gradient(180deg, var(--aero-light) 0%, var(--aero-main) 48%, var(--aero-deep) 52%, var(--aero-main) 100%);
+  --color-card-title: #ffffff;
+  --card-title-padding: var(--space-1) var(--space-4);
+  --card-title-radius: var(--radius-full);
+  --heading-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+
+  // Botones tipo píldora con reflejo
+  --bg-button: linear-gradient(180deg, var(--aero-btn-1) 0%, var(--aero-btn-2) 48%, var(--aero-btn-3) 52%, var(--aero-btn-4) 100%);
+  --bg-button-primary: linear-gradient(180deg, var(--aero-light) 0%, var(--aero-main) 48%, var(--aero-deep) 52%, var(--aero-main) 100%);
+  --button-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 1px 3px rgb(0 40 80 / 0.25);
+  --button-radius: var(--radius-full);
+}
+
+// ---- Variante: Cielo (azul clásico) ----
+[data-theme="aero-sky"] {
+  --aero-pale: #e8f6ff;
+  --aero-light: #bfe8ff;
+  --aero-main: #3aa9e6;
+  --aero-deep: #0b78c2;
+  --aero-glow: #cfeeff;
+  --aero-ink: #0b3556;
+  --aero-ink-muted: #4a7391;
+  --aero-border: #9fd0ee;
+  --aero-sky-top: #59c0f2;
+  --aero-sky-bottom: #c6ecff;
+  --aero-ground: #effaff;
+}
+
+// ---- Variante: Agua (turquesa) ----
+[data-theme="aero-aqua"] {
+  --aero-pale: #e4fbf9;
+  --aero-light: #b9f5ef;
+  --aero-main: #1fc4c4;
+  --aero-deep: #0b8b96;
+  --aero-glow: #c9f6f1;
+  --aero-ink: #073f45;
+  --aero-ink-muted: #3f7177;
+  --aero-border: #8fdcd8;
+  --aero-sky-top: #3ccfd6;
+  --aero-sky-bottom: #c4f5f1;
+  --aero-ground: #ecfffd;
+}
+
+// ---- Variante: Eco (verde, cielo y pasto) ----
+[data-theme="aero-eco"] {
+  --aero-pale: #eefbe6;
+  --aero-light: #d4f5bd;
+  --aero-main: #6cc24a;
+  --aero-deep: #3a8a2c;
+  --aero-glow: #dcf5cb;
+  --aero-ink: #1d3d14;
+  --aero-ink-muted: #4f6e44;
+  --aero-border: #a9dd8d;
+  --aero-sky-top: #79c9f2;
+  --aero-sky-bottom: #d8f2ff;
+  --aero-ground: #b6e58e;
+}
+
+// ---- Variante: Sakura (rosa) ----
+[data-theme="aero-sakura"] {
+  --aero-pale: #fff0f7;
+  --aero-light: #ffd3e8;
+  --aero-main: #f07ab2;
+  --aero-deep: #cf4488;
+  --aero-glow: #ffdff0;
+  --aero-ink: #4a1430;
+  --aero-ink-muted: #85506b;
+  --aero-border: #f5b3d3;
+  --aero-sky-top: #f7a6cd;
+  --aero-sky-bottom: #ffe3f0;
+  --aero-ground: #fff7fb;
+}
+
+// ---- Variante: Lila ----
+[data-theme="aero-lila"] {
+  --aero-pale: #f3efff;
+  --aero-light: #ddd2ff;
+  --aero-main: #9a7cf0;
+  --aero-deep: #6a48d4;
+  --aero-glow: #e6defe;
+  --aero-ink: #2b1a5c;
+  --aero-ink-muted: #625489;
+  --aero-border: #c3b3f5;
+  --aero-sky-top: #a797f4;
+  --aero-sky-bottom: #e5dfff;
+  --aero-ground: #f7f4ff;
+}
+
+// ---- Variante: Pecera (pez dorado sobre agua azul) ----
+[data-theme="aero-pecera"] {
+  --aero-pale: #fff4e8;
+  --aero-light: #ffd8a8;
+  --aero-main: #ff9636;
+  --aero-deep: #e2650e;
+  --aero-glow: #ffe6cc;
+  --aero-ink: #3a2205;
+  --aero-ink-muted: #7a5a38;
+  --aero-border: #ffc58c;
+  --aero-sky-top: #3fb0e8;
+  --aero-sky-bottom: #bde7fb;
+  --aero-ground: #e8f7ff;
+}
+
+// ---- Variante: Noche (oscura, vidrio azul profundo) ----
+[data-theme="aero-noche"] {
+  color-scheme: dark;
+  --aero-pale: #0e2240;
+  --aero-light: #7fd0ff;
+  --aero-main: #2d8fd6;
+  --aero-deep: #155ea3;
+  --aero-glow: #1d3f6b;
+  --aero-ink: #e6f3ff;
+  --aero-ink-muted: #9db8d4;
+  --aero-border: #2f5a8a;
+  --aero-sky-top: #04122a;
+  --aero-sky-bottom: #0b2e5a;
+  --aero-ground: #0f4a7a;
+  --aero-card-top: rgb(30 60 100 / 0.85);
+  --aero-card-bottom: rgb(12 30 60 / 0.75);
+  --aero-glass-edge: rgb(140 200 255 / 0.45);
+  --aero-btn-1: #3a6596;
+  --aero-btn-2: #24486f;
+  --aero-btn-3: #18375a;
+  --aero-btn-4: #23476e;
+  --aero-bubble: rgb(150 210 255 / 0.55);
+  --color-primary: var(--aero-light);
+  --color-on-primary: #04122a;
+  --color-today: var(--aero-light);
+  --bg-header: linear-gradient(180deg, rgb(20 45 80 / 0.9), rgb(10 25 50 / 0.75));
+  --color-backdrop: rgb(0 0 0 / 0.6);
 }

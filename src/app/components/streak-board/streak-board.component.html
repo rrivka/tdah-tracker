@@ -1,74 +1,50 @@
-<div class="streak-board">
+<!-- Tarjeta "Rachas": una fila compacta por hábito. Tocar una fila abre su calendario. -->
+<div class="streak-board card">
   <div class="streak-board__header">
-    <h2 class="streak-board__title">Rachas</h2>
-    <p class="streak-board__subtitle">Hábitos que quieres sostener día a día</p>
+    <h2 class="streak-board__title card-title">Rachas</h2>
+    <button class="streak-board__add" type="button" aria-label="Nueva racha" (click)="createRequested.emit()">+</button>
   </div>
 
   @if (loading()) {
     <p class="streak-board__status">Cargando…</p>
   } @else if (active().length === 0) {
-    <!-- Sin rachas activas -->
-    <div class="streak-board__empty">
-      <p class="streak-board__status">
-        {{ paused().length ? 'Todas tus rachas están en pausa.' : 'Aún no tienes rachas.' }}
-        Crea una para algo que quieras hacer seguido, como ejercicio o tomar agua.
-      </p>
-      <button class="streak-board__create button-primary" type="button" (click)="createRequested.emit()">
-        Crear racha
-      </button>
-    </div>
+    <p class="streak-board__status">
+      {{ paused().length ? 'Todas tus rachas están en pausa.' : 'Aún no tienes rachas.' }}
+      Toca + para crear una, como hacer ejercicio o tomar agua.
+    </p>
   } @else {
-    <!-- Tarjetas -->
-    <div class="streak-board__cards">
+    <ul class="streak-board__list">
       @for (s of active(); track s.id) {
-        <article
-          class="streak-card"
-          [class.streak-card--done]="doneToday(s)"
-          tabindex="0"
-          role="button"
-          [attr.aria-label]="'Ver calendario de ' + s.title"
-          (click)="detailId.set(s.id)"
-          (keydown.enter)="$event.target === $event.currentTarget && detailId.set(s.id)"
-        >
-          <div class="streak-card__top">
-            <span class="streak-card__emoji" aria-hidden="true">{{ s.emoji }}</span>
-            <div class="streak-card__info">
-              <h3 class="streak-card__title">{{ s.title }}</h3>
-              @if (s.description) {
-                <p class="streak-card__description">{{ s.description }}</p>
-              }
-            </div>
-            <div class="streak-card__count" [attr.aria-label]="currentStreak(s) + ' días seguidos'">
-              <span class="streak-card__flame" aria-hidden="true">🔥</span>
-              <span class="streak-card__number">{{ currentStreak(s) }}</span>
-            </div>
-          </div>
-
-          <!-- Últimos 7 días -->
-          <ol class="streak-card__week" aria-label="Últimos 7 días">
-            @for (d of lastDays(s); track d.key) {
-              <li class="streak-card__week-day">
-                <span class="streak-card__week-letter">{{ weekdayLetter(d.key) }}</span>
-                <span [class]="'streak-card__dot streak-card__dot--' + d.status"></span>
-              </li>
-            }
-          </ol>
-
-          <div class="streak-card__bottom">
-            <span class="streak-card__today-label">{{ todayLabel(s) }}</span>
-            <button
-              class="streak-card__done-button"
-              type="button"
-              [class.button-primary]="!doneToday(s)"
-              (click)="markToday(s, $event)"
-            >
-              {{ doneToday(s) ? 'Desmarcar' : '¡Hecho hoy!' }}
-            </button>
-          </div>
-        </article>
+        <li class="streak-row" [class.streak-row--done]="doneToday(s)">
+          <!-- Toda la fila abre el detalle; el botón ✓ marca el día -->
+          <button class="streak-row__open" type="button" [attr.aria-label]="'Ver calendario de ' + s.title" (click)="detailId.set(s.id)">
+            <span class="streak-row__emoji" aria-hidden="true">{{ s.emoji }}</span>
+            <span class="streak-row__info">
+              <span class="streak-row__title">{{ s.title }}</span>
+              <span class="streak-row__week" aria-hidden="true">
+                @for (d of lastDays(s); track d.key) {
+                  <span [class]="'streak-row__dot streak-row__dot--' + d.status" [title]="weekdayLetter(d.key)"></span>
+                }
+              </span>
+            </span>
+            <span class="streak-row__count" [attr.aria-label]="currentStreak(s) + ' días seguidos'">
+              🔥 {{ currentStreak(s) }}
+            </span>
+          </button>
+          <button
+            class="streak-row__check"
+            type="button"
+            [class.button-primary]="!doneToday(s)"
+            [attr.aria-pressed]="doneToday(s)"
+            [attr.aria-label]="doneToday(s) ? 'Desmarcar hoy' : 'Hecho hoy'"
+            [title]="todayLabel(s)"
+            (click)="markToday(s, $event)"
+          >
+            {{ doneToday(s) ? '✓' : '○' }}
+          </button>
+        </li>
       }
-    </div>
-    <button class="streak-board__create-more" type="button" (click)="createRequested.emit()">+ Nueva racha</button>
+    </ul>
   }
 
   <!-- En pausa -->
@@ -108,7 +84,7 @@
         </div>
       </dl>
 
-      <p class="streak-detail__days">{{ daysLabel(s) }}@if (s.description) { · {{ s.description }} }</p>
+      <p class="streak-detail__days">{{ daysLabel(s) }}@if (s.description) { · {{ s.description }} } · {{ todayLabel(s) }}</p>
 
       <app-streak-calendar [streak]="s" [today]="today()" (toggleDay)="toggleDay(s, $event)" />
 

@@ -4,6 +4,22 @@
   gap: var(--space-4);
 }
 
+.profile__tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.profile__tab.is-active,
+.profile__emoji.is-active,
+.profile__accent.is-active,
+.theme-preview.is-active {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-strong);
+  background: var(--color-selected-bg);
+  font-weight: var(--font-weight-bold);
+}
+
 .profile__summary {
   display: flex;
   align-items: center;
@@ -37,7 +53,7 @@
 .profile__group {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .profile__group {
@@ -53,8 +69,7 @@
 }
 
 .profile__emojis,
-.profile__accents,
-.profile__options {
+.profile__accents {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
@@ -68,13 +83,6 @@
 
 .profile__emoji--google {
   font-size: var(--font-size-sm);
-}
-
-.profile__emoji.is-active,
-.profile__accent.is-active {
-  border-color: var(--color-primary);
-  border-width: var(--border-width-strong);
-  background: var(--color-selected-bg);
 }
 
 .profile__accent {
@@ -105,4 +113,72 @@
   gap: var(--space-2);
   padding-top: var(--space-3);
   border-top: var(--border-width) solid var(--color-border);
+}
+
+// ---- Vistas previas de temas ----
+// Cada muestra lleva data-theme="…", así que dentro de ella las variables
+// (--bg-page, --bg-card, --bg-card-title…) son las de ese tema.
+
+.profile__themes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--size-theme-preview), 1fr));
+  gap: var(--space-2);
+}
+
+.theme-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+}
+
+.theme-preview__sample {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  height: var(--size-theme-preview-height);
+  padding: var(--space-2);
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--bg-page);
+}
+
+.theme-preview__bar {
+  width: 60%;
+  height: var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--bg-card-title);
+  background-color: var(--color-primary);
+}
+
+.theme-preview__card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-1);
+  border: var(--border-width) solid var(--card-border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+}
+
+.theme-preview__line {
+  width: 80%;
+  height: var(--space-1);
+  border-radius: var(--radius-full);
+  background: var(--color-text-muted);
+}
+
+.theme-preview__button {
+  align-self: flex-end;
+  width: 40%;
+  height: var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--bg-button-primary);
+}
+
+.theme-preview__label {
+  font-size: var(--font-size-xs);
 }

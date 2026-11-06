@@ -23,19 +23,19 @@ import { CreateDialogComponent, CreateRequest, CreateType } from '../create-dial
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ProfileComponent } from '../profile/profile.component';
 import { ProfileService } from '../../services/profile.service';
+import { CardId, SECTION_LABELS, Section, cardInfo } from '../../cards';
 
-/** Secciones de la app (en el teléfono se ve una a la vez). */
-export type Section = 'clock' | 'calendar' | 'tasks' | 'streaks' | 'settings';
 /** Herramientas debajo del reloj. */
 export type TimeTool = 'timer' | 'alarms';
 
 /**
  * Estructura principal: encabezado, secciones y navegación inferior.
  *
- * - Escritorio: columna lateral (reloj, calendario) y principal (rachas, actividades, pendientes)
- *   siempre visibles; Ajustes se abre con su botón.
+ * - Escritorio: dos columnas de tarjetas según el acomodo del perfil (ver src/app/cards.ts);
+ *   Ajustes se abre con su botón.
  * - Temporizador y alarmas: ventana modal que se abre al tocar la hora del reloj.
- * - Teléfono: solo se ve la sección activa (por defecto, Pendientes) y se cambia con la barra de abajo.
+ * - Teléfono: solo se ve la sección activa y se cambia con la barra de abajo
+ *   (las pestañas siguen el orden del acomodo).
  * Todo eso se decide en layout.component.scss con la clase "is-active".
  *
  * También lee los accesos directos del ícono de la app (ver "shortcuts" en public/manifest.webmanifest):
@@ -94,15 +94,42 @@ export class LayoutComponent {
     this.timer.state() === 'finished' ? '¡Tiempo!' : formatDuration(this.timer.remaining()),
   );
 
-  readonly navItems: { id: Section; label: string }[] = [
-    { id: 'clock', label: 'Reloj' },
-    { id: 'calendar', label: 'Calendario' },
-    { id: 'tasks', label: 'Pendientes' },
-    { id: 'streaks', label: 'Rachas' },
-    { id: 'settings', label: 'Ajustes' },
-  ];
+  /** Columnas del tablero con sus tarjetas visibles (según el acomodo del perfil). */
+  readonly columns = computed(() => {
+    const { left, right, hidden } = this.profile.profile().layout;
+    const visible = (ids: CardId[]) => ids.filter((id) => !hidden.includes(id));
+    return [
+      { id: 'left', cards: visible(left) },
+      { id: 'right', cards: visible(right) },
+    ].filter((c) => c.cards.length > 0);
+  });
+
+  /** Pestañas del teléfono: en el orden de las tarjetas visibles, y Ajustes al final. */
+  readonly navItems = computed(() => {
+    const sections: Section[] = [];
+    for (const col of this.columns()) {
+      for (const card of col.cards) {
+        const s = cardInfo(card).section;
+        if (!sections.includes(s)) sections.push(s);
+      }
+    }
+    sections.push('settings');
+    return sections.map((id) => ({ id, label: SECTION_LABELS[id] }));
+  });
+
+  /** Sección del teléfono a la que pertenece una tarjeta. */
+  sectionOf(card: CardId): Section {
+    return cardInfo(card).section;
+  }
 
   constructor() {
+    // Si se oculta la tarjeta de la pestaña actual, saltar a la primera pestaña disponible.
+    effect(() => {
+      const items = this.navItems();
+      const current = this.section();
+      if (!items.some((i) => i.id === current)) untracked(() => this.section.set(items[0].id));
+    });
+
     // Pantalla de inicio del perfil (solo la primera vez que carga el perfil).
     effect(() => {
       if (!this.profile.loaded()) return;

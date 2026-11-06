@@ -4,16 +4,29 @@ PWA personal para organizar pendientes: reloj, temporizador (con ventana flotant
 y lista de pendientes con fecha opcional. Inicio de sesión con Google; los pendientes se guardan en Firestore y
 funcionan sin internet.
 
-## Mi perfil (varias personas)
+## Personalización (varias personas)
 
 Cada persona entra con **su propia cuenta de Google** y solo ve sus datos (reglas de Firestore).
-"Mi perfil" se abre tocando el avatar del encabezado (o Ajustes → Abrir mi perfil):
+"Personalización" se abre tocando el avatar del encabezado (o Ajustes → Abrir personalización) y tiene 3 pestañas:
 
-- **Nombre para mostrar** (apodo) y **saludo** en el reloj ("Buenas noches, Ana").
-- **Avatar:** foto de Google o un emoji.
-- **Color de acento** y **tema** claro/oscuro.
-- **Pantalla de inicio** en el teléfono (Pendientes, Rachas, Calendario o Reloj).
-- **Cerrar sesión.**
+- **Perfil:** nombre para mostrar (apodo), avatar (foto de Google o emoji), pantalla de inicio en el teléfono,
+  saludo en el reloj y Cerrar sesión.
+- **Apariencia:** temas **Básicos** (Claro/Oscuro + color de acento) y **Frutiger Aero** (Cielo, Agua, Eco, Sakura,
+  Lila, Pecera, Noche). Cada tema tiene una vista previa en miniatura.
+- **Acomodo:** cuadrícula de prueba con las 5 tarjetas (Reloj, Calendario, Rachas, Constantes, Pendientes) en dos
+  columnas. Se arrastran por su asa ⠿ (mouse o dedo, con *pointer events*) o con los botones ↑ ↓ ⇄ 👁 (ocultar).
+  Nada cambia hasta "Guardar acomodo". En el teléfono, el orden de las pestañas sigue el acomodo.
+  Código: `src/app/cards.ts` (lista de tarjetas y acomodo por defecto) y `components/layout-editor/`.
+
+### Cómo funcionan los temas
+
+- Todas las tarjetas usan las clases globales `.card` y `.card-title` (`src/styles.scss`).
+- Además de los colores hay **tokens de estructura** en `_tokens.scss` (`--bg-page`, `--bg-card`, `--card-backdrop`,
+  `--bg-card-title`, `--bg-button`, `--bg-button-primary`, `--button-radius`, `--font-family-heading`…). Un tema
+  sencillo no los toca; Frutiger Aero los cambia por degradados, vidrio y brillos.
+- **Nueva variante Aero:** copia un bloque `[data-theme="aero-sky"]` (solo trae la paleta `--aero-*`), cámbiale
+  nombre y colores, y agrégalo a `THEMES` en `src/app/themes.ts` con `group: 'aero'`.
+- Las fuentes de Aero (Nunito y Fredoka) se cargan desde Google Fonts en `src/index.html`.
 
 Se guarda en Firestore (`users/{uid}/profile/main`, `services/profile.service.ts`) y se sincroniza entre dispositivos.
 Las **alarmas** se guardan en el dispositivo pero **separadas por usuario**, así no suenan en la sesión de otra persona.
