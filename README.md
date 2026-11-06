@@ -50,6 +50,14 @@ Las **alarmas** se guardan en el dispositivo pero **separadas por usuario**, as�
   se borra al instante y aparece un aviso con **Deshacer** durante 6 segundos. También al marcar algo en "Hoy".
   Para usarlo en otro lugar: `undo.show("mensaje", () => { /* cómo revertir */ })`.
 
+## Calendario
+
+- Cada día puede tener hasta 3 marcas: 🟡 pendientes sin terminar · 🟣 constantes (hueco = faltan, relleno = todas
+  hechas) · 🟠 racha cumplida. Debajo hay una leyenda.
+- Al tocar un día se ven sus constantes, rachas y pendientes, y se pueden marcar (las rachas solo hoy o días pasados).
+- **+ Agregar pendiente para este día** abre la ventana Agregar con la fecha ya puesta.
+- Colores: `--color-marker`, `--color-routine` y `--color-streak` en los tokens.
+
 ## Los tres tipos de cosas
 
 Todo se crea con el botón **+** (ventana "Agregar", `components/create-dialog/`), que tiene tres pestañas:

@@ -1,6 +1,9 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, output, signal } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 import { RoutineService } from '../../services/routine.service';
+import { StreakService } from '../../services/streak.service';
+import { Streak } from '../../models/streak.model';
+import { isDone, isScheduled } from '../../utils/streak.utils';
 import { formatDateKey, toDateKey, todayKey } from '../../utils/date.utils';
 
 /** Una casilla del calendario. */
@@ -11,13 +14,18 @@ interface CalendarCell {
   isToday: boolean;
   pending: number; // pendientes sin completar ese día
   completed: number;
+  routinesDue: number; // horarios de actividades constantes que tocan ese día
+  routinesDone: number; // cuántos de esos se marcaron
+  streaksDone: number; // rachas cumplidas ese día
 }
 
 /**
- * Calendario mensual.
+ * Calendario mensual completo.
  * - Flechas para cambiar de mes y botón "Hoy".
- * - Marca el día de hoy y los días que tienen pendientes.
- * - Al tocar un día, muestra abajo las actividades constantes y los pendientes de ese día.
+ * - Cada día puede tener hasta 3 marcas:
+ *     🟡 pendientes sin terminar · 🟣 actividades constantes (relleno = todas hechas) · 🟠 racha cumplida.
+ * - Al tocar un día, abajo se ven sus constantes, rachas y pendientes (se pueden marcar),
+ *   y un botón para agregar un pendiente con esa fecha.
  */
 @Component({
   selector: 'app-calendar',
@@ -27,6 +35,10 @@ interface CalendarCell {
 export class CalendarComponent {
   private readonly taskService = inject(TaskService);
   private readonly routineService = inject(RoutineService);
+  private readonly streakService = inject(StreakService);
+
+  /** Pide al layout abrir "Agregar" con la fecha del día seleccionado. */
+  readonly createRequested = output<string>();
 
   /** Mes que se está viendo. */
   readonly viewYear = signal(new Date().getFullYear());
@@ -53,6 +65,8 @@ export class CalendarComponent {
     const month = this.viewMonth();
     const today = this.taskService.today();
     const summary = this.taskService.summaryByDate();
+    this.routineService.routines(); // recalcular cuando cambian las constantes
+    const streaks = this.streakService.streaks();
 
     const offset = (new Date(year, month, 1).getDay() + 6) % 7; // días antes del 1 (lunes = 0)
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -63,6 +77,7 @@ export class CalendarComponent {
       const date = new Date(year, month, 1 - offset + i);
       const key = toDateKey(date);
       const s = summary.get(key);
+      const routines = this.routineService.forDate(key);
       cells.push({
         key,
         day: date.getDate(),
@@ -70,17 +85,41 @@ export class CalendarComponent {
         isToday: key === today,
         pending: s?.pending ?? 0,
         completed: s?.completed ?? 0,
+        routinesDue: routines.length,
+        routinesDone: routines.filter((r) => r.done).length,
+        streaksDone: streaks.filter((st) => isDone(st, key)).length,
       });
     }
     return cells;
   });
 
   readonly selectedLabel = computed(() => formatDateKey(this.selected()));
+
   readonly selectedTasks = computed(() => {
     // Leer tasks() hace que esto se recalcule cuando cambian los pendientes.
     this.taskService.tasks();
     return this.taskService.tasksForDate(this.selected());
   });
+
+  /** Actividades constantes que tocan el día seleccionado. */
+  readonly selectedRoutines = computed(() => {
+    this.routineService.routines(); // se recalcula cuando cambian
+    return this.routineService.forDate(this.selected());
+  });
+
+  /** Rachas de ese día: las que tocaban (activas) o las que se cumplieron. */
+  readonly selectedStreaks = computed(() => {
+    const key = this.selected();
+    const today = this.taskService.today();
+    return this.streakService
+      .streaks()
+      .filter((s) => (s.active && isScheduled(s, key)) || isDone(s, key))
+      .map((s) => ({ streak: s, done: isDone(s, key), editable: key <= today && key >= s.startDate }));
+  });
+
+  readonly selectedIsEmpty = computed(
+    () => this.selectedTasks().length + this.selectedRoutines().length + this.selectedStreaks().length === 0,
+  );
 
   previousMonth(): void {
     this.moveMonth(-1);
@@ -111,21 +150,24 @@ export class CalendarComponent {
     this.taskService.toggle(id);
   }
 
-  /** Actividades constantes que tocan el día seleccionado. */
-  readonly selectedRoutines = computed(() => {
-    this.routineService.routines(); // se recalcula cuando cambian
-    return this.routineService.forDate(this.selected());
-  });
-
   /** Marca/desmarca una actividad como hecha en el día seleccionado. */
   toggleRoutine(id: string, slot?: string): void {
     this.routineService.toggleDone(id, this.selected(), slot);
   }
 
-  /** Texto para lectores de pantalla, p. ej. "5 de noviembre, 2 pendientes". */
+  /** Marca/desmarca una racha en el día seleccionado (solo hoy o días pasados). */
+  toggleStreak(streak: Streak): void {
+    this.streakService.toggleDone(streak.id, this.selected());
+  }
+
+  /** Texto para lectores de pantalla, p. ej. "jue, 5 de nov: 2 pendientes, constantes 1 de 2, 1 racha". */
   cellLabel(cell: CalendarCell): string {
+    const parts: string[] = [];
+    if (cell.pending) parts.push(`${cell.pending} pendiente(s)`);
+    if (cell.routinesDue) parts.push(`constantes ${cell.routinesDone} de ${cell.routinesDue}`);
+    if (cell.streaksDone) parts.push(`${cell.streaksDone} racha(s) cumplida(s)`);
     const base = formatDateKey(cell.key);
-    return cell.pending ? `${base}, ${cell.pending} pendiente(s)` : base;
+    return parts.length ? `${base}: ${parts.join(', ')}` : base;
   }
 
   private moveMonth(delta: number): void {

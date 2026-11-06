@@ -24,6 +24,8 @@ export const CREATE_TYPES: { id: CreateType; label: string; help: string }[] = [
 export interface CreateRequest {
   type: CreateType;
   n: number;
+  /** Fecha para el nuevo pendiente ("YYYY-MM-DD"), p. ej. al agregar desde el calendario. */
+  date?: string;
 }
 
 /**
@@ -47,6 +49,8 @@ export class CreateDialogComponent {
   readonly open = signal(false);
   readonly type = signal<CreateType>('task');
   readonly help = computed(() => CREATE_TYPES.find((t) => t.id === this.type())?.help ?? '');
+  /** Fecha sugerida para el pendiente (viene del pedido). */
+  readonly date = computed(() => this.request()?.date ?? '');
 
   constructor() {
     effect(() => {

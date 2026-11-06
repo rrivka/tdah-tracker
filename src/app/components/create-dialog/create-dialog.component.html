@@ -20,7 +20,7 @@
     <!-- focusTrigger=1: el cursor queda listo en el título al abrir -->
     @switch (type()) {
       @case ('task') {
-        <app-task-form [focusTrigger]="1" (save)="addTask($event)" (cancelled)="open.set(false)" />
+        <app-task-form [focusTrigger]="1" [initialDate]="date()" (save)="addTask($event)" (cancelled)="open.set(false)" />
       }
       @case ('routine') {
         <app-routine-form [focusTrigger]="1" (save)="addRoutine($event)" (cancelled)="open.set(false)" />

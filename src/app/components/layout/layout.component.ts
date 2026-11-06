@@ -159,8 +159,8 @@ export class LayoutComponent {
   }
 
   /** Abre la ventana "Agregar" en la pestaña indicada. */
-  requestCreate(type: CreateType): void {
-    this.createRequest.set({ type, n: (this.createRequest()?.n ?? 0) + 1 });
+  requestCreate(type: CreateType, date?: string): void {
+    this.createRequest.set({ type, n: (this.createRequest()?.n ?? 0) + 1, date });
   }
 
   show(section: Section): void {

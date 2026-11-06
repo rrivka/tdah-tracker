@@ -19,6 +19,8 @@ import { Task, TaskInput } from '../../models/task.model';
 export class TaskFormComponent implements OnInit {
   /** Si se pasa, el formulario está en modo edición. */
   readonly task = input<Task | null>(null);
+  /** Fecha con la que empieza un pendiente nuevo (p. ej. el día elegido en el calendario). */
+  readonly initialDate = input('');
 
   readonly save = output<TaskInput>();
   readonly cancelled = output<void>();
@@ -45,6 +47,7 @@ export class TaskFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!this.task() && this.initialDate()) this.dueDate.set(this.initialDate());
     const t = this.task();
     if (t) {
       this.title.set(t.title);

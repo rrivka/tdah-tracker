@@ -64,15 +64,84 @@
   background: var(--color-selected-bg);
 }
 
+// ---- Marcas de cada día ----
+
+.calendar__markers {
+  display: flex;
+  gap: var(--border-width-strong);
+  min-height: var(--size-marker);
+}
+
 .calendar__marker {
+  display: inline-block;
   width: var(--size-marker);
   height: var(--size-marker);
   border-radius: var(--radius-full);
+}
+
+// Pendientes sin terminar
+.calendar__marker--task {
   background: var(--color-marker);
 }
 
+// Constantes: hueco si faltan, relleno si se hicieron todas
+.calendar__marker--routine {
+  border: var(--border-width) solid var(--color-routine);
+}
+
+.calendar__marker--routine.is-complete {
+  background: var(--color-routine);
+}
+
+// Racha cumplida
+.calendar__marker--streak {
+  background: var(--color-streak);
+}
+
+// ---- Leyenda ----
+
+.calendar__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  list-style: none;
+}
+
+.calendar__legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+// ---- Día seleccionado ----
+
 .calendar__day-tasks {
+  display: flex;
+  flex-direction: column;
   margin-top: var(--space-4);
+}
+
+.calendar__add {
+  align-self: flex-start;
+  margin-top: var(--space-2);
+  font-size: var(--font-size-sm);
+}
+
+.calendar__streak {
+  padding-left: var(--space-2);
+  border-left: var(--border-width-strong) solid var(--color-streak);
+}
+
+.calendar__streak-emoji {
+  font-size: var(--font-size-md);
+}
+
+.calendar__streak-list {
+  margin-bottom: var(--space-2);
 }
 
 .calendar__day-title {

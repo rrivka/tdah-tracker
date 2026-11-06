@@ -25,19 +25,40 @@
         (click)="select(cell)"
       >
         <span class="calendar__day-number">{{ cell.day }}</span>
-        @if (cell.pending > 0) {
-          <span class="calendar__marker" aria-hidden="true"></span>
-        }
+        <!-- Marcas: pendientes · constantes (relleno = todas hechas) · racha cumplida -->
+        <span class="calendar__markers" aria-hidden="true">
+          @if (cell.pending > 0) {
+            <span class="calendar__marker calendar__marker--task"></span>
+          }
+          @if (cell.routinesDue > 0) {
+            <span
+              class="calendar__marker calendar__marker--routine"
+              [class.is-complete]="cell.routinesDone === cell.routinesDue"
+            ></span>
+          }
+          @if (cell.streaksDone > 0) {
+            <span class="calendar__marker calendar__marker--streak"></span>
+          }
+        </span>
       </button>
     }
   </div>
 
-  <!-- Pendientes y actividades constantes del día seleccionado -->
+  <!-- Leyenda de las marcas -->
+  <ul class="calendar__legend">
+    <li class="calendar__legend-item"><span class="calendar__marker calendar__marker--task"></span> Pendientes</li>
+    <li class="calendar__legend-item">
+      <span class="calendar__marker calendar__marker--routine is-complete"></span> Constantes
+    </li>
+    <li class="calendar__legend-item"><span class="calendar__marker calendar__marker--streak"></span> Racha cumplida</li>
+  </ul>
+
+  <!-- Todo lo del día seleccionado -->
   <div class="calendar__day-tasks">
     <h3 class="calendar__day-title"><span class="calendar__day-icon" aria-hidden="true">📅</span> {{ selectedLabel() }}</h3>
 
     @if (selectedRoutines().length > 0) {
-      <ul class="calendar__task-list calendar__routine-list">
+      <ul class="calendar__task-list calendar__routine-list" aria-label="Constantes">
         @for (item of selectedRoutines(); track item.routine.id + (item.slot ?? '')) {
           <li class="calendar__task calendar__routine" [class.calendar__task--completed]="item.done">
             <label class="calendar__task-label">
@@ -50,10 +71,22 @@
       </ul>
     }
 
-    @if (selectedTasks().length === 0) {
-      <p class="calendar__empty">No hay pendientes este día.</p>
-    } @else {
-      <ul class="calendar__task-list">
+    @if (selectedStreaks().length > 0) {
+      <ul class="calendar__task-list calendar__streak-list" aria-label="Rachas">
+        @for (item of selectedStreaks(); track item.streak.id) {
+          <li class="calendar__task calendar__streak" [class.calendar__task--completed]="item.done">
+            <label class="calendar__task-label">
+              <input type="checkbox" [checked]="item.done" [disabled]="!item.editable" (change)="toggleStreak(item.streak)" />
+              <span class="calendar__streak-emoji" aria-hidden="true">{{ item.streak.emoji }}</span>
+              <span class="calendar__task-title">{{ item.streak.title }}</span>
+            </label>
+          </li>
+        }
+      </ul>
+    }
+
+    @if (selectedTasks().length > 0) {
+      <ul class="calendar__task-list" aria-label="Pendientes">
         @for (task of selectedTasks(); track task.id) {
           <li class="calendar__task" [class.calendar__task--completed]="task.completed">
             <label class="calendar__task-label">
@@ -64,5 +97,13 @@
         }
       </ul>
     }
+
+    @if (selectedIsEmpty()) {
+      <p class="calendar__empty">Nada para este día.</p>
+    }
+
+    <button class="calendar__add" type="button" (click)="createRequested.emit(selected())">
+      + Agregar pendiente para este día
+    </button>
   </div>
 </div>

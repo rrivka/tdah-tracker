@@ -49,7 +49,7 @@
                 <app-clock (openTools)="showTool(tool())" />
               }
               @case ('calendar') {
-                <app-calendar />
+                <app-calendar (createRequested)="requestCreate('task', $event)" />
               }
               @case ('streaks') {
                 <app-streak-board (createRequested)="requestCreate('streak')" />
