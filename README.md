@@ -27,7 +27,13 @@ Cada persona entra con **su propia cuenta de Google** y solo ve sus datos (regla
   sencillo no los toca; Frutiger Aero los cambia por degradados, vidrio y brillos.
 - **Nueva variante Aero:** copia un bloque `[data-theme="aero-sky"]` (solo trae la paleta `--aero-*`), cámbiale
   nombre y colores, y agrégalo a `THEMES` en `src/app/themes.ts` con `group: 'aero'`.
-- Las fuentes de Aero (Nunito y Fredoka) se cargan desde Google Fonts en `src/index.html`.
+- **Tipografías de Aero** (Google Fonts, en `src/index.html`): Audiowide (nombre de la app), Orbitron (reloj y
+  temporizador), Fredoka (títulos), Nunito (texto) y Space Mono (pestañas). Se asignan con `--font-family-display`,
+  `--font-family-clock`, `--font-family-heading`, `--font-family-base` y `--font-family-label`.
+- **Adornos de Aero** (todos son tokens, se pueden quitar o cambiar en el bloque `[data-theme^="aero"]`):
+  barra tipo ventana en cada tarjeta (`--card-chrome-content`, `--card-sparkle`), doble borde (`--card-ring`),
+  capa de burbujas/nubes/colinas (`--page-decor`), campos en píldora (`--input-radius`), scroll del color del tema,
+  fondo de las rachas (`--bg-streak-row`) e ícono del día de hoy en el calendario (`--calendar-today-icon`).
 
 Se guarda en Firestore (`users/{uid}/profile/main`, `services/profile.service.ts`) y se sincroniza entre dispositivos.
 Las **alarmas** se guardan en el dispositivo pero **separadas por usuario**, así no suenan en la sesión de otra persona.

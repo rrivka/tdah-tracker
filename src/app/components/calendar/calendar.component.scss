@@ -49,6 +49,17 @@
   font-weight: var(--font-weight-bold);
 }
 
+// Ícono del día de hoy (⭐ / ✨ según el tema: --calendar-today-icon).
+.calendar__day--today::after {
+  content: var(--calendar-today-icon);
+  position: absolute;
+  top: calc(var(--space-2) * -1);
+  right: calc(var(--space-1) * -1);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-tight);
+  pointer-events: none;
+}
+
 .calendar__day--selected {
   background: var(--color-selected-bg);
 }

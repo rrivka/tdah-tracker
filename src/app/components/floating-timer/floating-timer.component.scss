@@ -50,8 +50,9 @@
 
 .floating-timer__display {
   margin: 0;
-  font-family: var(--font-family-mono);
+  font-family: var(--font-family-clock);
   font-size: var(--font-size-timer-floating);
+  text-shadow: var(--clock-shadow);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
 }

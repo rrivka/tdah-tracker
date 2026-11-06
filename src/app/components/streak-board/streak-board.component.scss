@@ -51,13 +51,33 @@
 // ---- Fila de una racha ----
 
 .streak-row {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-2);
+  padding: var(--space-3) var(--space-2);
+  overflow: hidden;
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-md);
-  background: var(--color-bg);
+  background: var(--bg-streak-row);
+}
+
+// Emoji gigante y tenue a la derecha (detrás del contenido).
+.streak-row__watermark {
+  position: absolute;
+  top: 50%;
+  left: 45%; // a la mitad, lejos del contador 🔥 y del botón ✓
+  font-size: var(--font-size-celebration);
+  line-height: var(--line-height-tight);
+  opacity: 0.18;
+  pointer-events: none;
+  transform: translateY(-50%) rotate(-12deg);
+}
+
+// El contenido va por encima de la marca de agua.
+.streak-row__open,
+.streak-row__check {
+  position: relative;
 }
 
 .streak-row--done {

@@ -5,6 +5,8 @@
 }
 
 .profile__tabs {
+  font-family: var(--font-family-label);
+  font-size: var(--font-size-sm);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(var(--size-number-input), 1fr));
   gap: var(--space-2);

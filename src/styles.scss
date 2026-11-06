@@ -17,6 +17,11 @@ body {
   padding: 0;
 }
 
+html {
+  // Color de la barra de scroll (en Aero, del color del tema).
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
 body {
   min-height: 100dvh;
   // --bg-page puede ser un color o un degradado/imagen (p. ej. el cielo de Frutiger Aero).
@@ -69,8 +74,14 @@ select {
   min-height: var(--size-touch);
   padding: var(--space-2) var(--space-3);
   border: var(--border-width) solid var(--color-border);
+  border-radius: var(--input-radius);
+  background: var(--bg-input);
+  box-shadow: var(--input-shadow);
+}
+
+// Los cuadros de texto largos no se ven bien como píldora.
+textarea {
   border-radius: var(--radius-md);
-  background: var(--color-bg);
 }
 
 input[type='checkbox'],
@@ -113,12 +124,43 @@ input[type='radio'] {
 // El tema decide cómo se ven (plano, vidrio, barra con brillo…).
 // =============================================================================
 .card {
-  padding: var(--space-4);
+  position: relative;
+  // Arriba deja espacio para la barra tipo "ventana" (alto 0 en temas sin barra).
+  padding: calc(var(--space-4) + var(--card-chrome-height)) var(--space-4) var(--space-4);
   border: var(--border-width) solid var(--card-border-color);
   border-radius: var(--radius-lg);
   background: var(--bg-card);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm), var(--card-ring);
   backdrop-filter: var(--card-backdrop);
+}
+
+// Barra tipo ventana (botones a la derecha) y adorno (a la izquierda).
+// Solo aparecen si el tema define --card-chrome-content / --card-sparkle.
+.card::before,
+.card::after {
+  position: absolute;
+  top: 0;
+  height: var(--card-chrome-height);
+  color: var(--color-on-primary);
+  font-size: var(--font-size-xs);
+  line-height: var(--card-chrome-height);
+  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+
+.card::before {
+  content: var(--card-chrome-content);
+  right: 0;
+  left: 0;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--bg-card-chrome);
+  text-align: right;
+}
+
+.card::after {
+  content: var(--card-sparkle);
+  left: var(--space-3);
 }
 
 .card-title {
@@ -130,4 +172,18 @@ input[type='radio'] {
   font-family: var(--font-family-heading);
   font-size: var(--font-size-lg);
   text-shadow: var(--heading-shadow);
+}
+
+// =============================================================================
+// CAPA DECORATIVA DE LA PÁGINA
+// Va encima del fondo y debajo de todo lo demás. Solo se ve si el tema define
+// --page-decor (Frutiger Aero dibuja burbujas, destellos, nubes y colinas).
+// =============================================================================
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--page-decor);
+  pointer-events: none;
 }

@@ -240,6 +240,36 @@
   --button-radius: var(--radius-md);
   --font-family-heading: var(--font-family-base);
   --heading-shadow: none;
+
+  // ---- Tipografías por uso ----
+  --font-family-display: var(--font-family-heading); // nombre de la app
+  --font-family-clock: var(--font-family-mono); // hora del reloj
+  --font-family-label: var(--font-family-base); // pestañas y etiquetas pequeñas
+  --app-title-shadow: none;
+  --app-title-decor: none; // adorno junto al nombre de la app (texto, p. ej. "✦")
+  --clock-shadow: none;
+
+  // ---- Adornos de tarjetas ----
+  --card-ring: 0 0 0 0 transparent; // segundo borde (anillo) alrededor de las tarjetas
+  --card-chrome-height: 0px; // alto de la barra tipo "ventana" arriba de cada tarjeta
+  --bg-card-chrome: transparent;
+  --card-chrome-content: none; // botones de ventana a la derecha (texto, p. ej. "– ▢ ✕")
+  --card-sparkle: none; // adorno a la izquierda de esa barra (texto, p. ej. "✦ ✧")
+
+  // ---- Página, campos y navegación ----
+  --page-decor: none; // capa decorativa encima del fondo (burbujas, nubes, colinas…)
+  --bg-input: var(--color-bg);
+  --input-shadow: none;
+  --input-radius: var(--radius-md);
+  --bg-nav-active: var(--color-selected-bg);
+  --color-nav-active: var(--color-text);
+  --scrollbar-thumb: var(--color-border);
+  --scrollbar-track: transparent;
+
+  // ---- Rachas y calendario ----
+  --bg-streak-row: linear-gradient(100deg, var(--color-streak-soft), var(--color-bg) 75%);
+  --calendar-today-icon: "⭐"; // ícono del día de hoy en el calendario
+  --heading-shadow: none;
 }
 
 // =============================================================================
@@ -315,6 +345,56 @@
   --bg-button: linear-gradient(180deg, var(--aero-btn-1) 0%, var(--aero-btn-2) 48%, var(--aero-btn-3) 52%, var(--aero-btn-4) 100%);
   --bg-button-primary: linear-gradient(180deg, var(--aero-light) 0%, var(--aero-main) 48%, var(--aero-deep) 52%, var(--aero-main) 100%);
   --button-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 1px 3px rgb(0 40 80 / 0.25);
+  --button-radius: var(--radius-full);
+
+  // ---- Tipografías Y2K (se cargan en src/index.html) ----
+  --font-family-display: "Audiowide", "Fredoka", sans-serif;
+  --font-family-clock: "Orbitron", "Audiowide", ui-monospace, monospace;
+  --font-family-label: "Space Mono", ui-monospace, monospace;
+  --app-title-shadow: 0 0 2px #ffffff, 0 0 10px var(--aero-light), 0 2px 0 var(--aero-deep);
+  --app-title-decor: "✦";
+  --clock-shadow: 0 0 12px var(--aero-light), 0 2px 0 var(--aero-card-top);
+
+  // ---- Tarjetas tipo ventana ----
+  --card-ring: 0 0 0 2px var(--aero-border), inset 0 0 0 1px var(--aero-glass-edge);
+  --card-chrome-height: 1.25rem;
+  --bg-card-chrome: linear-gradient(180deg, var(--aero-light) 0%, var(--aero-main) 55%, var(--aero-deep) 100%);
+  --card-chrome-content: "–  ▢  ✕";
+  --card-sparkle: "✦ ✧";
+
+  // ---- Capa decorativa: burbujas con reflejo, destellos, nubes y colinas ----
+  --aero-hill: color-mix(in srgb, var(--aero-main) 55%, var(--aero-pale));
+  --aero-hill-2: color-mix(in srgb, var(--aero-deep) 45%, var(--aero-pale));
+  --page-decor:
+    radial-gradient(circle at 8% 84%, transparent 0 4.2%, rgb(255 255 255 / 0.7) 4.5%, transparent 4.9%),
+    radial-gradient(circle at 7.2% 82.6%, rgb(255 255 255 / 0.9) 0 0.7%, transparent 1%),
+    radial-gradient(circle at 94% 58%, transparent 0 3%, rgb(255 255 255 / 0.65) 3.3%, transparent 3.7%),
+    radial-gradient(circle at 93.4% 57%, rgb(255 255 255 / 0.9) 0 0.5%, transparent 0.8%),
+    radial-gradient(circle at 62% 10%, transparent 0 1.8%, rgb(255 255 255 / 0.6) 2%, transparent 2.4%),
+    radial-gradient(circle at 18% 28%, #ffffff 0 0.15%, transparent 0.35%),
+    radial-gradient(circle at 46% 6%, #ffffff 0 0.12%, transparent 0.3%),
+    radial-gradient(circle at 81% 22%, #ffffff 0 0.18%, transparent 0.4%),
+    radial-gradient(circle at 35% 62%, #ffffff 0 0.12%, transparent 0.3%),
+    radial-gradient(ellipse 30% 7% at 24% 13%, rgb(255 255 255 / 0.75), transparent 70%),
+    radial-gradient(ellipse 22% 5% at 76% 8%, rgb(255 255 255 / 0.6), transparent 70%),
+    radial-gradient(ellipse 70% 22% at 12% 108%, var(--aero-hill) 0 60%, transparent 61%),
+    radial-gradient(ellipse 85% 26% at 88% 114%, var(--aero-hill-2) 0 60%, transparent 61%);
+
+  // ---- Campos tipo "barra de búsqueda", pestañas y scroll ----
+  --bg-input: linear-gradient(180deg, var(--aero-btn-2), var(--aero-btn-1));
+  --input-shadow: inset 0 2px 3px rgb(0 40 80 / 0.15);
+  --input-radius: var(--radius-full);
+  --bg-nav-active: var(--bg-button-primary);
+  --color-nav-active: var(--color-on-primary);
+  --scrollbar-thumb: var(--aero-main);
+  --scrollbar-track: var(--aero-pale);
+
+  // ---- Rachas y calendario ----
+  --bg-streak-row:
+    radial-gradient(circle at 58% 28%, var(--aero-bubble) 0 2.5%, transparent 3%),
+    radial-gradient(circle at 66% 76%, var(--aero-bubble) 0 1.6%, transparent 2.1%),
+    linear-gradient(120deg, var(--aero-card-top) 0%, var(--aero-glow) 65%, var(--aero-light) 140%);
+  --calendar-today-icon: "✨";
   --button-radius: var(--radius-full);
 }
 
@@ -434,5 +514,6 @@
   --color-on-primary: #04122a;
   --color-today: var(--aero-light);
   --bg-header: linear-gradient(180deg, rgb(20 45 80 / 0.9), rgb(10 25 50 / 0.75));
+  --bg-input: linear-gradient(180deg, #0b2244, #12305a);
   --color-backdrop: rgb(0 0 0 / 0.6);
 }

@@ -16,6 +16,8 @@
     <ul class="streak-board__list">
       @for (s of active(); track s.id) {
         <li class="streak-row" [class.streak-row--done]="doneToday(s)">
+          <!-- Emoji grande y tenue de fondo (decoración) -->
+          <span class="streak-row__watermark" aria-hidden="true">{{ s.emoji }}</span>
           <!-- Toda la fila abre el detalle; el botón ✓ marca el día -->
           <button class="streak-row__open" type="button" [attr.aria-label]="'Ver calendario de ' + s.title" (click)="detailId.set(s.id)">
             <span class="streak-row__emoji" aria-hidden="true">{{ s.emoji }}</span>

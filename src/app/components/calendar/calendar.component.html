@@ -34,7 +34,7 @@
 
   <!-- Pendientes y actividades constantes del día seleccionado -->
   <div class="calendar__day-tasks">
-    <h3 class="calendar__day-title">{{ selectedLabel() }}</h3>
+    <h3 class="calendar__day-title"><span class="calendar__day-icon" aria-hidden="true">📅</span> {{ selectedLabel() }}</h3>
 
     @if (selectedRoutines().length > 0) {
       <ul class="calendar__task-list calendar__routine-list">

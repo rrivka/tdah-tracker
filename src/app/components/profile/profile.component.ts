@@ -52,7 +52,7 @@ export class ProfileComponent {
   }));
 
   /** Emojis sugeridos para el avatar. */
-  readonly emojis = ['😊', '😎', '🦊', '🐱', '🐶', '🐼', '🦄', '🌸', '🌻', '⭐', '🚀', '🎧', '🐠', '🫧'];
+  readonly emojis = ['😊', '😎', '🦊', '🐱', '🐶', '🐼', '🦄', '🌸', '🌻', '⭐', '🚀', '🎧', '🐠', '💧'];
 
   readonly startSections: { id: StartSection; label: string }[] = [
     { id: 'tasks', label: 'Pendientes' },

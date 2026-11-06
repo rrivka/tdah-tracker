@@ -20,7 +20,16 @@
 }
 
 .layout__title {
+  font-family: var(--font-family-display);
   font-size: var(--font-size-lg);
+  text-shadow: var(--app-title-shadow);
+}
+
+// Adorno junto al nombre (p. ej. "✦" en Aero).
+.layout__title::after {
+  content: var(--app-title-decor);
+  margin-left: var(--space-2);
+  color: var(--color-primary);
 }
 
 .layout__header-actions {
@@ -67,6 +76,8 @@
 // ---- Temporizador / Alarmas (dentro de la ventana modal) ----
 
 .layout__tool-tabs {
+  font-family: var(--font-family-label);
+  font-size: var(--font-size-sm);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-2);
@@ -125,13 +136,16 @@
   border: none;
   border-radius: 0;
   background: transparent;
+  font-family: var(--font-family-label);
   font-size: var(--font-size-xs);
   overflow-wrap: anywhere;
   box-shadow: none;
 }
 
 .layout__nav-button.is-active {
-  background: var(--color-selected-bg);
+  border-radius: var(--button-radius);
+  background: var(--bg-nav-active);
+  color: var(--color-nav-active);
   font-weight: var(--font-weight-bold);
 }
 

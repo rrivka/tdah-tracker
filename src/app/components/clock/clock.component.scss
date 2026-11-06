@@ -20,8 +20,9 @@
 
 .clock__time {
   display: block;
-  font-family: var(--font-family-mono);
+  font-family: var(--font-family-clock);
   font-size: var(--font-size-clock);
+  text-shadow: var(--clock-shadow);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   white-space: nowrap; // "8:48:05 p.m." siempre en una línea
