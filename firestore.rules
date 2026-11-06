@@ -17,5 +17,10 @@ service cloud.firestore {
     match /users/{uid}/routines/{routineId} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
+
+    // Rachas (hábitos estilo Duolingo: ejercicio, agua…)
+    match /users/{uid}/streaks/{streakId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
   }
 }

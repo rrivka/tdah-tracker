@@ -1,0 +1,246 @@
+.streak-board {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.streak-board__title {
+  font-size: var(--font-size-lg);
+}
+
+.streak-board__subtitle,
+.streak-board__status {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.streak-board__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.streak-board__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--size-streak-card), 1fr));
+  gap: var(--space-3);
+}
+
+.streak-board__create-more,
+.streak-board__toggle-paused {
+  align-self: flex-start;
+  font-size: var(--font-size-sm);
+}
+
+.streak-board__paused {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.streak-board__paused-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+// ---- Tarjeta ----
+
+.streak-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--border-width-strong) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+}
+
+.streak-card--done {
+  border-color: var(--color-streak);
+}
+
+.streak-card__top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.streak-card__emoji {
+  font-size: var(--font-size-streak-emoji);
+  line-height: var(--line-height-tight);
+}
+
+.streak-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.streak-card__title {
+  font-size: var(--font-size-md);
+  overflow-wrap: anywhere;
+}
+
+.streak-card__description {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.streak-card__count {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-streak);
+  font-weight: var(--font-weight-bold);
+}
+
+.streak-card__number {
+  font-size: var(--font-size-xl);
+}
+
+// Últimos 7 días
+.streak-card__week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.streak-card__week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.streak-card__week-letter {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.streak-card__dot {
+  width: var(--size-streak-dot);
+  height: var(--size-streak-dot);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.streak-card__dot--done {
+  border-color: var(--color-streak);
+  background: var(--color-streak);
+}
+
+.streak-card__dot--missed {
+  border-color: var(--color-danger);
+}
+
+.streak-card__dot--today {
+  border: var(--border-width-strong) dashed var(--color-streak);
+}
+
+.streak-card__dot--paused {
+  background: var(--color-border);
+}
+
+.streak-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.streak-card__today-label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+// ---- Detalle ----
+
+.streak-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.streak-detail__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.streak-detail__stat {
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  text-align: center;
+}
+
+.streak-detail__stat-label,
+.streak-detail__days,
+.streak-detail__hint {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.streak-detail__stat-value {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.streak-detail__days,
+.streak-detail__hint {
+  margin: 0;
+}
+
+.streak-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+// ---- Festejo ----
+
+.streak-celebration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.streak-celebration__emoji,
+.streak-celebration__count {
+  margin: 0;
+  font-size: var(--font-size-celebration);
+  line-height: var(--line-height-tight);
+}
+
+.streak-celebration__count {
+  color: var(--color-streak);
+  font-weight: var(--font-weight-bold);
+}
+
+.streak-celebration__text {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.streak-celebration__title {
+  margin: 0;
+  color: var(--color-text-muted);
+}

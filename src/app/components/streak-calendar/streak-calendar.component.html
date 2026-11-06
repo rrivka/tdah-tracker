@@ -1,0 +1,37 @@
+<div class="streak-calendar">
+  <div class="streak-calendar__header">
+    <button class="streak-calendar__nav" type="button" aria-label="Mes anterior" (click)="move(-1)">‹</button>
+    <h3 class="streak-calendar__month">{{ monthLabel() }}</h3>
+    <button class="streak-calendar__nav" type="button" aria-label="Mes siguiente" (click)="move(1)">›</button>
+  </div>
+
+  <div class="streak-calendar__grid">
+    @for (w of weekdays; track $index) {
+      <span class="streak-calendar__weekday">{{ w }}</span>
+    }
+    @for (cell of cells(); track cell.key) {
+      <button
+        type="button"
+        [class]="'streak-calendar__day streak-calendar__day--' + cell.status"
+        [class.streak-calendar__day--outside]="!cell.inMonth"
+        [class.streak-calendar__day--is-today]="cell.key === today()"
+        [disabled]="!cell.editable"
+        [attr.aria-label]="cellLabel(cell)"
+        [attr.aria-pressed]="cell.status === 'done'"
+        (click)="toggleDay.emit(cell.key)"
+      >
+        {{ cell.day }}
+      </button>
+    }
+  </div>
+
+  <ul class="streak-calendar__legend">
+    @for (s of legend; track s) {
+      <li class="streak-calendar__legend-item">
+        <span [class]="'streak-calendar__swatch streak-calendar__day--' + s" aria-hidden="true"></span>
+        {{ labels[s] }}
+      </li>
+    }
+  </ul>
+  <p class="streak-calendar__hint">Toca un día pasado para marcarlo o desmarcarlo.</p>
+</div>

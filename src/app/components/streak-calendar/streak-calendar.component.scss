@@ -1,0 +1,113 @@
+.streak-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.streak-calendar__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.streak-calendar__month {
+  flex: 1;
+  font-size: var(--font-size-md);
+  text-align: center;
+}
+
+.streak-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-1);
+}
+
+.streak-calendar__weekday {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  text-align: center;
+}
+
+.streak-calendar__day {
+  padding: var(--space-1);
+  border-color: transparent;
+  background: var(--color-bg);
+}
+
+// Deshabilitado = futuro o antes de empezar: solo se ve tenue, sin la opacidad global.
+.streak-calendar__day:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.streak-calendar__day--outside {
+  opacity: var(--opacity-disabled);
+}
+
+// ---- Estados (también se usan en la leyenda) ----
+
+.streak-calendar__day--done {
+  border-color: var(--color-streak);
+  background: var(--color-streak);
+  color: var(--color-on-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.streak-calendar__day--missed {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.streak-calendar__day--today {
+  border-color: var(--color-streak);
+  border-style: dashed;
+}
+
+.streak-calendar__day--rest,
+.streak-calendar__day--future,
+.streak-calendar__day--before {
+  color: var(--color-text-muted);
+}
+
+.streak-calendar__day--paused {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.streak-calendar__day--is-today {
+  border-width: var(--border-width-strong);
+}
+
+// ---- Leyenda ----
+
+.streak-calendar__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  list-style: none;
+}
+
+.streak-calendar__legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.streak-calendar__swatch {
+  display: inline-block;
+  width: var(--size-streak-dot);
+  height: var(--size-streak-dot);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.streak-calendar__hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}

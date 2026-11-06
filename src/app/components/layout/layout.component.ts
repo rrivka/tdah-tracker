@@ -18,22 +18,25 @@ import { RingingOverlayComponent } from '../ringing-overlay/ringing-overlay.comp
 import { ModalComponent } from '../modal/modal.component';
 import { RoutineListComponent } from '../routine-list/routine-list.component';
 import { RoutineService } from '../../services/routine.service';
+import { StreakBoardComponent } from '../streak-board/streak-board.component';
+import { CreateDialogComponent, CreateRequest, CreateType } from '../create-dialog/create-dialog.component';
 
 /** Secciones de la app (en el teléfono se ve una a la vez). */
-export type Section = 'clock' | 'calendar' | 'tasks' | 'settings';
+export type Section = 'clock' | 'calendar' | 'tasks' | 'streaks' | 'settings';
 /** Herramientas debajo del reloj. */
 export type TimeTool = 'timer' | 'alarms';
 
 /**
  * Estructura principal: encabezado, secciones y navegación inferior.
  *
- * - Escritorio: reloj, calendario y pendientes siempre visibles; Ajustes se abre con su botón.
+ * - Escritorio: columna lateral (reloj, calendario) y principal (rachas, actividades, pendientes)
+ *   siempre visibles; Ajustes se abre con su botón.
  * - Temporizador y alarmas: ventana modal que se abre al tocar la hora del reloj.
  * - Teléfono: solo se ve la sección activa (por defecto, Pendientes) y se cambia con la barra de abajo.
  * Todo eso se decide en layout.component.scss con la clase "is-active".
  *
  * También lee los accesos directos del ícono de la app (ver "shortcuts" en public/manifest.webmanifest):
- *   #/?nuevo=1                → abre Pendientes con el cursor listo para escribir
+ *   #/?nuevo=1                → abre la ventana "Agregar" con el cursor listo para escribir
  *   #/?seccion=temporizador   → abre el temporizador
  *   #/?seccion=alarmas        → abre las alarmas
  */
@@ -50,6 +53,8 @@ export type TimeTool = 'timer' | 'alarms';
     RingingOverlayComponent,
     ModalComponent,
     RoutineListComponent,
+    StreakBoardComponent,
+    CreateDialogComponent,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
@@ -69,8 +74,8 @@ export class LayoutComponent {
   readonly tool = signal<TimeTool>('timer');
   /** ¿Está abierta la ventana de temporizador/alarmas? (se abre tocando la hora) */
   readonly toolsOpen = signal(false);
-  /** Cada vez que aumenta, el formulario de nuevo pendiente recibe el cursor. */
-  readonly focusNewTask = signal(0);
+  /** Último pedido de abrir la ventana "Agregar" (ver requestCreate). */
+  readonly createRequest = signal<CreateRequest | null>(null);
 
   readonly error = this.tasks.error;
   readonly userName = computed(() => this.auth.user()?.displayName ?? this.auth.user()?.email ?? '');
@@ -82,6 +87,7 @@ export class LayoutComponent {
     { id: 'clock', label: 'Reloj' },
     { id: 'calendar', label: 'Calendario' },
     { id: 'tasks', label: 'Pendientes' },
+    { id: 'streaks', label: 'Rachas' },
     { id: 'settings', label: 'Ajustes' },
   ];
 
@@ -92,7 +98,7 @@ export class LayoutComponent {
         const seccion = params.get('seccion');
         if (params.get('nuevo')) {
           this.section.set('tasks');
-          this.focusNewTask.update((n) => n + 1);
+          this.requestCreate('task');
         } else if (seccion === 'temporizador' || seccion === 'alarmas') {
           this.showTool(seccion === 'temporizador' ? 'timer' : 'alarms');
         } else {
@@ -101,6 +107,11 @@ export class LayoutComponent {
         // Limpia la URL para que al recargar no se repita.
         void this.router.navigate([], { queryParams: {}, replaceUrl: true });
       });
+  }
+
+  /** Abre la ventana "Agregar" en la pestaña indicada. */
+  requestCreate(type: CreateType): void {
+    this.createRequest.set({ type, n: (this.createRequest()?.n ?? 0) + 1 });
   }
 
   show(section: Section): void {

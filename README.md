@@ -4,11 +4,32 @@ PWA personal para organizar pendientes: reloj, temporizador (con ventana flotant
 y lista de pendientes con fecha opcional. Inicio de sesión con Google; los pendientes se guardan en Firestore y
 funcionan sin internet.
 
+## Los tres tipos de cosas
+
+Todo se crea con el botón **+** (ventana "Agregar", `components/create-dialog/`), que tiene tres pestañas:
+
+| Tipo | Para qué | Dónde se guarda |
+|---|---|---|
+| **Pendiente** | Algo corto que se hace una vez | `users/{uid}/tasks` |
+| **Constante** | Algo corto que se repite (medicación) | `users/{uid}/routines` |
+| **Racha** | Un hábito más grande que quieres sostener día a día (ejercicio, agua) | `users/{uid}/streaks` |
+
+## Rachas (estilo Duolingo)
+
+- **Tarjetas** con emoji, 🔥 días seguidos, los últimos 7 días y botón **"¡Hecho hoy!"** (muestra un festejo).
+- **Tocar la tarjeta** abre el detalle: racha actual, mejor racha, total y un **calendario** con días cumplidos,
+  fallados, de descanso y en pausa. Se pueden marcar días pasados que olvidaste registrar.
+- **Días de la racha:** p. ej. solo L, X, V. Los demás son de descanso y **no rompen** la racha.
+- **Pausar / reanudar:** los días en pausa tampoco la rompen (vacaciones, enfermedad).
+- Cálculos en `utils/streak.utils.ts`; datos en `services/streak.service.ts`; vista en `components/streak-board/`,
+  `streak-calendar/` y `streak-form/`. Colores: `--color-streak` y `--color-streak-soft`.
+- En el teléfono tienen su propia pestaña "Rachas"; en escritorio van arriba de los pendientes.
+
 ## Actividades constantes
 
-Cosas que se repiten (medicación, ejercicio…), separadas de los pendientes sueltos.
+Cosas cortas que se repiten (medicación…), separadas de los pendientes sueltos.
 
-- Se crean con el mismo botón **+** → pestaña "Actividad constante".
+- Se crean con el mismo botón **+** → pestaña "Constante".
 - **Frecuencia:** todos los días, algunos días de la semana o cada N días (desde una fecha).
 - **Horarios opcionales (uno o varios**, p. ej. 08:00 y 21:00). Cada horario es una fila con su propia casilla.
   Con "Avisarme" suena en cada horario como alarma (con botón

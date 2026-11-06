@@ -1,0 +1,105 @@
+<form class="streak-form" (ngSubmit)="submit()">
+  <div class="streak-form__field">
+    <label class="streak-form__label" [for]="uid + '-title'">Hábito</label>
+    <input
+      #titleInput
+      class="streak-form__input"
+      type="text"
+      name="title"
+      required
+      autocomplete="off"
+      placeholder="Ej. Hacer ejercicio"
+      [id]="uid + '-title'"
+      [ngModel]="title()"
+      (ngModelChange)="title.set($event)"
+    />
+  </div>
+
+  <fieldset class="streak-form__group">
+    <legend class="streak-form__label">Ícono</legend>
+    <div class="streak-form__emojis">
+      @for (e of emojis; track e) {
+        <button
+          class="streak-form__emoji"
+          type="button"
+          [class.is-active]="emoji() === e"
+          [attr.aria-pressed]="emoji() === e"
+          (click)="emoji.set(e)"
+        >
+          {{ e }}
+        </button>
+      }
+      <input
+        class="streak-form__input streak-form__emoji-input"
+        type="text"
+        name="emoji"
+        maxlength="4"
+        aria-label="Otro emoji"
+        placeholder="Otro"
+        [ngModel]="emojis.includes(emoji()) ? '' : emoji()"
+        (ngModelChange)="emoji.set($event || emojis[0])"
+      />
+    </div>
+  </fieldset>
+
+  <div class="streak-form__field">
+    <label class="streak-form__label" [for]="uid + '-description'">Meta o nota (opcional)</label>
+    <input
+      class="streak-form__input"
+      type="text"
+      name="description"
+      autocomplete="off"
+      placeholder="Ej. 30 minutos / 2 litros"
+      [id]="uid + '-description'"
+      [ngModel]="description()"
+      (ngModelChange)="description.set($event)"
+    />
+  </div>
+
+  <fieldset class="streak-form__group">
+    <legend class="streak-form__label">¿Qué días toca?</legend>
+    <div class="streak-form__days" role="group" aria-label="Días de la semana">
+      @for (d of weekdays; track d.value) {
+        <button
+          class="streak-form__day"
+          type="button"
+          [class.is-active]="days().includes(d.value)"
+          [attr.aria-pressed]="days().includes(d.value)"
+          [attr.aria-label]="d.name"
+          (click)="toggleDay(d.value)"
+        >
+          {{ d.short }}
+        </button>
+      }
+    </div>
+    @if (days().length === 0) {
+      <p class="streak-form__error">Elige al menos un día.</p>
+    } @else if (!everyDay()) {
+      <p class="streak-form__help">
+        Los demás días son de descanso: no rompen tu racha.
+        <button class="streak-form__link" type="button" (click)="setEveryDay()">Todos los días</button>
+      </p>
+    }
+  </fieldset>
+
+  <div class="streak-form__field">
+    <label class="streak-form__label" [for]="uid + '-start'">Empieza el</label>
+    <input
+      class="streak-form__input"
+      type="date"
+      name="startDate"
+      [id]="uid + '-start'"
+      [ngModel]="startDate()"
+      (ngModelChange)="startDate.set($event)"
+    />
+  </div>
+
+  <div class="streak-form__actions">
+    <button class="streak-form__submit button-primary" type="submit" [disabled]="!valid()">
+      {{ isEditing ? 'Guardar' : 'Crear racha' }}
+    </button>
+    @if (isEditing) {
+      <button class="streak-form__cancel" type="button" (click)="cancelled.emit()">Cancelar</button>
+    }
+  </div>
+</form>

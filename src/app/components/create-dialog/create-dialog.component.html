@@ -1,0 +1,33 @@
+<app-modal [open]="open()" title="Agregar" (closed)="open.set(false)">
+  @if (open()) {
+    <!-- ¿Qué quieres agregar? Tres tipos, cada uno con su explicación -->
+    <div class="create-dialog__tabs" role="tablist" aria-label="Tipo">
+      @for (t of types; track t.id) {
+        <button
+          class="create-dialog__tab"
+          type="button"
+          role="tab"
+          [class.is-active]="type() === t.id"
+          [attr.aria-selected]="type() === t.id"
+          (click)="type.set(t.id)"
+        >
+          {{ t.label }}
+        </button>
+      }
+    </div>
+    <p class="create-dialog__help">{{ help() }}</p>
+
+    <!-- focusTrigger=1: el cursor queda listo en el título al abrir -->
+    @switch (type()) {
+      @case ('task') {
+        <app-task-form [focusTrigger]="1" (save)="addTask($event)" (cancelled)="open.set(false)" />
+      }
+      @case ('routine') {
+        <app-routine-form [focusTrigger]="1" (save)="addRoutine($event)" (cancelled)="open.set(false)" />
+      }
+      @case ('streak') {
+        <app-streak-form [focusTrigger]="1" (save)="addStreak($event)" (cancelled)="open.set(false)" />
+      }
+    }
+  }
+</app-modal>

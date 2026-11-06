@@ -1,0 +1,91 @@
+.streak-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.streak-form__field,
+.streak-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.streak-form__group {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.streak-form__label {
+  padding: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.streak-form__emojis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.streak-form__emoji {
+  min-width: var(--size-touch);
+  padding: var(--space-1);
+  font-size: var(--font-size-lg);
+}
+
+.streak-form__emoji.is-active {
+  border-color: var(--color-streak);
+  background: var(--color-streak-soft);
+}
+
+.streak-form__emoji-input {
+  width: var(--size-number-input);
+}
+
+.streak-form__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-1);
+}
+
+.streak-form__day {
+  padding: var(--space-1);
+}
+
+.streak-form__day.is-active {
+  border-color: var(--color-streak);
+  background: var(--color-streak);
+  color: var(--color-on-primary);
+}
+
+.streak-form__help,
+.streak-form__error {
+  margin: 0;
+  font-size: var(--font-size-xs);
+}
+
+.streak-form__help {
+  color: var(--color-text-muted);
+}
+
+.streak-form__error {
+  color: var(--color-danger);
+}
+
+// Botón con aspecto de enlace.
+.streak-form__link {
+  min-height: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  font-size: inherit;
+  text-decoration: underline;
+}
+
+.streak-form__actions {
+  display: flex;
+  gap: var(--space-2);
+}

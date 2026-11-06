@@ -63,43 +63,8 @@
     </ul>
   }
 
-  <!-- Botón para crear un pendiente (abre la ventana con el formulario) -->
-  <button class="task-list__add-button button-primary" type="button" aria-label="Nuevo pendiente" (click)="openCreate()">
+  <!-- Botón para agregar (abre la ventana "Agregar": pendiente, constante o racha) -->
+  <button class="task-list__add-button button-primary" type="button" aria-label="Agregar" (click)="createRequested.emit()">
     +
   </button>
 </div>
-
-<app-modal [open]="creating()" title="Agregar" (closed)="creating.set(false)">
-  @if (creating()) {
-    <!-- ¿Qué quieres agregar? -->
-    <div class="task-list__type-tabs" role="tablist" aria-label="Tipo">
-      <button
-        class="task-list__type-tab"
-        type="button"
-        role="tab"
-        [class.is-active]="createType() === 'task'"
-        [attr.aria-selected]="createType() === 'task'"
-        (click)="createType.set('task')"
-      >
-        Pendiente
-      </button>
-      <button
-        class="task-list__type-tab"
-        type="button"
-        role="tab"
-        [class.is-active]="createType() === 'routine'"
-        [attr.aria-selected]="createType() === 'routine'"
-        (click)="createType.set('routine')"
-      >
-        Actividad constante
-      </button>
-    </div>
-
-    <!-- focusTrigger=1: el cursor queda listo en el título al abrir -->
-    @if (createType() === 'task') {
-      <app-task-form [focusTrigger]="1" (save)="add($event)" (cancelled)="creating.set(false)" />
-    } @else {
-      <app-routine-form [focusTrigger]="1" (save)="addRoutine($event)" (cancelled)="creating.set(false)" />
-    }
-  }
-</app-modal>

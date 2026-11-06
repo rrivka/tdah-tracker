@@ -4,6 +4,7 @@ import { TaskService } from '../../services/task.service';
 import { AuthService } from '../../services/auth.service';
 import { BackupService } from '../../services/backup.service';
 import { RoutineService } from '../../services/routine.service';
+import { StreakService } from '../../services/streak.service';
 import { NotificationService } from '../../services/notification.service';
 import { ThemeId } from '../../themes';
 import { todayKey } from '../../utils/date.utils';
@@ -19,6 +20,7 @@ export class SettingsComponent {
   private readonly taskService = inject(TaskService);
   private readonly backup = inject(BackupService);
   private readonly routineService = inject(RoutineService);
+  private readonly streakService = inject(StreakService);
   private readonly auth = inject(AuthService);
   private readonly notifications = inject(NotificationService);
 
@@ -29,6 +31,7 @@ export class SettingsComponent {
   readonly email = computed(() => this.auth.user()?.email ?? '');
   readonly taskCount = computed(() => this.taskService.tasks().length);
   readonly routineCount = computed(() => this.routineService.routines().length);
+  readonly streakCount = computed(() => this.streakService.streaks().length);
 
   /** Mensaje después de importar (éxito o error). */
   readonly message = signal<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -61,7 +64,7 @@ export class SettingsComponent {
       const r = this.backup.importJson(await file.text());
       this.message.set({
         type: 'success',
-        text: `Se importaron ${r.tasks} pendiente(s) y ${r.routines} actividad(es) constante(s).`,
+        text: `Se importaron ${r.tasks} pendiente(s), ${r.routines} actividad(es) constante(s) y ${r.streaks} racha(s).`,
       });
     } catch (e) {
       this.message.set({ type: 'error', text: (e as Error).message });

@@ -1,0 +1,145 @@
+<div class="streak-board">
+  <div class="streak-board__header">
+    <h2 class="streak-board__title">Rachas</h2>
+    <p class="streak-board__subtitle">Hábitos que quieres sostener día a día</p>
+  </div>
+
+  @if (loading()) {
+    <p class="streak-board__status">Cargando…</p>
+  } @else if (active().length === 0) {
+    <!-- Sin rachas activas -->
+    <div class="streak-board__empty">
+      <p class="streak-board__status">
+        {{ paused().length ? 'Todas tus rachas están en pausa.' : 'Aún no tienes rachas.' }}
+        Crea una para algo que quieras hacer seguido, como ejercicio o tomar agua.
+      </p>
+      <button class="streak-board__create button-primary" type="button" (click)="createRequested.emit()">
+        Crear racha
+      </button>
+    </div>
+  } @else {
+    <!-- Tarjetas -->
+    <div class="streak-board__cards">
+      @for (s of active(); track s.id) {
+        <article
+          class="streak-card"
+          [class.streak-card--done]="doneToday(s)"
+          tabindex="0"
+          role="button"
+          [attr.aria-label]="'Ver calendario de ' + s.title"
+          (click)="detailId.set(s.id)"
+          (keydown.enter)="$event.target === $event.currentTarget && detailId.set(s.id)"
+        >
+          <div class="streak-card__top">
+            <span class="streak-card__emoji" aria-hidden="true">{{ s.emoji }}</span>
+            <div class="streak-card__info">
+              <h3 class="streak-card__title">{{ s.title }}</h3>
+              @if (s.description) {
+                <p class="streak-card__description">{{ s.description }}</p>
+              }
+            </div>
+            <div class="streak-card__count" [attr.aria-label]="currentStreak(s) + ' días seguidos'">
+              <span class="streak-card__flame" aria-hidden="true">🔥</span>
+              <span class="streak-card__number">{{ currentStreak(s) }}</span>
+            </div>
+          </div>
+
+          <!-- Últimos 7 días -->
+          <ol class="streak-card__week" aria-label="Últimos 7 días">
+            @for (d of lastDays(s); track d.key) {
+              <li class="streak-card__week-day">
+                <span class="streak-card__week-letter">{{ weekdayLetter(d.key) }}</span>
+                <span [class]="'streak-card__dot streak-card__dot--' + d.status"></span>
+              </li>
+            }
+          </ol>
+
+          <div class="streak-card__bottom">
+            <span class="streak-card__today-label">{{ todayLabel(s) }}</span>
+            <button
+              class="streak-card__done-button"
+              type="button"
+              [class.button-primary]="!doneToday(s)"
+              (click)="markToday(s, $event)"
+            >
+              {{ doneToday(s) ? 'Desmarcar' : '¡Hecho hoy!' }}
+            </button>
+          </div>
+        </article>
+      }
+    </div>
+    <button class="streak-board__create-more" type="button" (click)="createRequested.emit()">+ Nueva racha</button>
+  }
+
+  <!-- En pausa -->
+  @if (paused().length > 0) {
+    <button class="streak-board__toggle-paused" type="button" [attr.aria-expanded]="showPaused()" (click)="showPaused.set(!showPaused())">
+      {{ showPaused() ? 'Ocultar en pausa' : 'En pausa (' + paused().length + ')' }}
+    </button>
+    @if (showPaused()) {
+      <ul class="streak-board__paused">
+        @for (s of paused(); track s.id) {
+          <li class="streak-board__paused-item">
+            <span>{{ s.emoji }} {{ s.title }}</span>
+            <button class="streak-board__resume" type="button" (click)="setActive(s, true)">Reanudar</button>
+          </li>
+        }
+      </ul>
+    }
+  }
+</div>
+
+<!-- Detalle: estadísticas + calendario -->
+<app-modal [open]="detail() !== null" [title]="detail() ? detail()!.emoji + ' ' + detail()!.title : ''" (closed)="detailId.set(null)">
+  @if (detail(); as s) {
+    <div class="streak-detail">
+      <dl class="streak-detail__stats">
+        <div class="streak-detail__stat">
+          <dt class="streak-detail__stat-label">Racha actual</dt>
+          <dd class="streak-detail__stat-value">🔥 {{ currentStreak(s) }}</dd>
+        </div>
+        <div class="streak-detail__stat">
+          <dt class="streak-detail__stat-label">Mejor racha</dt>
+          <dd class="streak-detail__stat-value">🏆 {{ bestStreak(s) }}</dd>
+        </div>
+        <div class="streak-detail__stat">
+          <dt class="streak-detail__stat-label">Total</dt>
+          <dd class="streak-detail__stat-value">✓ {{ s.doneDates.length }}</dd>
+        </div>
+      </dl>
+
+      <p class="streak-detail__days">{{ daysLabel(s) }}@if (s.description) { · {{ s.description }} }</p>
+
+      <app-streak-calendar [streak]="s" [today]="today()" (toggleDay)="toggleDay(s, $event)" />
+
+      <div class="streak-detail__actions">
+        <button class="streak-detail__edit" type="button" (click)="editing.set(s); detailId.set(null)">Editar</button>
+        <button class="streak-detail__pause" type="button" (click)="setActive(s, false)">Pausar</button>
+        <button class="streak-detail__delete button-danger" type="button" (click)="remove(s)">Eliminar</button>
+      </div>
+      <p class="streak-detail__hint">Pausar sirve para vacaciones o días difíciles: la racha no se rompe mientras está en pausa.</p>
+    </div>
+  }
+</app-modal>
+
+<!-- Editar -->
+<app-modal [open]="editing() !== null" title="Editar racha" (closed)="editing.set(null)">
+  @if (editing(); as s) {
+    <app-streak-form [streak]="s" (save)="saveEdit($event)" (cancelled)="editing.set(null)" />
+  }
+</app-modal>
+
+<!-- Festejo -->
+<app-modal [open]="celebration() !== null" title="¡Bien hecho!" (closed)="celebration.set(null)">
+  @if (celebration(); as c) {
+    <div class="streak-celebration">
+      <p class="streak-celebration__emoji" aria-hidden="true">{{ c.emoji }}</p>
+      <p class="streak-celebration__count">🔥 {{ c.count }}</p>
+      <p class="streak-celebration__text">{{ celebrationText(c.count) }}</p>
+      <p class="streak-celebration__title">{{ c.title }}</p>
+      <button class="streak-celebration__close button-primary" type="button" (click)="celebration.set(null)">
+        Continuar
+      </button>
+    </div>
+  }
+</app-modal>

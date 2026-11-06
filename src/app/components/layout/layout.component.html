@@ -32,27 +32,28 @@
   }
 
   <main class="layout__main">
-    <section
-      class="layout__section layout__section--clock"
-      [class.is-active]="section() === 'clock'"
-    >
-      <app-clock (openTools)="showTool(tool())" />
-    </section>
+    <!-- Columna lateral (escritorio): reloj y calendario -->
+    <div class="layout__column layout__column--side">
+      <section class="layout__section layout__section--clock" [class.is-active]="section() === 'clock'">
+        <app-clock (openTools)="showTool(tool())" />
+      </section>
 
-    <section
-      class="layout__section layout__section--calendar"
-      [class.is-active]="section() === 'calendar'"
-    >
-      <app-calendar />
-    </section>
+      <section class="layout__section layout__section--calendar" [class.is-active]="section() === 'calendar'">
+        <app-calendar />
+      </section>
+    </div>
 
-    <section
-      class="layout__section layout__section--tasks"
-      [class.is-active]="section() === 'tasks'"
-    >
-      <app-routine-list />
-      <app-task-list [focusNew]="focusNewTask()" />
-    </section>
+    <!-- Columna principal (escritorio): rachas, actividades constantes y pendientes -->
+    <div class="layout__column layout__column--main">
+      <section class="layout__section layout__section--streaks" [class.is-active]="section() === 'streaks'">
+        <app-streak-board (createRequested)="requestCreate('streak')" />
+      </section>
+
+      <section class="layout__section layout__section--tasks" [class.is-active]="section() === 'tasks'">
+        <app-routine-list />
+        <app-task-list (createRequested)="requestCreate('task')" />
+      </section>
+    </div>
 
     <section
       class="layout__section layout__section--settings"
@@ -116,6 +117,9 @@
   @if (timer.floating()) {
     <app-floating-timer />
   }
+
+  <!-- Ventana "Agregar" (pendiente / constante / racha). Fuera de las secciones para abrirse desde cualquiera. -->
+  <app-create-dialog [request]="createRequest()" />
 
   <!-- Aviso de alarma / fin del temporizador -->
   <app-ringing-overlay />

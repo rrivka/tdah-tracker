@@ -8,21 +8,7 @@
   font-size: var(--font-size-lg);
 }
 
-// Pestañas "Pendiente / Actividad constante" en la ventana Agregar.
-.task-list__type-tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-}
-
-.task-list__type-tab.is-active {
-  background: var(--color-selected-bg);
-  border-color: var(--color-primary);
-  font-weight: var(--font-weight-bold);
-}
-
-// Botón "+" (crear pendiente), centrado debajo de la lista.
+// Botón "+" (agregar), centrado debajo de la lista.
 .task-list__add-button {
   align-self: center;
   width: var(--size-add-button);

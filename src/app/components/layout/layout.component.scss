@@ -73,6 +73,12 @@
   padding: var(--space-4);
 }
 
+// En el teléfono las columnas "desaparecen" (display: contents): sus secciones
+// se comportan como si estuvieran directamente dentro de <main>.
+.layout__column {
+  display: contents;
+}
+
 // Solo se ve la sección activa.
 .layout__section {
   display: none;
@@ -86,7 +92,7 @@
   position: sticky;
   bottom: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   border-top: var(--border-width) solid var(--color-border);
   background: var(--color-bg);
 }
@@ -115,15 +121,10 @@
     display: none;
   }
 
-  // Columna izquierda: reloj + calendario. Derecha: pendientes. Abajo: ajustes.
+  // Columna lateral: reloj + calendario. Principal: rachas + pendientes. Abajo: ajustes.
   .layout__main {
     display: grid;
     grid-template-columns: var(--size-column-side) 1fr;
-    grid-template-areas:
-      'clock    tasks'
-      'calendar tasks'
-      'settings settings';
-    grid-template-rows: auto 1fr auto;
     align-items: start;
     gap: var(--space-5);
     width: 100%;
@@ -131,25 +132,23 @@
     margin: 0 auto;
   }
 
+  .layout__column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    min-width: 0;
+  }
+
+  // En escritorio estas secciones siempre se ven.
   .layout__section--clock,
   .layout__section--calendar,
+  .layout__section--streaks,
   .layout__section--tasks {
     display: block;
   }
 
-  .layout__section--clock {
-    grid-area: clock;
-  }
-
-  .layout__section--calendar {
-    grid-area: calendar;
-  }
-
-  .layout__section--tasks {
-    grid-area: tasks;
-  }
-
+  // Ajustes ocupa todo el ancho, debajo de las dos columnas.
   .layout__section--settings {
-    grid-area: settings;
+    grid-column: 1 / -1;
   }
 }

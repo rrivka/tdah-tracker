@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore';
 import { Task } from '../models/task.model';
 import { Routine } from '../models/routine.model';
+import { Streak } from '../models/streak.model';
 
 /**
  * StorageService: la ÚNICA capa que habla con Firestore.
@@ -20,6 +21,7 @@ import { Routine } from '../models/routine.model';
  * Estructura de datos:
  *   users/{uid}/tasks/{taskId}         ← pendientes
  *   users/{uid}/routines/{routineId}   ← actividades constantes
+ *   users/{uid}/streaks/{streakId}     ← rachas
  *
  * Nota sobre el modo sin conexión: con la persistencia offline activada,
  * las escrituras se aplican al instante en la caché local (y onSnapshot avisa),
@@ -83,6 +85,42 @@ export class StorageService {
 
   deleteRoutine(uid: string, id: string): Promise<void> {
     return deleteDoc(doc(this.routinesCollection(uid), id));
+  }
+
+  // ---- Rachas: users/{uid}/streaks/{streakId} ----
+
+  private streaksCollection(uid: string) {
+    return collection(this.firestore, 'users', uid, 'streaks');
+  }
+
+  newStreakId(uid: string): string {
+    return doc(this.streaksCollection(uid)).id;
+  }
+
+  watchStreaks(uid: string, onChange: (streaks: Streak[]) => void, onError: (e: Error) => void): Unsubscribe {
+    return onSnapshot(
+      this.streaksCollection(uid),
+      (snapshot) => onChange(snapshot.docs.map((d) => ({ ...(d.data() as Omit<Streak, 'id'>), id: d.id }))),
+      onError,
+    );
+  }
+
+  saveStreak(uid: string, streak: Streak): Promise<void> {
+    const { id, ...data } = streak;
+    // Las pausas son objetos dentro de una lista: Firestore tampoco acepta `undefined` ahí.
+    return setDoc(doc(this.streaksCollection(uid), id), clean({ ...data, pauses: data.pauses.map(clean) }));
+  }
+
+  deleteStreak(uid: string, id: string): Promise<void> {
+    return deleteDoc(doc(this.streaksCollection(uid), id));
+  }
+
+  saveManyStreaks(uid: string, streaks: Streak[]): Promise<void> {
+    const batch = writeBatch(this.firestore);
+    for (const { id, ...data } of streaks.slice(0, 450)) {
+      batch.set(doc(this.streaksCollection(uid), id), clean({ ...data, pauses: data.pauses.map(clean) }));
+    }
+    return batch.commit();
   }
 
   /** Guarda muchas actividades a la vez (para importar). */

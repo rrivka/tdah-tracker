@@ -32,6 +32,8 @@
   --font-size-clock: 2.25rem; // la hora del reloj
   --font-size-timer: 2.5rem; // cuenta regresiva del temporizador
   --font-size-timer-floating: 3rem; // cuenta regresiva en la ventana flotante
+  --font-size-streak-emoji: 2.25rem; // emoji de las tarjetas de racha
+  --font-size-celebration: 3.5rem; // número grande del festejo de racha
 
   // ---- Espacios (márgenes, paddings, separaciones) ----
   --space-1: 0.25rem;
@@ -60,6 +62,8 @@
   --size-floating-width: 18rem; // ancho del temporizador flotante y del aviso de alarma
   --size-modal-width: 32rem; // ancho máximo de las ventanas modales
   --size-add-button: 3.5rem; // botón redondo "+" para crear pendiente
+  --size-streak-card: 16rem; // ancho mínimo de una tarjeta de racha
+  --size-streak-dot: 0.875rem; // puntitos de los últimos 7 días
 
   // ---- Capas (qué queda encima de qué) ----
   --z-floating: 900; // temporizador flotante dentro de la app
@@ -93,6 +97,8 @@
   --color-marker: #f59e0b; // puntito de días con pendientes
   --color-backdrop: rgb(0 0 0 / 0.5); // fondo oscurecido detrás del aviso de alarma
   --color-routine: #8b5cf6; // borde que distingue las actividades constantes
+  --color-streak: #ea580c; // rachas: días cumplidos, fuego, botón de racha
+  --color-streak-soft: #ffedd5; // fondo suave de rachas (emoji elegido)
 
   --shadow-sm: none;
   --shadow-md: 0 1px 3px rgb(0 0 0 / 0.15);
@@ -120,6 +126,8 @@
   --color-marker: #fbbf24;
   --color-backdrop: rgb(0 0 0 / 0.7);
   --color-routine: #a78bfa;
+  --color-streak: #fb923c;
+  --color-streak-soft: #431407;
 
   --shadow-sm: none;
   --shadow-md: 0 1px 3px rgb(0 0 0 / 0.6);
