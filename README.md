@@ -86,7 +86,7 @@ Cosas cortas que se repiten (medicación…), separadas de los pendientes suelto
   (localStorage) para que no suenen en todos a la vez (`services/alarm.service.ts`).
 - **Límite de la web:** el temporizador y las alarmas solo suenan **con la app abierta** (puede estar minimizada o en
   otra pestaña). Una PWA no puede despertar al teléfono con la app cerrada.
-- **Notificaciones:** se activan en Ajustes → Notificaciones. En iPhone solo funcionan con la app instalada en la
+- **Notificaciones:** se activan en Personalización → Ajustes → Notificaciones. En iPhone solo funcionan con la app instalada en la
   pantalla de inicio (iOS 16.4+).
 - **Accesos directos del ícono** (mantén presionado el ícono de la app instalada, Android/escritorio): "Nuevo
   pendiente", "Temporizador" y "Alarmas". Se definen en `shortcuts` de `public/manifest.webmanifest`.
@@ -155,7 +155,7 @@ src/
     ├── app.config.ts       ← Firebase, router (hash), service worker, persistencia offline
     ├── app.routes.ts       ← rutas: /login y / (protegida con authGuard)
     ├── app.constants.ts    ← nombre de la app (APP_NAME)
-    ├── themes.ts           ← lista de temas que aparecen en Ajustes
+    ├── themes.ts           ← lista de temas y colores de acento (Personalización → Apariencia)
     ├── models/task.model.ts
     ├── utils/date.utils.ts
     ├── guards/auth.guard.ts
@@ -203,7 +203,7 @@ Para cambiar el aspecto de toda la app, cambia los valores de los tokens.
    { id: 'sepia', label: 'Sepia' },
    ```
 
-Listo: aparece en **Ajustes** y no hay que tocar ningún componente.
+Listo: aparece en **Personalización → Apariencia** y no hay que tocar ningún componente.
 
 ### Cambiar el nombre de la app
 
