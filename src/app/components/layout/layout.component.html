@@ -31,13 +31,22 @@
 
   <app-modal [open]="captureOpen()" title="⚡ Anotar rápido" (closed)="captureOpen.set(false)">
     @if (captureOpen()) {
-      <app-quick-capture />
+      <!-- @defer: este código se descarga solo la primera vez que abres la ventana -->
+      @defer (on immediate) {
+        <app-quick-capture />
+      } @loading (minimum 200ms) {
+        <p class="layout__loading">Cargando…</p>
+      }
     }
   </app-modal>
 
   <app-modal [open]="profileOpen()" title="Personalización" (closed)="profileOpen.set(false)">
     @if (profileOpen()) {
-      <app-profile (logout)="logout()" />
+      @defer (on immediate) {
+        <app-profile (logout)="logout()" />
+      } @loading (minimum 200ms) {
+        <p class="layout__loading">Cargando…</p>
+      }
     }
   </app-modal>
 
@@ -110,10 +119,16 @@
         </button>
       </div>
       <div class="layout__tool-panel" role="tabpanel">
-        @if (tool() === 'timer') {
-          <app-timer />
-        } @else {
-          <app-alarms />
+        @if (toolsOpen()) {
+          @defer (on immediate) {
+            @if (tool() === 'timer') {
+              <app-timer />
+            } @else {
+              <app-alarms />
+            }
+          } @loading (minimum 200ms) {
+            <p class="layout__loading">Cargando…</p>
+          }
         }
       </div>
     </div>
@@ -136,7 +151,9 @@
 
   <!-- Temporizador flotante (ventana encima de todo o recuadro en la esquina) -->
   @if (timer.floating()) {
-    <app-floating-timer />
+    @defer (on immediate) {
+      <app-floating-timer />
+    }
   }
 
   <!-- Ventana "Agregar" (pendiente / constante / racha). Fuera de las secciones para abrirse desde cualquiera. -->

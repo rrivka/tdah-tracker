@@ -1,0 +1,15 @@
+@if (updateReady()) {
+  <div class="status-bar status-bar--update" role="status">
+    <span class="status-bar__text">✨ Hay una versión nueva de la app.</span>
+    <button class="status-bar__action button-primary" type="button" (click)="update()">Actualizar</button>
+  </div>
+}
+@if (!sync.online()) {
+  <div class="status-bar status-bar--offline" role="status">
+    <span class="status-bar__text">📴 Sin conexión · tus cambios se guardan en este dispositivo y se suben al volver.</span>
+  </div>
+} @else if (showSyncing()) {
+  <div class="status-bar status-bar--syncing" role="status">
+    <span class="status-bar__text">🔄 Sincronizando…</span>
+  </div>
+}

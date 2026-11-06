@@ -13,6 +13,7 @@ import { Task } from '../models/task.model';
 import { Routine } from '../models/routine.model';
 import { Streak } from '../models/streak.model';
 import { Profile } from '../models/profile.model';
+import { SyncService } from './sync.service';
 
 /**
  * StorageService: la ÚNICA capa que habla con Firestore.
@@ -33,6 +34,8 @@ import { Profile } from '../models/profile.model';
 @Injectable({ providedIn: 'root' })
 export class StorageService {
   private readonly firestore = inject(Firestore);
+  /** Lleva la cuenta de escrituras sin confirmar (indicador "Sincronizando…"). */
+  private readonly sync = inject(SyncService);
 
   private tasksCollection(uid: string) {
     return collection(this.firestore, 'users', uid, 'tasks');
@@ -55,11 +58,11 @@ export class StorageService {
   /** Crea o reemplaza un pendiente completo. */
   saveTask(uid: string, task: Task): Promise<void> {
     const { id, ...data } = task;
-    return setDoc(doc(this.tasksCollection(uid), id), clean(data));
+    return this.sync.track(setDoc(doc(this.tasksCollection(uid), id), clean(data)));
   }
 
   deleteTask(uid: string, id: string): Promise<void> {
-    return deleteDoc(doc(this.tasksCollection(uid), id));
+    return this.sync.track(deleteDoc(doc(this.tasksCollection(uid), id)));
   }
 
   // ---- Actividades constantes: users/{uid}/routines/{routineId} ----
@@ -82,11 +85,11 @@ export class StorageService {
 
   saveRoutine(uid: string, routine: Routine): Promise<void> {
     const { id, ...data } = routine;
-    return setDoc(doc(this.routinesCollection(uid), id), clean(data));
+    return this.sync.track(setDoc(doc(this.routinesCollection(uid), id), clean(data)));
   }
 
   deleteRoutine(uid: string, id: string): Promise<void> {
-    return deleteDoc(doc(this.routinesCollection(uid), id));
+    return this.sync.track(deleteDoc(doc(this.routinesCollection(uid), id)));
   }
 
   // ---- Perfil: users/{uid}/profile/main ----
@@ -105,7 +108,7 @@ export class StorageService {
   }
 
   saveProfile(uid: string, profile: Profile): Promise<void> {
-    return setDoc(this.profileDoc(uid), clean(profile));
+    return this.sync.track(setDoc(this.profileDoc(uid), clean(profile)));
   }
 
   // ---- Rachas: users/{uid}/streaks/{streakId} ----
@@ -129,11 +132,11 @@ export class StorageService {
   saveStreak(uid: string, streak: Streak): Promise<void> {
     const { id, ...data } = streak;
     // Las pausas son objetos dentro de una lista: Firestore tampoco acepta `undefined` ahí.
-    return setDoc(doc(this.streaksCollection(uid), id), clean({ ...data, pauses: data.pauses.map(clean) }));
+    return this.sync.track(setDoc(doc(this.streaksCollection(uid), id), clean({ ...data, pauses: data.pauses.map(clean) })));
   }
 
   deleteStreak(uid: string, id: string): Promise<void> {
-    return deleteDoc(doc(this.streaksCollection(uid), id));
+    return this.sync.track(deleteDoc(doc(this.streaksCollection(uid), id)));
   }
 
   saveManyStreaks(uid: string, streaks: Streak[]): Promise<void> {
@@ -141,7 +144,7 @@ export class StorageService {
     for (const { id, ...data } of streaks.slice(0, 450)) {
       batch.set(doc(this.streaksCollection(uid), id), clean({ ...data, pauses: data.pauses.map(clean) }));
     }
-    return batch.commit();
+    return this.sync.track(batch.commit());
   }
 
   /** Guarda muchas actividades a la vez (para importar). */
@@ -150,7 +153,7 @@ export class StorageService {
     for (const { id, ...data } of routines.slice(0, 450)) {
       batch.set(doc(this.routinesCollection(uid), id), clean(data));
     }
-    return batch.commit();
+    return this.sync.track(batch.commit());
   }
 
   /** Guarda muchos pendientes a la vez (para importar). Firestore permite máx. 500 por lote. */
@@ -163,7 +166,7 @@ export class StorageService {
       }
       commits.push(batch.commit());
     }
-    return Promise.all(commits).then(() => undefined);
+    return this.sync.track(Promise.all(commits).then(() => undefined));
   }
 }
 

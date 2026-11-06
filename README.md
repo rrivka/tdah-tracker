@@ -165,6 +165,24 @@ Abre http://localhost:8080 → DevTools → pestaña **Application**:
 - **Manifest**: nombre, iconos y botón de instalar.
 - Marca **Offline** en la pestaña Network y recarga: la app sigue cargando, y los pendientes que crees se sincronizan al volver a tener conexión.
 
+## Pruebas automáticas
+
+Las reglas delicadas (fechas, frecuencias de constantes, rachas con descansos y pausas) tienen pruebas en
+`src/app/utils/*.spec.ts`. Para correrlas:
+
+```bash
+npx ng test --watch=false
+```
+
+El GitHub Action las corre antes de publicar: **si alguna falla, no se publica**.
+
+## Rendimiento y estado
+
+- **Carga diferida:** login y tablero se cargan por ruta (`loadComponent` en `app.routes.ts`); Personalización,
+  captura rápida, temporizador/alarmas y la ventana flotante usan `@defer` y se descargan al abrirlos.
+- **Franja de estado** (`components/status-bar/`): 📴 sin conexión, 🔄 sincronizando (cambios aún no confirmados por
+  el servidor, vía `services/sync.service.ts`) y ✨ versión nueva con botón Actualizar (service worker).
+
 ## Desplegar
 
 Es automático: cada `git push` a `main` ejecuta el GitHub Action [.github/workflows/deploy.yml](.github/workflows/deploy.yml), que compila con

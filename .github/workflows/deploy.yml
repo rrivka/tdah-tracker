@@ -29,6 +29,9 @@ jobs:
 
       - run: npm ci
 
+      # Pruebas automáticas: si alguna falla, no se publica.
+      - run: npx ng test --watch=false
+
       # base-href = /nombre-del-repo/ (GitHub Pages sirve la app en ese subpath).
       - run: npx ng build --base-href "/${{ github.event.repository.name }}/"
 
