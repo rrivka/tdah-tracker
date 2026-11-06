@@ -1,4 +1,4 @@
-import { Component, OnInit, input, output, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, effect, input, output, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Task, TaskInput } from '../../models/task.model';
 
@@ -27,8 +27,22 @@ export class TaskFormComponent implements OnInit {
   readonly description = signal('');
   readonly dueDate = signal('');
 
+  /** Cada vez que este número aumenta, el campo de título recibe el cursor. */
+  readonly focusTrigger = input(0);
+  private readonly titleInput = viewChild<ElementRef<HTMLInputElement>>('titleInput');
+
   /** Id único para conectar <label for> con su <input>. */
   readonly uid = 'task-form-' + Math.random().toString(36).slice(2, 8);
+
+  constructor() {
+    effect(() => {
+      if (this.focusTrigger() > 0) {
+        const el = this.titleInput()?.nativeElement;
+        // setTimeout: espera a que la sección sea visible antes de enfocar.
+        setTimeout(() => el?.focus());
+      }
+    });
+  }
 
   ngOnInit(): void {
     const t = this.task();

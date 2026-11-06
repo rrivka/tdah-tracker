@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 import { TaskService } from '../../services/task.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 import { ThemeId } from '../../themes';
 import { todayKey } from '../../utils/date.utils';
 
@@ -15,6 +16,9 @@ export class SettingsComponent {
   private readonly themeService = inject(ThemeService);
   private readonly taskService = inject(TaskService);
   private readonly auth = inject(AuthService);
+  private readonly notifications = inject(NotificationService);
+
+  readonly notificationPermission = this.notifications.permission;
 
   readonly themes = this.themeService.themes;
   readonly theme = this.themeService.theme;
@@ -23,6 +27,10 @@ export class SettingsComponent {
 
   /** Mensaje después de importar (éxito o error). */
   readonly message = signal<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  enableNotifications(): void {
+    void this.notifications.request();
+  }
 
   setTheme(id: ThemeId): void {
     this.themeService.setTheme(id);

@@ -1,7 +1,25 @@
 # TDAH Tracker
 
-PWA personal para organizar pendientes: reloj, calendario mensual y lista de pendientes con fecha opcional.
-Inicio de sesión con Google; los datos se guardan en Firestore y funcionan sin internet.
+PWA personal para organizar pendientes: reloj, temporizador (con ventana flotante), alarmas, calendario mensual
+y lista de pendientes con fecha opcional. Inicio de sesión con Google; los pendientes se guardan en Firestore y
+funcionan sin internet.
+
+## Temporizador, alarmas y accesos directos
+
+- **Temporizador** (Reloj → Temporizador): atajos (cambia la lista `presets` en `components/timer/timer.component.ts`),
+  pausa, +1 min. Su estado vive en `services/timer.service.ts` y sobrevive a recargas.
+- **Ventana flotante** (solo escritorio): usa la API *Document Picture-in-Picture* (Chrome, Edge, Opera), que abre una
+  mini ventana encima de todos los programas. En otros navegadores se muestra como recuadro dentro de la app
+  (`components/floating-timer/`).
+- **Alarmas** (Reloj → Alarmas): diarias o de una vez, con "Posponer 5 min". Se guardan **solo en este dispositivo**
+  (localStorage) para que no suenen en todos a la vez (`services/alarm.service.ts`).
+- **Límite de la web:** el temporizador y las alarmas solo suenan **con la app abierta** (puede estar minimizada o en
+  otra pestaña). Una PWA no puede despertar al teléfono con la app cerrada.
+- **Notificaciones:** se activan en Ajustes → Notificaciones. En iPhone solo funcionan con la app instalada en la
+  pantalla de inicio (iOS 16.4+).
+- **Accesos directos del ícono** (mantén presionado el ícono de la app instalada, Android/escritorio): "Nuevo
+  pendiente", "Temporizador" y "Alarmas". Se definen en `shortcuts` de `public/manifest.webmanifest`.
+  iPhone no los soporta.
 
 - **App publicada:** https://rrivka.github.io/tdah-tracker/
 - **Stack:** Angular 21 (standalone + signals, zoneless) · @angular/pwa · Firebase (Auth + Firestore) con @angular/fire · SCSS sin librerías de UI.

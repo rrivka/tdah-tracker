@@ -32,6 +32,33 @@
   </fieldset>
 
   <fieldset class="settings__group">
+    <legend class="settings__group-title">Notificaciones</legend>
+    <p class="settings__help">
+      Sirven para avisarte cuando suena una alarma o termina el temporizador, aunque estés en otra ventana.
+    </p>
+    @switch (notificationPermission()) {
+      @case ('granted') {
+        <p class="settings__status settings__status--ok">Activadas en este dispositivo.</p>
+      }
+      @case ('denied') {
+        <p class="settings__status settings__status--error">
+          Bloqueadas. Actívalas en la configuración del navegador (ícono del candado junto a la dirección).
+        </p>
+      }
+      @case ('unsupported') {
+        <p class="settings__status">
+          Este navegador no las soporta. En iPhone, instala la app en la pantalla de inicio para poder usarlas.
+        </p>
+      }
+      @default {
+        <button class="settings__notifications-button" type="button" (click)="enableNotifications()">
+          Activar notificaciones
+        </button>
+      }
+    }
+  </fieldset>
+
+  <fieldset class="settings__group">
     <legend class="settings__group-title">Cuenta</legend>
     <p class="settings__help">Sesión iniciada como {{ email() }}</p>
   </fieldset>

@@ -2,6 +2,18 @@
   <header class="layout__header">
     <h1 class="layout__title">{{ appName }}</h1>
     <div class="layout__header-actions">
+      <!-- Indicador del temporizador: se ve si está corriendo, en pausa o terminado -->
+      @if (timer.active()) {
+        <button
+          class="layout__timer-indicator"
+          type="button"
+          [class.is-finished]="timer.state() === 'finished'"
+          [attr.aria-label]="'Temporizador: ' + timerLabel()"
+          (click)="showTool('timer')"
+        >
+          ⏱ {{ timerLabel() }}
+        </button>
+      }
       <span class="layout__user-name">{{ userName() }}</span>
       <button
         class="layout__settings-button"
@@ -22,6 +34,38 @@
   <main class="layout__main">
     <section class="layout__section layout__section--clock" [class.is-active]="section() === 'clock'">
       <app-clock />
+
+      <div class="layout__tools">
+        <div class="layout__tool-tabs" role="tablist" aria-label="Herramientas">
+          <button
+            class="layout__tool-tab"
+            type="button"
+            role="tab"
+            [class.is-active]="tool() === 'timer'"
+            [attr.aria-selected]="tool() === 'timer'"
+            (click)="tool.set('timer')"
+          >
+            Temporizador
+          </button>
+          <button
+            class="layout__tool-tab"
+            type="button"
+            role="tab"
+            [class.is-active]="tool() === 'alarms'"
+            [attr.aria-selected]="tool() === 'alarms'"
+            (click)="tool.set('alarms')"
+          >
+            Alarmas
+          </button>
+        </div>
+        <div class="layout__tool-panel" role="tabpanel">
+          @if (tool() === 'timer') {
+            <app-timer />
+          } @else {
+            <app-alarms />
+          }
+        </div>
+      </div>
     </section>
 
     <section class="layout__section layout__section--calendar" [class.is-active]="section() === 'calendar'">
@@ -29,7 +73,7 @@
     </section>
 
     <section class="layout__section layout__section--tasks" [class.is-active]="section() === 'tasks'">
-      <app-task-list />
+      <app-task-list [focusNew]="focusNewTask()" />
     </section>
 
     <section class="layout__section layout__section--settings" [class.is-active]="section() === 'settings'">
@@ -51,4 +95,12 @@
       </button>
     }
   </nav>
+
+  <!-- Temporizador flotante (ventana encima de todo o recuadro en la esquina) -->
+  @if (timer.floating()) {
+    <app-floating-timer />
+  }
+
+  <!-- Aviso de alarma / fin del temporizador -->
+  <app-ringing-overlay />
 </div>

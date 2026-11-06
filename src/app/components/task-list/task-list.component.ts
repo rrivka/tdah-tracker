@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { TASK_FILTERS, TaskService } from '../../services/task.service';
 import { Task, TaskFilter, TaskInput } from '../../models/task.model';
 import { formatDateKey } from '../../utils/date.utils';
@@ -16,6 +16,9 @@ import { TaskFormComponent } from '../task-form/task-form.component';
 })
 export class TaskListComponent {
   private readonly taskService = inject(TaskService);
+
+  /** Cuando aumenta, el campo "Nuevo pendiente" recibe el cursor (acceso directo del ícono). */
+  readonly focusNew = input(0);
 
   readonly filters = TASK_FILTERS;
   readonly filter = this.taskService.filter;

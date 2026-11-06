@@ -1,0 +1,32 @@
+<div class="floating-timer__box" [class]="'floating-timer__box floating-timer__box--' + timer.state()">
+  <button class="floating-timer__close" type="button" aria-label="Cerrar ventana flotante" (click)="timer.closeFloating()">
+    ✕
+  </button>
+
+  <p class="floating-timer__display" role="timer">{{ display() }}</p>
+
+  @if (timer.state() === 'finished') {
+    <p class="floating-timer__finished-text">¡Se acabó el tiempo!</p>
+  }
+
+  <div class="floating-timer__actions">
+    @switch (timer.state()) {
+      @case ('idle') {
+        <button class="floating-timer__start button-primary" type="button" (click)="timer.start()">Iniciar</button>
+      }
+      @case ('running') {
+        <button class="floating-timer__pause" type="button" (click)="timer.pause()">Pausar</button>
+      }
+      @case ('paused') {
+        <button class="floating-timer__resume button-primary" type="button" (click)="timer.resume()">Continuar</button>
+      }
+      @case ('finished') {
+        <button class="floating-timer__stop button-primary" type="button" (click)="timer.reset()">Detener</button>
+      }
+    }
+    <button class="floating-timer__add" type="button" (click)="timer.addMinute()">+1 min</button>
+    @if (timer.state() === 'running' || timer.state() === 'paused') {
+      <button class="floating-timer__reset" type="button" (click)="timer.reset()">Reiniciar</button>
+    }
+  </div>
+</div>

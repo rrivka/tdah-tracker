@@ -1,0 +1,56 @@
+<div class="alarms">
+  <form class="alarms__form" (ngSubmit)="add()">
+    <label class="alarms__field alarms__field--time">
+      <span class="alarms__field-label">Hora</span>
+      <input class="alarms__input" type="time" name="time" required [ngModel]="time()" (ngModelChange)="time.set($event)" />
+    </label>
+    <label class="alarms__field alarms__field--label">
+      <span class="alarms__field-label">Nombre (opcional)</span>
+      <input
+        class="alarms__input"
+        type="text"
+        name="label"
+        autocomplete="off"
+        placeholder="Ej. Tomar medicina"
+        [ngModel]="label()"
+        (ngModelChange)="label.set($event)"
+      />
+    </label>
+    <label class="alarms__repeat">
+      <input type="checkbox" name="repeat" [ngModel]="repeat()" (ngModelChange)="repeat.set($event)" />
+      Todos los días
+    </label>
+    <button class="alarms__add button-primary" type="submit" [disabled]="!time()">Agregar alarma</button>
+  </form>
+
+  @if (alarms().length === 0) {
+    <p class="alarms__empty">No tienes alarmas.</p>
+  } @else {
+    <ul class="alarms__list">
+      @for (alarm of alarms(); track alarm.id) {
+        <li class="alarm-item" [class.alarm-item--disabled]="!alarm.enabled">
+          <label class="alarm-item__toggle">
+            <input type="checkbox" [checked]="alarm.enabled" (change)="toggle(alarm.id)" />
+            <span class="visually-hidden">Activar alarma de las {{ alarm.time }}</span>
+          </label>
+          <div class="alarm-item__content">
+            <span class="alarm-item__time">{{ alarm.time }}</span>
+            <span class="alarm-item__label">{{ alarm.label || 'Alarma' }}</span>
+            <span class="alarm-item__meta">
+              {{ alarm.repeat ? 'Diaria' : 'Una vez' }}
+              @if (alarm.enabled) {
+                · {{ timeUntil(alarm) }}
+              }
+            </span>
+          </div>
+          <button class="alarm-item__delete button-danger" type="button" (click)="remove(alarm)">Eliminar</button>
+        </li>
+      }
+    </ul>
+  }
+
+  <p class="alarms__note">
+    Las alarmas suenan solo con la app abierta (puede estar minimizada o en otra pestaña) y se guardan en este
+    dispositivo.
+  </p>
+</div>

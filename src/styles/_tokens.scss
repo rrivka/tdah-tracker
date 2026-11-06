@@ -29,7 +29,9 @@
   --font-size-md: 1rem;
   --font-size-lg: 1.25rem;
   --font-size-xl: 1.5rem;
-  --font-size-clock: 3rem; // la hora del reloj
+  --font-size-clock: 2.25rem; // la hora del reloj
+  --font-size-timer: 2.5rem; // cuenta regresiva del temporizador
+  --font-size-timer-floating: 3rem; // cuenta regresiva en la ventana flotante
 
   // ---- Espacios (márgenes, paddings, separaciones) ----
   --space-1: 0.25rem;
@@ -53,6 +55,13 @@
   --size-content-max: 72rem; // ancho máximo del contenido en escritorio
   --size-column-side: 22rem; // ancho de la columna de reloj + calendario
   --size-textarea-rows: 4.5rem; // alto mínimo de la descripción
+
+  --size-number-input: 5rem; // ancho de los campos de minutos/segundos
+  --size-floating-width: 18rem; // ancho del temporizador flotante y del aviso de alarma
+
+  // ---- Capas (qué queda encima de qué) ----
+  --z-floating: 900; // temporizador flotante dentro de la app
+  --z-overlay: 1000; // aviso de alarma (encima de todo)
 
   // ---- Otros ----
   --opacity-disabled: 0.6; // botones deshabilitados
@@ -79,6 +88,7 @@
   --color-today: #2563eb; // borde del día de hoy en el calendario
   --color-selected-bg: #dbeafe; // fondo del día seleccionado / filtro activo
   --color-marker: #f59e0b; // puntito de días con pendientes
+  --color-backdrop: rgb(0 0 0 / 0.5); // fondo oscurecido detrás del aviso de alarma
 
   --shadow-sm: none;
   --shadow-md: 0 1px 3px rgb(0 0 0 / 0.15);
@@ -104,6 +114,7 @@
   --color-today: #60a5fa;
   --color-selected-bg: #1e3a5f;
   --color-marker: #fbbf24;
+  --color-backdrop: rgb(0 0 0 / 0.7);
 
   --shadow-sm: none;
   --shadow-md: 0 1px 3px rgb(0 0 0 / 0.6);

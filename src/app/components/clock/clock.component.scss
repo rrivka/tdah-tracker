@@ -13,6 +13,7 @@
   font-size: var(--font-size-clock);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
+  white-space: nowrap; // "8:48:05 p.m." siempre en una línea
 }
 
 .clock__date {

@@ -1,0 +1,80 @@
+@use 'breakpoints' as bp;
+
+.timer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.timer__display {
+  margin: 0;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-timer);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  text-align: center;
+}
+
+.timer--paused .timer__display {
+  color: var(--color-text-muted);
+}
+
+.timer--finished .timer__display,
+.timer__finished-text {
+  color: var(--color-danger);
+}
+
+.timer__finished-text {
+  margin: 0;
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+}
+
+.timer__presets,
+.timer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.timer__custom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.timer__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: var(--size-number-input);
+}
+
+.timer__field-label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.timer__hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+// La ventana flotante es para escritorio.
+.timer__floating-button,
+.timer__hint {
+  display: none;
+}
+
+@media (min-width: bp.$desktop) {
+  .timer__floating-button {
+    display: block;
+  }
+
+  .timer__hint {
+    display: block;
+  }
+}

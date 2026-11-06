@@ -1,0 +1,46 @@
+.ringing-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--color-backdrop);
+}
+
+.ringing-overlay__box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: var(--size-floating-width);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.ringing-overlay__icon {
+  margin: 0;
+  font-size: var(--font-size-timer);
+  line-height: var(--line-height-tight);
+}
+
+.ringing-overlay__title {
+  font-size: var(--font-size-xl);
+}
+
+.ringing-overlay__text {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ringing-overlay__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}

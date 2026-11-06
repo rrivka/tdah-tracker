@@ -36,9 +36,14 @@ export class CalendarComponent {
   /** Encabezados de la semana (empieza en lunes). */
   readonly weekdays = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
-  readonly monthLabel = computed(() =>
-    new Date(this.viewYear(), this.viewMonth(), 1).toLocaleDateString('es-MX', { month: 'long', year: 'numeric' }),
-  );
+  /** "Noviembre de 2026" (solo la primera letra en mayúscula). */
+  readonly monthLabel = computed(() => {
+    const text = new Date(this.viewYear(), this.viewMonth(), 1).toLocaleDateString('es-MX', {
+      month: 'long',
+      year: 'numeric',
+    });
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  });
 
   /** Todas las casillas del mes (semanas completas, de lunes a domingo). */
   readonly cells = computed<CalendarCell[]>(() => {

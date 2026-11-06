@@ -1,0 +1,72 @@
+<div class="timer" [class]="'timer timer--' + timer.state()">
+  <p class="timer__display" role="timer" aria-live="off">{{ display() }}</p>
+
+  @switch (timer.state()) {
+    @case ('idle') {
+      <div class="timer__presets">
+        @for (p of presets; track p) {
+          <button class="timer__preset" type="button" (click)="startPreset(p)">{{ p }} min</button>
+        }
+      </div>
+
+      <form class="timer__custom" (ngSubmit)="startCustom()">
+        <label class="timer__field">
+          <span class="timer__field-label">Min</span>
+          <input
+            class="timer__input"
+            type="number"
+            name="minutes"
+            min="0"
+            max="999"
+            [ngModel]="minutes()"
+            (ngModelChange)="minutes.set($event)"
+          />
+        </label>
+        <label class="timer__field">
+          <span class="timer__field-label">Seg</span>
+          <input
+            class="timer__input"
+            type="number"
+            name="seconds"
+            min="0"
+            max="59"
+            [ngModel]="seconds()"
+            (ngModelChange)="seconds.set($event)"
+          />
+        </label>
+        <button class="timer__start button-primary" type="submit">Iniciar</button>
+      </form>
+    }
+    @case ('running') {
+      <div class="timer__actions">
+        <button class="timer__pause" type="button" (click)="timer.pause()">Pausar</button>
+        <button class="timer__add" type="button" (click)="timer.addMinute()">+1 min</button>
+        <button class="timer__reset" type="button" (click)="timer.reset()">Reiniciar</button>
+      </div>
+    }
+    @case ('paused') {
+      <div class="timer__actions">
+        <button class="timer__resume button-primary" type="button" (click)="timer.resume()">Continuar</button>
+        <button class="timer__add" type="button" (click)="timer.addMinute()">+1 min</button>
+        <button class="timer__reset" type="button" (click)="timer.reset()">Reiniciar</button>
+      </div>
+    }
+    @case ('finished') {
+      <p class="timer__finished-text">¡Se acabó el tiempo!</p>
+      <div class="timer__actions">
+        <button class="timer__stop button-primary" type="button" (click)="timer.reset()">Detener</button>
+        <button class="timer__add" type="button" (click)="timer.addMinute()">+1 min</button>
+      </div>
+    }
+  }
+
+  <!-- Ventana flotante: pensado para la computadora (en el teléfono se oculta con CSS). -->
+  <button class="timer__floating-button" type="button" [attr.aria-pressed]="timer.floating()" (click)="toggleFloating()">
+    {{ timer.floating() ? 'Cerrar ventana flotante' : 'Ventana flotante' }}
+  </button>
+  @if (!timer.pipSupported) {
+    <p class="timer__hint">
+      Tu navegador no permite ventanas encima de otros programas; se mostrará como recuadro dentro de la app.
+    </p>
+  }
+</div>

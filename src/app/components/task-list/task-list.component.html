@@ -2,7 +2,7 @@
   <h2 class="task-list__title">Pendientes</h2>
 
   <div class="task-list__new">
-    <app-task-form (save)="add($event)" />
+    <app-task-form [focusTrigger]="focusNew()" (save)="add($event)" />
   </div>
 
   <div class="task-list__filters" role="group" aria-label="Filtros">

@@ -1,0 +1,76 @@
+// :host = la etiqueta <app-floating-timer>.
+
+// Modo recuadro dentro de la app (navegadores sin Picture-in-Picture).
+:host(.floating-timer--overlay) {
+  position: fixed;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  z-index: var(--z-floating);
+  width: var(--size-floating-width);
+}
+
+// Modo ventana Picture-in-Picture: ocupa toda la mini ventana.
+:host(.floating-timer--pip) {
+  display: block;
+  height: 100vh;
+}
+
+.floating-timer__box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 100%;
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+:host(.floating-timer--pip) .floating-timer__box {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.floating-timer__close {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+  min-height: 0;
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  background: transparent;
+}
+
+.floating-timer__display {
+  margin: 0;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-timer-floating);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
+
+.floating-timer__box--paused .floating-timer__display {
+  color: var(--color-text-muted);
+}
+
+.floating-timer__box--finished .floating-timer__display,
+.floating-timer__finished-text {
+  color: var(--color-danger);
+}
+
+.floating-timer__finished-text {
+  margin: 0;
+  font-weight: var(--font-weight-bold);
+}
+
+.floating-timer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}

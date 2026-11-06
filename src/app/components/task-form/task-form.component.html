@@ -2,6 +2,7 @@
   <div class="task-form__field">
     <label class="task-form__label" [for]="uid + '-title'">{{ isEditing ? 'Título' : 'Nuevo pendiente' }}</label>
     <input
+      #titleInput
       class="task-form__input task-form__input--title"
       type="text"
       name="title"

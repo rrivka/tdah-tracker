@@ -1,0 +1,24 @@
+@if (alarm(); as a) {
+  <div class="ringing-overlay" role="alertdialog" aria-labelledby="ringing-title">
+    <div class="ringing-overlay__box">
+      <p class="ringing-overlay__icon" aria-hidden="true">⏰</p>
+      <h2 class="ringing-overlay__title" id="ringing-title">{{ a.time }}</h2>
+      <p class="ringing-overlay__text">{{ a.label || 'Alarma' }}</p>
+      <div class="ringing-overlay__actions">
+        <button class="ringing-overlay__stop button-primary" type="button" (click)="alarmService.stop()">Detener</button>
+        <button class="ringing-overlay__snooze" type="button" (click)="alarmService.snooze()">Posponer 5 min</button>
+      </div>
+    </div>
+  </div>
+} @else if (timerFinished()) {
+  <div class="ringing-overlay" role="alertdialog" aria-labelledby="ringing-title">
+    <div class="ringing-overlay__box">
+      <p class="ringing-overlay__icon" aria-hidden="true">⏱</p>
+      <h2 class="ringing-overlay__title" id="ringing-title">¡Se acabó el tiempo!</h2>
+      <div class="ringing-overlay__actions">
+        <button class="ringing-overlay__stop button-primary" type="button" (click)="timer.reset()">Detener</button>
+        <button class="ringing-overlay__snooze" type="button" (click)="timer.addMinute()">+1 min</button>
+      </div>
+    </div>
+  </div>
+}

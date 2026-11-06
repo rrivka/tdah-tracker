@@ -70,3 +70,16 @@
 .settings__message--error {
   color: var(--color-danger);
 }
+
+.settings__status {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.settings__status--ok {
+  color: var(--color-success);
+}
+
+.settings__status--error {
+  color: var(--color-danger);
+}

@@ -56,5 +56,44 @@
   ],
   "description": "Organizador personal de pendientes",
   "theme_color": "#ffffff",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "shortcuts": [
+    {
+      "name": "Nuevo pendiente",
+      "short_name": "Nuevo",
+      "description": "Anotar algo rápido",
+      "url": "./#/?nuevo=1",
+      "icons": [
+        {
+          "src": "icons/icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Temporizador",
+      "short_name": "Temporizador",
+      "url": "./#/?seccion=temporizador",
+      "icons": [
+        {
+          "src": "icons/icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Alarmas",
+      "short_name": "Alarmas",
+      "url": "./#/?seccion=alarmas",
+      "icons": [
+        {
+          "src": "icons/icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
 }
