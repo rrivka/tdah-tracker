@@ -21,12 +21,21 @@ export interface Routine {
   /** Desde qué día cuenta ("YYYY-MM-DD"). */
   startDate: string;
 
-  /** Hora "HH:MM" opcional. Sin hora = "en cualquier momento del día". */
+  /**
+   * Horarios "HH:MM" del día, ordenados (p. ej. ["08:00", "21:00"]).
+   * Vacío o ausente = sin horario ("en cualquier momento del día").
+   */
+  times?: string[];
+  /** @deprecated Versión anterior (un solo horario). Se lee como times = [time]. */
   time?: string;
-  /** Si tiene hora: sonar a esa hora si todavía no está hecha. */
+  /** Si tiene horarios: sonar en cada uno si todavía no está hecho. */
   remind: boolean;
 
-  /** Días en que se marcó como hecha ("YYYY-MM-DD"). Se guardan solo los más recientes. */
+  /**
+   * Lo que se marcó como hecho (se guardan solo los más recientes):
+   *  - "YYYY-MM-DD"        → hecha ese día (actividades sin horario)
+   *  - "YYYY-MM-DD HH:MM"  → hecho ese horario de ese día
+   */
   doneDates: string[];
 
   createdAt: string;
@@ -38,5 +47,5 @@ export type RoutineFrequency = 'daily' | 'weekdays' | 'interval';
 /** Datos que el usuario llena en el formulario. */
 export type RoutineInput = Pick<
   Routine,
-  'title' | 'description' | 'frequency' | 'days' | 'everyDays' | 'startDate' | 'time' | 'remind'
+  'title' | 'description' | 'frequency' | 'days' | 'everyDays' | 'startDate' | 'times' | 'remind'
 >;

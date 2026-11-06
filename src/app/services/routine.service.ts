@@ -7,14 +7,19 @@ import { TickService } from './tick.service';
 import { AlarmService } from './alarm.service';
 import { toDateKey } from '../utils/date.utils';
 import { toTimeKey } from '../utils/time.utils';
-import { compareRoutines, isDoneOn, isDueOn } from '../utils/routine.utils';
+import { compareRoutines, compareSlots, doneKey, isDoneOn, isDueOn, routineTimes } from '../utils/routine.utils';
 
-/** Cuántos días "hechos" se guardan por actividad (para no crecer sin límite). */
-const MAX_DONE_DATES = 60;
+/** Cuántas marcas de "hecho" se guardan por actividad (para no crecer sin límite). */
+const MAX_DONE_DATES = 200;
 
-/** Una actividad con su estado para un día concreto. */
+/**
+ * Una fila de la lista del día: una actividad en uno de sus horarios
+ * (o la actividad completa si no tiene horario).
+ */
 export interface RoutineForDay {
   routine: Routine;
+  /** Horario "HH:MM" de esta fila, o undefined si la actividad no tiene horario. */
+  slot?: string;
   done: boolean;
 }
 
@@ -78,11 +83,22 @@ export class RoutineService {
     });
   }
 
-  /** Actividades que tocan el día `dateKey`, con su estado. */
+  /**
+   * Filas del día `dateKey`: una por cada horario de cada actividad que toca ese día
+   * (o una sola fila si no tiene horario). Ordenadas por hora.
+   */
   forDate(dateKey: string): RoutineForDay[] {
-    return this.routines()
-      .filter((r) => isDueOn(r, dateKey))
-      .map((routine) => ({ routine, done: isDoneOn(routine, dateKey) }));
+    const rows: RoutineForDay[] = [];
+    for (const routine of this.routines()) {
+      if (!isDueOn(routine, dateKey)) continue;
+      const times = routineTimes(routine);
+      if (times.length === 0) {
+        rows.push({ routine, done: isDoneOn(routine, dateKey) });
+      } else {
+        for (const slot of times) rows.push({ routine, slot, done: isDoneOn(routine, dateKey, slot) });
+      }
+    }
+    return rows.sort((a, b) => compareSlots(a.slot, b.slot) || a.routine.title.localeCompare(b.routine.title, 'es'));
   }
 
   add(input: RoutineInput): void {
@@ -115,19 +131,21 @@ export class RoutineService {
     this.persist(this.storage.deleteRoutine(this.uid(), id));
   }
 
-  /** Marca o desmarca como hecha en un día (por defecto, hoy). */
-  toggleDone(id: string, dateKey: string = this.tasks.today()): void {
+  /** Marca o desmarca como hecha en un día y, si se indica, en un horario concreto. */
+  toggleDone(id: string, dateKey: string, slot?: string): void {
     const r = this.find(id);
     if (!r) return;
-    this.setDone(id, dateKey, !isDoneOn(r, dateKey));
+    this.setDone(id, dateKey, !isDoneOn(r, dateKey, slot), slot);
   }
 
-  /** Marca como hecha (o no) en un día. */
-  setDone(id: string, dateKey: string, done: boolean): void {
+  /** Marca como hecha (o no) en un día y, si se indica, en un horario concreto. */
+  setDone(id: string, dateKey: string, done: boolean, slot?: string): void {
     const r = this.find(id);
     if (!r) return;
-    const others = r.doneDates.filter((d) => d !== dateKey);
-    const doneDates = (done ? [...others, dateKey] : others).sort().slice(-MAX_DONE_DATES);
+    const key = doneKey(dateKey, slot);
+    // Al desmarcar quitamos también una marca vieja del día completo, si la hubiera.
+    const others = r.doneDates.filter((d) => d !== key && !(slot && !done && d === dateKey));
+    const doneDates = (done ? [...others, key] : others).sort().slice(-MAX_DONE_DATES);
     this.persist(this.storage.saveRoutine(this.uid(), { ...r, doneDates, updatedAt: new Date().toISOString() }));
   }
 
@@ -155,7 +173,12 @@ export class RoutineService {
           days: Array.isArray(raw['days']) ? (raw['days'] as number[]) : undefined,
           everyDays: typeof raw['everyDays'] === 'number' ? raw['everyDays'] : undefined,
           startDate: typeof raw['startDate'] === 'string' ? raw['startDate'] : this.tasks.today(),
-          time: typeof raw['time'] === 'string' ? raw['time'] : undefined,
+          // Acepta el formato nuevo (times) y el viejo (time).
+          times: Array.isArray(raw['times'])
+            ? (raw['times'] as string[])
+            : typeof raw['time'] === 'string'
+              ? [raw['time']]
+              : [],
           remind: raw['remind'] === true,
         }),
         doneDates: Array.isArray(raw['doneDates']) ? (raw['doneDates'] as string[]).slice(-MAX_DONE_DATES) : [],
@@ -174,14 +197,15 @@ export class RoutineService {
     const minute = toTimeKey(date);
     const dateKey = toDateKey(date);
     for (const r of this._routines()) {
-      if (!r.remind || r.time !== minute) continue;
-      if (!isDueOn(r, dateKey) || isDoneOn(r, dateKey)) continue;
+      // ¿Tiene aviso y uno de sus horarios es justo este minuto?
+      if (!r.remind || !routineTimes(r).includes(minute)) continue;
+      if (!isDueOn(r, dateKey) || isDoneOn(r, dateKey, minute)) continue;
       const key = `${dateKey} ${minute}`;
       if (this.reminded.get(r.id) === key) continue;
       this.reminded.set(r.id, key);
       this.alarms.ring({
         id: 'routine-' + r.id,
-        time: r.time,
+        time: minute,
         label: r.title,
         enabled: true,
         repeat: true,
@@ -207,8 +231,9 @@ export class RoutineService {
 }
 
 /** Limpia los datos del formulario: quita lo que no aplica a la frecuencia elegida. */
-function normalize(input: RoutineInput): RoutineInput {
-  const time = input.time && /^\d{2}:\d{2}$/.test(input.time) ? input.time : undefined;
+function normalize(input: RoutineInput): RoutineInput & { time?: undefined } {
+  // Horarios válidos, sin repetidos y ordenados.
+  const times = [...new Set((input.times ?? []).filter((t) => /^\d{2}:\d{2}$/.test(t)))].sort();
   const description = input.description?.trim() || undefined;
   return {
     title: input.title.trim(),
@@ -217,7 +242,9 @@ function normalize(input: RoutineInput): RoutineInput {
     days: input.frequency === 'weekdays' ? [...new Set(input.days ?? [])].sort() : undefined,
     everyDays: input.frequency === 'interval' ? Math.max(1, Math.round(input.everyDays ?? 1)) : undefined,
     startDate: /^\d{4}-\d{2}-\d{2}$/.test(input.startDate) ? input.startDate : toDateKey(new Date()),
-    time,
-    remind: !!time && input.remind,
+    times,
+    // Borra el campo viejo `time` al guardar (ya se usa `times`).
+    time: undefined,
+    remind: times.length > 0 && input.remind,
   };
 }

@@ -38,11 +38,11 @@
 
     @if (selectedRoutines().length > 0) {
       <ul class="calendar__task-list calendar__routine-list">
-        @for (item of selectedRoutines(); track item.routine.id) {
+        @for (item of selectedRoutines(); track item.routine.id + (item.slot ?? '')) {
           <li class="calendar__task calendar__routine" [class.calendar__task--completed]="item.done">
             <label class="calendar__task-label">
-              <input type="checkbox" [checked]="item.done" (change)="toggleRoutine(item.routine.id)" />
-              <span class="calendar__routine-time">{{ item.routine.time ?? '—' }}</span>
+              <input type="checkbox" [checked]="item.done" (change)="toggleRoutine(item.routine.id, item.slot)" />
+              <span class="calendar__routine-time">{{ item.slot ?? '—' }}</span>
               <span class="calendar__task-title">{{ item.routine.title }}</span>
             </label>
           </li>

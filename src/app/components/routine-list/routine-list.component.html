@@ -17,17 +17,18 @@
     <p class="routine-list__status">Hoy no te toca ninguna actividad constante.</p>
   } @else {
     <ul class="routine-list__items">
-      @for (item of today(); track item.routine.id) {
+      <!-- Una fila por cada horario (la misma actividad puede salir varias veces) -->
+      @for (item of today(); track item.routine.id + (item.slot ?? '')) {
         <li class="routine-item" [class.routine-item--done]="item.done">
           <input
             class="routine-item__checkbox"
             type="checkbox"
-            [id]="'routine-' + item.routine.id"
+            [id]="'routine-' + item.routine.id + (item.slot ?? '')"
             [checked]="item.done"
-            (change)="toggle(item.routine.id)"
+            (change)="toggle(item.routine.id, item.slot)"
           />
-          <label class="routine-item__content" [for]="'routine-' + item.routine.id">
-            <span class="routine-item__time">{{ item.routine.time ?? 'Sin horario' }}</span>
+          <label class="routine-item__content" [for]="'routine-' + item.routine.id + (item.slot ?? '')">
+            <span class="routine-item__time">{{ item.slot ?? 'Sin horario' }}</span>
             <span class="routine-item__title">{{ item.routine.title }}</span>
             @if (item.routine.description) {
               <span class="routine-item__description">{{ item.routine.description }}</span>
@@ -55,7 +56,7 @@
           <div class="routine-row__content">
             <span class="routine-row__title">{{ r.title }}</span>
             <span class="routine-row__meta">
-              {{ frequencyLabel(r) }} · {{ r.time ?? 'sin horario' }}
+              {{ frequencyLabel(r) }} · {{ timesLabel(r) }}
               @if (r.remind) {
                 · con aviso
               }

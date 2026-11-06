@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { RoutineService } from '../../services/routine.service';
 import { TaskService } from '../../services/task.service';
 import { Routine, RoutineInput } from '../../models/routine.model';
-import { frequencyLabel, nextDueDate } from '../../utils/routine.utils';
+import { frequencyLabel, nextDueDate, routineTimes } from '../../utils/routine.utils';
 import { formatDateKey, fromDateKey, toDateKey } from '../../utils/date.utils';
 import { ModalComponent } from '../modal/modal.component';
 import { RoutineFormComponent } from '../routine-form/routine-form.component';
@@ -37,8 +37,15 @@ export class RoutineListComponent {
 
   readonly doneCount = computed(() => this.today().filter((r) => r.done).length);
 
-  toggle(id: string): void {
-    this.routineService.toggleDone(id);
+  /** Marca/desmarca hoy (en ese horario, si tiene). */
+  toggle(id: string, slot?: string): void {
+    this.routineService.toggleDone(id, this.taskService.today(), slot);
+  }
+
+  /** "08:00, 21:00" o "sin horario". */
+  timesLabel(routine: Routine): string {
+    const times = routineTimes(routine);
+    return times.length ? times.join(', ') : 'sin horario';
   }
 
   saveEdit(input: RoutineInput): void {

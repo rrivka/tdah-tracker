@@ -92,33 +92,37 @@
     }
   </fieldset>
 
-  <!-- Horario opcional -->
-  <div class="routine-form__field">
-    <label class="routine-form__label" [for]="uid + '-time'">Horario (opcional)</label>
-    <div class="routine-form__row">
-      <input
-        class="routine-form__input routine-form__input--time"
-        type="time"
-        name="time"
-        [id]="uid + '-time'"
-        [ngModel]="time()"
-        (ngModelChange)="time.set($event)"
-      />
-      @if (time()) {
-        <button class="routine-form__clear-time" type="button" (click)="time.set(''); remind.set(false)">
-          Sin horario
-        </button>
-      }
-    </div>
-    @if (time()) {
+  <!-- Horarios opcionales (uno o varios) -->
+  <fieldset class="routine-form__group">
+    <legend class="routine-form__label">Horarios (opcional)</legend>
+
+    @for (t of times(); track $index; let i = $index) {
+      <div class="routine-form__row routine-form__time-row">
+        <input
+          class="routine-form__input routine-form__input--time"
+          type="time"
+          required
+          [attr.aria-label]="'Horario ' + (i + 1)"
+          [value]="t"
+          (input)="setTime(i, $any($event.target).value)"
+        />
+        <button class="routine-form__remove-time" type="button" (click)="removeTime(i)">Quitar</button>
+      </div>
+    }
+
+    <button class="routine-form__add-time" type="button" (click)="addTime()">
+      {{ times().length === 0 ? '+ Agregar horario' : '+ Otro horario' }}
+    </button>
+
+    @if (times().length > 0) {
       <label class="routine-form__option">
         <input type="checkbox" name="remind" [ngModel]="remind()" (ngModelChange)="remind.set($event)" />
-        Avisarme a esa hora si no lo he hecho
+        Avisarme en cada horario si no lo he hecho
       </label>
     } @else {
       <p class="routine-form__help">Sin horario: aparece en tu lista del día para hacerla cuando puedas.</p>
     }
-  </div>
+  </fieldset>
 
   <div class="routine-form__actions">
     <button class="routine-form__submit button-primary" type="submit" [disabled]="!valid()">

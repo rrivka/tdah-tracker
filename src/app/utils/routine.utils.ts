@@ -27,9 +27,23 @@ export function isDueOn(routine: Routine, dateKey: string): boolean {
   }
 }
 
-/** ¿Está marcada como hecha ese día? */
-export function isDoneOn(routine: Routine, dateKey: string): boolean {
-  return routine.doneDates.includes(dateKey);
+/** Horarios de una actividad (acepta el formato viejo de un solo `time`). */
+export function routineTimes(routine: Routine): string[] {
+  if (routine.times?.length) return routine.times;
+  return routine.time ? [routine.time] : [];
+}
+
+/** Clave de "hecho": "YYYY-MM-DD" o "YYYY-MM-DD HH:MM" si es un horario concreto. */
+export function doneKey(dateKey: string, slot?: string): string {
+  return slot ? `${dateKey} ${slot}` : dateKey;
+}
+
+/**
+ * ¿Está hecha ese día (y en ese horario, si se indica)?
+ * Una marca del día completo ("YYYY-MM-DD") cuenta para todos sus horarios.
+ */
+export function isDoneOn(routine: Routine, dateKey: string, slot?: string): boolean {
+  return routine.doneDates.includes(dateKey) || (!!slot && routine.doneDates.includes(doneKey(dateKey, slot)));
 }
 
 /** Texto de la frecuencia: "Todos los días", "L, X, V", "Cada 3 días". */
@@ -62,14 +76,17 @@ export function nextDueDate(routine: Routine, fromKey: string): string | null {
   return null;
 }
 
-/** Ordena por hora (las que no tienen hora van al final) y luego por título. */
+/** Ordena por primer horario (las que no tienen horario van al final) y luego por título. */
 export function compareRoutines(a: Routine, b: Routine): number {
-  if (a.time !== b.time) {
-    if (!a.time) return 1;
-    if (!b.time) return -1;
-    return a.time < b.time ? -1 : 1;
-  }
-  return a.title.localeCompare(b.title, 'es');
+  return compareSlots(routineTimes(a)[0], routineTimes(b)[0]) || a.title.localeCompare(b.title, 'es');
+}
+
+/** Compara dos horarios "HH:MM"; sin horario va al final. */
+export function compareSlots(a: string | undefined, b: string | undefined): number {
+  if (a === b) return 0;
+  if (!a) return 1;
+  if (!b) return -1;
+  return a < b ? -1 : 1;
 }
 
 /** Días completos entre dos dateKeys (b - a). */

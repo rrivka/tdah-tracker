@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, computed, effect, input, output, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Routine, RoutineFrequency, RoutineInput } from '../../models/routine.model';
-import { WEEKDAYS } from '../../utils/routine.utils';
+import { WEEKDAYS, routineTimes } from '../../utils/routine.utils';
 import { todayKey } from '../../utils/date.utils';
 
 /**
@@ -36,7 +36,8 @@ export class RoutineFormComponent implements OnInit {
   readonly days = signal<number[]>([1, 2, 3, 4, 5]); // por defecto de lunes a viernes
   readonly everyDays = signal(2);
   readonly startDate = signal(todayKey());
-  readonly time = signal('');
+  /** Horarios "HH:MM". Vacío = sin horario. */
+  readonly times = signal<string[]>([]);
   readonly remind = signal(false);
 
   /** ¿Se puede guardar? (título y, si es por días de la semana, al menos un día). */
@@ -65,12 +66,31 @@ export class RoutineFormComponent implements OnInit {
     if (r.days) this.days.set(r.days);
     if (r.everyDays) this.everyDays.set(r.everyDays);
     this.startDate.set(r.startDate);
-    this.time.set(r.time ?? '');
+    this.times.set([...routineTimes(r)]);
     this.remind.set(r.remind);
   }
 
   get isEditing(): boolean {
     return this.routine() !== null;
+  }
+
+  /** Agrega un horario (propone 1 hora después del último, o las 08:00). */
+  addTime(): void {
+    this.times.update((list) => {
+      const last = list.at(-1);
+      if (!last) return ['08:00'];
+      const h = (Number(last.slice(0, 2)) + 1) % 24;
+      return [...list, `${String(h).padStart(2, '0')}${last.slice(2)}`];
+    });
+  }
+
+  setTime(index: number, value: string): void {
+    this.times.update((list) => list.map((t, i) => (i === index ? value : t)));
+  }
+
+  removeTime(index: number): void {
+    this.times.update((list) => list.filter((_, i) => i !== index));
+    if (this.times().length === 0) this.remind.set(false);
   }
 
   toggleDay(day: number): void {
@@ -86,7 +106,7 @@ export class RoutineFormComponent implements OnInit {
       days: this.days(),
       everyDays: Number(this.everyDays()),
       startDate: this.startDate(),
-      time: this.time() || undefined,
+      times: this.times().filter((t) => !!t),
       remind: this.remind(),
     });
   }

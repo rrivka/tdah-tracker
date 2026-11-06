@@ -118,8 +118,8 @@ export class CalendarComponent {
   });
 
   /** Marca/desmarca una actividad como hecha en el día seleccionado. */
-  toggleRoutine(id: string): void {
-    this.routineService.toggleDone(id, this.selected());
+  toggleRoutine(id: string, slot?: string): void {
+    this.routineService.toggleDone(id, this.selected(), slot);
   }
 
   /** Texto para lectores de pantalla, p. ej. "5 de noviembre, 2 pendientes". */

@@ -10,7 +10,8 @@ Cosas que se repiten (medicación, ejercicio…), separadas de los pendientes su
 
 - Se crean con el mismo botón **+** → pestaña "Actividad constante".
 - **Frecuencia:** todos los días, algunos días de la semana o cada N días (desde una fecha).
-- **Horario opcional.** Con horario se puede activar "Avisarme": a esa hora suena como alarma (con botón
+- **Horarios opcionales (uno o varios**, p. ej. 08:00 y 21:00). Cada horario es una fila con su propia casilla.
+  Con "Avisarme" suena en cada horario como alarma (con botón
   "Ya lo hice") si aún no está marcada. Solo con la app abierta, igual que las alarmas.
 - El apartado muestra las de **hoy** con casilla de "hecho" (se reinicia cada día) y "Ver todas" para editar/eliminar.
 - Se guardan en Firestore (`users/{uid}/routines/{id}`) y se incluyen en el respaldo JSON.

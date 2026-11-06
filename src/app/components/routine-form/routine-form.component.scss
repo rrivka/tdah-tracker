@@ -47,6 +47,14 @@
   gap: var(--space-2);
 }
 
+.routine-form__time-row .routine-form__input--time {
+  flex: 1;
+}
+
+.routine-form__add-time {
+  align-self: flex-start;
+}
+
 .routine-form__days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);

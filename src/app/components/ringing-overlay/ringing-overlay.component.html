@@ -7,7 +7,7 @@
       <div class="ringing-overlay__actions">
         @if (a.routineId) {
           <!-- Recordatorio de una actividad constante -->
-          <button class="ringing-overlay__done button-primary" type="button" (click)="markDone(a.routineId)">
+          <button class="ringing-overlay__done button-primary" type="button" (click)="markDone(a.routineId, a.time)">
             Ya lo hice
           </button>
           <button class="ringing-overlay__stop" type="button" (click)="alarmService.stop()">Detener</button>

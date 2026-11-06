@@ -22,9 +22,9 @@ export class RingingOverlayComponent {
 
   private readonly routines = inject(RoutineService);
 
-  /** "Ya lo hice": marca la actividad como hecha hoy y apaga el aviso. */
-  markDone(routineId: string): void {
-    this.routines.setDone(routineId, toDateKey(new Date()), true);
+  /** "Ya lo hice": marca ese horario de la actividad como hecho hoy y apaga el aviso. */
+  markDone(routineId: string, slot: string): void {
+    this.routines.setDone(routineId, toDateKey(new Date()), true, slot);
     this.alarmService.stop();
   }
 }
