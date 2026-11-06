@@ -7,7 +7,7 @@ funcionan sin internet.
 ## Personalización (varias personas)
 
 Cada persona entra con **su propia cuenta de Google** y solo ve sus datos (reglas de Firestore).
-"Personalización" se abre tocando el avatar del encabezado (o Ajustes → Abrir personalización) y tiene 3 pestañas:
+"Personalización" se abre tocando el avatar del encabezado y tiene 4 pestañas:
 
 - **Perfil:** nombre para mostrar (apodo), avatar (foto de Google o emoji), pantalla de inicio en el teléfono,
   saludo en el reloj y Cerrar sesión.
@@ -17,6 +17,7 @@ Cada persona entra con **su propia cuenta de Google** y solo ve sus datos (regla
   columnas. Se arrastran por su asa ⠿ (mouse o dedo, con *pointer events*) o con los botones ↑ ↓ ⇄ 👁 (ocultar).
   Nada cambia hasta "Guardar acomodo". En el teléfono, el orden de las pestañas sigue el acomodo.
   Código: `src/app/cards.ts` (lista de tarjetas y acomodo por defecto) y `components/layout-editor/`.
+- **Ajustes:** respaldo (exportar/importar JSON) y notificaciones. Ya no hay tarjeta de Ajustes en el tablero.
 
 ### Cómo funcionan los temas
 
@@ -215,6 +216,6 @@ Listo: aparece en **Ajustes** y no hay que tocar ningún componente.
 
 ## Respaldo
 
-En **Ajustes → Respaldo**:
+En **Personalización → Ajustes → Respaldo**:
 - **Exportar JSON** descarga `pendientes-AAAA-MM-DD.json` con todos tus pendientes.
 - **Importar JSON** lee un respaldo: los pendientes con el mismo `id` se actualizan y los nuevos se agregan. Nunca borra nada.

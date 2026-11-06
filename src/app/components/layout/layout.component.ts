@@ -10,7 +10,6 @@ import { formatDuration } from '../../utils/time.utils';
 import { ClockComponent } from '../clock/clock.component';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { TaskListComponent } from '../task-list/task-list.component';
-import { SettingsComponent } from '../settings/settings.component';
 import { TimerComponent } from '../timer/timer.component';
 import { AlarmsComponent } from '../alarms/alarms.component';
 import { FloatingTimerComponent } from '../floating-timer/floating-timer.component';
@@ -32,7 +31,7 @@ export type TimeTool = 'timer' | 'alarms';
  * Estructura principal: encabezado, secciones y navegación inferior.
  *
  * - Escritorio: dos columnas de tarjetas según el acomodo del perfil (ver src/app/cards.ts);
- *   Ajustes se abre con su botón.
+ *   Ajustes (respaldo, notificaciones) está en Personalización, que se abre con el avatar.
  * - Temporizador y alarmas: ventana modal que se abre al tocar la hora del reloj.
  * - Teléfono: solo se ve la sección activa y se cambia con la barra de abajo
  *   (las pestañas siguen el orden del acomodo).
@@ -49,7 +48,6 @@ export type TimeTool = 'timer' | 'alarms';
     ClockComponent,
     CalendarComponent,
     TaskListComponent,
-    SettingsComponent,
     TimerComponent,
     AlarmsComponent,
     FloatingTimerComponent,
@@ -104,7 +102,7 @@ export class LayoutComponent {
     ].filter((c) => c.cards.length > 0);
   });
 
-  /** Pestañas del teléfono: en el orden de las tarjetas visibles, y Ajustes al final. */
+  /** Pestañas del teléfono: en el orden de las tarjetas visibles. */
   readonly navItems = computed(() => {
     const sections: Section[] = [];
     for (const col of this.columns()) {
@@ -113,7 +111,6 @@ export class LayoutComponent {
         if (!sections.includes(s)) sections.push(s);
       }
     }
-    sections.push('settings');
     return sections.map((id) => ({ id, label: SECTION_LABELS[id] }));
   });
 
@@ -170,11 +167,6 @@ export class LayoutComponent {
   showTool(tool: TimeTool): void {
     this.tool.set(tool);
     this.toolsOpen.set(true);
-  }
-
-  /** Botón "Ajustes" del encabezado (escritorio): abre o cierra el panel. */
-  toggleSettings(): void {
-    this.section.update((s) => (s === 'settings' ? 'tasks' : 'settings'));
   }
 
   async logout(): Promise<void> {

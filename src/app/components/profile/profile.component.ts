@@ -6,19 +6,21 @@ import { StartSection } from '../../models/profile.model';
 import { AccentId, THEME_GROUPS, ThemeId, usesAccent } from '../../themes';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { LayoutEditorComponent } from '../layout-editor/layout-editor.component';
+import { SettingsComponent } from '../settings/settings.component';
 
-type Tab = 'profile' | 'appearance' | 'layout';
+type Tab = 'profile' | 'appearance' | 'layout' | 'settings';
 
 /**
- * Personalización (se abre tocando el avatar del encabezado). Tres pestañas:
+ * Personalización (se abre tocando el avatar del encabezado). Cuatro pestañas:
  *  - Perfil: nombre, avatar, pantalla de inicio, saludo y cuenta.
  *  - Apariencia: temas básicos (con color de acento) y Frutiger Aero.
  *  - Acomodo: ordenar, mover y ocultar las tarjetas del tablero.
+ *  - Ajustes: respaldo (exportar/importar) y notificaciones.
  * Los cambios de Perfil y Apariencia se guardan al momento; el Acomodo tiene su botón Guardar.
  */
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, AvatarComponent, LayoutEditorComponent],
+  imports: [FormsModule, AvatarComponent, LayoutEditorComponent, SettingsComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
@@ -34,6 +36,7 @@ export class ProfileComponent {
     { id: 'profile', label: 'Perfil' },
     { id: 'appearance', label: 'Apariencia' },
     { id: 'layout', label: 'Acomodo' },
+    { id: 'settings', label: 'Ajustes' },
   ];
 
   readonly profile = this.profileService.profile;

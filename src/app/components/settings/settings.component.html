@@ -1,18 +1,11 @@
-<div class="settings card">
-  <h2 class="settings__title card-title">Ajustes</h2>
-
-  <fieldset class="settings__group">
-    <legend class="settings__group-title">Personalización</legend>
-    <p class="settings__help">Perfil, temas (incluido Frutiger Aero) y acomodo de las tarjetas.</p>
-    <button class="settings__profile-button" type="button" (click)="openProfile.emit()">Abrir personalización</button>
-  </fieldset>
-
-  <fieldset class="settings__group">
-    <legend class="settings__group-title">Respaldo</legend>
+<!-- Pestaña "Ajustes" dentro de Personalización: respaldo y notificaciones. -->
+<div class="settings">
+  <section class="settings__group">
+    <h3 class="settings__group-title">Respaldo</h3>
     <p class="settings__help">
       Descarga tus {{ taskCount() }} pendiente(s), {{ routineCount() }} actividad(es) constante(s) y {{ streakCount() }}
-      racha(s) como archivo JSON, o
-      importa un respaldo. Al importar, lo que ya existe se actualiza y lo nuevo se agrega; nunca se borra nada.
+      racha(s) como archivo JSON, o importa un respaldo. Al importar, lo que ya existe se actualiza y lo nuevo se
+      agrega; nunca se borra nada.
     </p>
     <div class="settings__backup-actions">
       <button class="settings__export-button" type="button" (click)="exportTasks()">Exportar JSON</button>
@@ -24,10 +17,10 @@
     @if (message(); as m) {
       <p class="settings__message" [class.settings__message--error]="m.type === 'error'" role="status">{{ m.text }}</p>
     }
-  </fieldset>
+  </section>
 
-  <fieldset class="settings__group">
-    <legend class="settings__group-title">Notificaciones</legend>
+  <section class="settings__group">
+    <h3 class="settings__group-title">Notificaciones</h3>
     <p class="settings__help">
       Sirven para avisarte cuando suena una alarma o termina el temporizador, aunque estés en otra ventana.
     </p>
@@ -51,10 +44,5 @@
         </button>
       }
     }
-  </fieldset>
-
-  <fieldset class="settings__group">
-    <legend class="settings__group-title">Cuenta</legend>
-    <p class="settings__help">Sesión iniciada como {{ email() }}</p>
-  </fieldset>
+  </section>
 </div>

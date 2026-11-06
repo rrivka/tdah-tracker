@@ -48,7 +48,7 @@ export class LayoutEditorComponent {
       const s = cardInfo(id).section;
       if (!sections.includes(s)) sections.push(s);
     }
-    return [...sections, 'settings' as Section].map((s) => SECTION_LABELS[s]);
+    return sections.map((s) => SECTION_LABELS[s]);
   });
 
   info = cardInfo;

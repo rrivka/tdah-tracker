@@ -1,56 +1,44 @@
 .settings {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-}
-
-.settings__title {
-  font-size: var(--font-size-lg);
+  gap: var(--space-5);
 }
 
 .settings__group {
-  margin: 0;
-  padding: var(--space-4);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 .settings__group-title {
-  padding: 0 var(--space-2);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
 }
 
-.settings__theme-options,
 .settings__backup-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-3);
-}
-
-.settings__theme-option {
-  display: flex;
-  align-items: center;
   gap: var(--space-2);
-  min-height: var(--size-touch);
 }
 
 .settings__help {
-  margin: 0 0 var(--space-3);
+  margin: 0;
   color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
 }
 
-// El <input type="file"> se oculta y la etiqueta se ve como botón.
+// El <input type="file"> se oculta y la etiqueta se ve como un botón más.
 .settings__import-label {
   display: inline-flex;
   align-items: center;
   min-height: var(--size-touch);
   padding: var(--space-2) var(--space-4);
   border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-bg);
+  border-radius: var(--button-radius);
+  background: var(--bg-button);
+  box-shadow: var(--button-shadow);
   cursor: pointer;
 }
 
@@ -62,24 +50,22 @@
   clip: rect(0 0 0 0);
 }
 
-.settings__message {
-  margin: var(--space-3) 0 0;
-  color: var(--color-success);
-}
-
-.settings__message--error {
-  color: var(--color-danger);
-}
-
+.settings__message,
 .settings__status {
   margin: 0;
   font-size: var(--font-size-sm);
 }
 
+.settings__message,
 .settings__status--ok {
   color: var(--color-success);
 }
 
+.settings__message--error,
 .settings__status--error {
   color: var(--color-danger);
+}
+
+.settings__notifications-button {
+  align-self: flex-start;
 }

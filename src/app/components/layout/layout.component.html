@@ -14,15 +14,7 @@
           ⏱ {{ timerLabel() }}
         </button>
       }
-      <button
-        class="layout__settings-button"
-        type="button"
-        [attr.aria-pressed]="section() === 'settings'"
-        (click)="toggleSettings()"
-      >
-        Ajustes
-      </button>
-      <!-- Perfil: avatar + nombre. Abre "Personalización" (ahí está también Cerrar sesión). -->
+      <!-- Avatar + nombre: abre "Personalización" (perfil, apariencia, acomodo, ajustes y cerrar sesión). -->
       <button class="layout__profile-button" type="button" aria-label="Personalización" (click)="profileOpen.set(true)">
         <app-avatar />
         <span class="layout__user-name">{{ userName() }}</span>
@@ -70,10 +62,6 @@
         }
       </div>
     }
-
-    <section class="layout__section layout__section--settings" [class.is-active]="section() === 'settings'">
-      <app-settings (openProfile)="profileOpen.set(true)" />
-    </section>
   </main>
 
   <!-- Temporizador y alarmas: se abren al tocar la hora del reloj -->

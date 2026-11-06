@@ -11,8 +11,8 @@
 
 export type CardId = 'clock' | 'calendar' | 'streaks' | 'routines' | 'tasks';
 
-/** Secciones del teléfono (una pestaña cada una). Ajustes es aparte, siempre al final. */
-export type Section = 'clock' | 'calendar' | 'streaks' | 'tasks' | 'settings';
+/** Secciones del teléfono (una pestaña cada una). Ajustes vive en Personalización (avatar). */
+export type Section = 'clock' | 'calendar' | 'streaks' | 'tasks';
 
 export const CARDS: { id: CardId; label: string; icon: string; section: Section }[] = [
   { id: 'clock', label: 'Reloj', icon: '🕒', section: 'clock' },
@@ -29,7 +29,6 @@ export const SECTION_LABELS: Record<Section, string> = {
   calendar: 'Calendario',
   streaks: 'Rachas',
   tasks: 'Pendientes',
-  settings: 'Ajustes',
 };
 
 export interface DashboardLayout {

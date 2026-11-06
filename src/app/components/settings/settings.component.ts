@@ -1,13 +1,12 @@
-import { Component, computed, inject, output, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { TaskService } from '../../services/task.service';
-import { AuthService } from '../../services/auth.service';
 import { BackupService } from '../../services/backup.service';
 import { RoutineService } from '../../services/routine.service';
 import { StreakService } from '../../services/streak.service';
 import { NotificationService } from '../../services/notification.service';
 import { todayKey } from '../../utils/date.utils';
 
-/** Ajustes: acceso al perfil, respaldo (exportar/importar JSON), notificaciones y cuenta. */
+/** Pestaña "Ajustes" de Personalización: respaldo (exportar/importar JSON) y notificaciones. */
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -18,14 +17,10 @@ export class SettingsComponent {
   private readonly backup = inject(BackupService);
   private readonly routineService = inject(RoutineService);
   private readonly streakService = inject(StreakService);
-  private readonly auth = inject(AuthService);
   private readonly notifications = inject(NotificationService);
 
   readonly notificationPermission = this.notifications.permission;
 
-  /** Pide al layout abrir "Mi perfil". */
-  readonly openProfile = output<void>();
-  readonly email = computed(() => this.auth.user()?.email ?? '');
   readonly taskCount = computed(() => this.taskService.tasks().length);
   readonly routineCount = computed(() => this.routineService.routines().length);
   readonly streakCount = computed(() => this.streakService.streaks().length);
