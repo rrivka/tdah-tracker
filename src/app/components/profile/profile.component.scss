@@ -1,0 +1,108 @@
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.profile__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.profile__summary-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.profile__summary-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  overflow-wrap: anywhere;
+}
+
+.profile__summary-email,
+.profile__help {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  overflow-wrap: anywhere;
+}
+
+.profile__help {
+  margin: 0;
+}
+
+.profile__field,
+.profile__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.profile__group {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.profile__label {
+  padding: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.profile__emojis,
+.profile__accents,
+.profile__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.profile__emoji {
+  min-width: var(--size-touch);
+  padding: var(--space-1);
+  font-size: var(--font-size-lg);
+}
+
+.profile__emoji--google {
+  font-size: var(--font-size-sm);
+}
+
+.profile__emoji.is-active,
+.profile__accent.is-active {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-strong);
+  background: var(--color-selected-bg);
+}
+
+.profile__accent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+// La muestra tiene su propio data-accent, así --color-primary aquí es el de ese acento.
+.profile__accent-swatch {
+  width: var(--size-streak-dot);
+  height: var(--size-streak-dot);
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+}
+
+.profile__option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--size-touch);
+}
+
+.profile__account {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: var(--border-width) solid var(--color-border);
+}

@@ -1,0 +1,12 @@
+@switch (avatar().kind) {
+  @case ('photo') {
+    <!-- referrerpolicy: necesario para que Google muestre la foto fuera de sus páginas -->
+    <img class="avatar__photo" [src]="avatar().value" alt="" referrerpolicy="no-referrer" />
+  }
+  @case ('emoji') {
+    <span class="avatar__emoji" aria-hidden="true">{{ avatar().value }}</span>
+  }
+  @default {
+    <span class="avatar__initial" aria-hidden="true">{{ avatar().value }}</span>
+  }
+}

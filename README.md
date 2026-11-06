@@ -4,6 +4,23 @@ PWA personal para organizar pendientes: reloj, temporizador (con ventana flotant
 y lista de pendientes con fecha opcional. Inicio de sesión con Google; los pendientes se guardan en Firestore y
 funcionan sin internet.
 
+## Mi perfil (varias personas)
+
+Cada persona entra con **su propia cuenta de Google** y solo ve sus datos (reglas de Firestore).
+"Mi perfil" se abre tocando el avatar del encabezado (o Ajustes → Abrir mi perfil):
+
+- **Nombre para mostrar** (apodo) y **saludo** en el reloj ("Buenas noches, Ana").
+- **Avatar:** foto de Google o un emoji.
+- **Color de acento** y **tema** claro/oscuro.
+- **Pantalla de inicio** en el teléfono (Pendientes, Rachas, Calendario o Reloj).
+- **Cerrar sesión.**
+
+Se guarda en Firestore (`users/{uid}/profile/main`, `services/profile.service.ts`) y se sincroniza entre dispositivos.
+Las **alarmas** se guardan en el dispositivo pero **separadas por usuario**, así no suenan en la sesión de otra persona.
+
+**Agregar un color de acento:** en `_tokens.scss` copia un par de bloques `[data-accent='...']` (claro) y
+`[data-theme='dark'][data-accent='...']` (oscuro), y agrégalo a `ACCENTS` en `src/app/themes.ts`.
+
 ## Los tres tipos de cosas
 
 Todo se crea con el botón **+** (ventana "Agregar", `components/create-dialog/`), que tiene tres pestañas:

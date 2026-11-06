@@ -1,0 +1,26 @@
+// :host = la etiqueta <app-avatar> (un círculo).
+:host {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-avatar);
+  height: var(--size-avatar);
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--color-selected-bg);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+:host(.avatar--lg) {
+  width: var(--size-avatar-lg);
+  height: var(--size-avatar-lg);
+  font-size: var(--font-size-xl);
+}
+
+.avatar__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

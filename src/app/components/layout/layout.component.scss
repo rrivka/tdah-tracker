@@ -27,15 +27,30 @@
   gap: var(--space-2);
 }
 
-// En el teléfono el nombre y el botón de Ajustes van en la barra inferior.
+// En el teléfono solo se ve el avatar (sin nombre) y Ajustes va en la barra inferior.
 .layout__user-name,
 .layout__settings-button {
   display: none;
 }
 
+// Botón de perfil: avatar + nombre, sin aspecto de botón.
+.layout__profile-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1);
+  border-color: transparent;
+  border-radius: var(--radius-full);
+  background: transparent;
+}
+
 .layout__user-name {
+  max-width: var(--size-number-input);
+  overflow: hidden;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .layout__timer-indicator {
@@ -98,10 +113,13 @@
 }
 
 .layout__nav-button {
+  min-width: 0;
+  padding: var(--space-2) var(--space-1);
   border: none;
   border-radius: 0;
   background: transparent;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-xs);
+  overflow-wrap: anywhere;
 }
 
 .layout__nav-button.is-active {

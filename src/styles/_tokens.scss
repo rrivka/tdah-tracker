@@ -11,7 +11,10 @@
 //
 // CÓMO AGREGAR UN TEMA NUEVO
 //   1. Copia el bloque [data-theme='dark'] de abajo, cambia el nombre y los colores.
-//   2. Agrega el tema en src/app/themes.ts para que aparezca en Ajustes.
+//   2. Agrega el tema en src/app/themes.ts para que aparezca en el perfil.
+//
+// COLORES DE ACENTO (al final del archivo)
+//   Cambian solo el color principal (botones, hoy, selección) encima de cualquier tema.
 // =============================================================================
 
 :root {
@@ -64,6 +67,8 @@
   --size-add-button: 3.5rem; // botón redondo "+" para crear pendiente
   --size-streak-card: 16rem; // ancho mínimo de una tarjeta de racha
   --size-streak-dot: 0.875rem; // puntitos de los últimos 7 días
+  --size-avatar: 2rem; // avatar del encabezado
+  --size-avatar-lg: 4rem; // avatar grande en "Mi perfil"
 
   // ---- Capas (qué queda encima de qué) ----
   --z-floating: 900; // temporizador flotante dentro de la app
@@ -131,4 +136,78 @@
 
   --shadow-sm: none;
   --shadow-md: 0 1px 3px rgb(0 0 0 / 0.6);
+}
+
+// =============================================================================
+// COLORES DE ACENTO
+// -----------------------------------------------------------------------------
+// Se eligen en "Mi perfil". Cada uno tiene un bloque para el tema claro
+// ([data-accent='...']) y otro para el oscuro ([data-theme='dark'][data-accent='...']).
+// Para agregar uno: copia un par de bloques, cambia el nombre y los colores, y
+// agrégalo a ACCENTS en src/app/themes.ts.
+// =============================================================================
+
+// ---- Azul (por defecto) ----
+[data-accent='blue'] {
+  --color-primary: #2563eb;
+  --color-today: #2563eb;
+  --color-selected-bg: #dbeafe;
+}
+
+[data-theme='dark'][data-accent='blue'] {
+  --color-primary: #60a5fa;
+  --color-today: #60a5fa;
+  --color-selected-bg: #1e3a5f;
+}
+
+// ---- Verde ----
+[data-accent='green'] {
+  --color-primary: #16a34a;
+  --color-today: #16a34a;
+  --color-selected-bg: #dcfce7;
+}
+
+[data-theme='dark'][data-accent='green'] {
+  --color-primary: #4ade80;
+  --color-today: #4ade80;
+  --color-selected-bg: #14532d;
+}
+
+// ---- Morado ----
+[data-accent='purple'] {
+  --color-primary: #7c3aed;
+  --color-today: #7c3aed;
+  --color-selected-bg: #ede9fe;
+}
+
+[data-theme='dark'][data-accent='purple'] {
+  --color-primary: #a78bfa;
+  --color-today: #a78bfa;
+  --color-selected-bg: #3b2a63;
+}
+
+// ---- Rosa ----
+[data-accent='pink'] {
+  --color-primary: #db2777;
+  --color-today: #db2777;
+  --color-selected-bg: #fce7f3;
+}
+
+[data-theme='dark'][data-accent='pink'] {
+  --color-primary: #f472b6;
+  --color-today: #f472b6;
+  --color-selected-bg: #5b2140;
+}
+
+// ---- Turquesa ----
+[data-accent='teal'] {
+  --color-primary: #0d9488;
+  --color-today: #0d9488;
+  --color-selected-bg: #ccfbf1;
+}
+
+[data-theme='dark'][data-accent='teal'] {
+  --color-primary: #2dd4bf;
+  --color-today: #2dd4bf;
+  --color-selected-bg: #134e4a;
 }

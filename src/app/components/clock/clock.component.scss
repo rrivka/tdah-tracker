@@ -7,6 +7,11 @@
   text-align: center;
 }
 
+.clock__greeting {
+  margin: 0 0 var(--space-2);
+  font-weight: var(--font-weight-bold);
+}
+
 // La hora es un botón, pero sin apariencia de botón.
 .clock__button {
   width: 100%;

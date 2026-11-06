@@ -1,4 +1,5 @@
 import { Component, DestroyRef, computed, inject, output, signal } from '@angular/core';
+import { ProfileService } from '../../services/profile.service';
 
 /**
  * Reloj: hora actual y fecha del día, actualizándose cada segundo.
@@ -21,6 +22,17 @@ export class ClockComponent {
   readonly date = computed(() =>
     this.now().toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
   );
+
+  private readonly profile = inject(ProfileService);
+
+  /** "Buenos días, Ana" según la hora (o null si el usuario lo desactivó en su perfil). */
+  readonly greeting = computed(() => {
+    if (!this.profile.profile().showGreeting) return null;
+    const h = this.now().getHours();
+    const saludo = h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches';
+    const name = this.profile.firstName();
+    return name ? `${saludo}, ${name}` : saludo;
+  });
 
   constructor() {
     const id = setInterval(() => this.now.set(new Date()), 1000);

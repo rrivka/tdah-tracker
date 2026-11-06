@@ -1,22 +1,19 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { ThemeService } from '../../services/theme.service';
+import { Component, computed, inject, output, signal } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 import { AuthService } from '../../services/auth.service';
 import { BackupService } from '../../services/backup.service';
 import { RoutineService } from '../../services/routine.service';
 import { StreakService } from '../../services/streak.service';
 import { NotificationService } from '../../services/notification.service';
-import { ThemeId } from '../../themes';
 import { todayKey } from '../../utils/date.utils';
 
-/** Ajustes: tema, respaldo (exportar/importar JSON) y cuenta. */
+/** Ajustes: acceso al perfil, respaldo (exportar/importar JSON), notificaciones y cuenta. */
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss',
 })
 export class SettingsComponent {
-  private readonly themeService = inject(ThemeService);
   private readonly taskService = inject(TaskService);
   private readonly backup = inject(BackupService);
   private readonly routineService = inject(RoutineService);
@@ -26,8 +23,8 @@ export class SettingsComponent {
 
   readonly notificationPermission = this.notifications.permission;
 
-  readonly themes = this.themeService.themes;
-  readonly theme = this.themeService.theme;
+  /** Pide al layout abrir "Mi perfil". */
+  readonly openProfile = output<void>();
   readonly email = computed(() => this.auth.user()?.email ?? '');
   readonly taskCount = computed(() => this.taskService.tasks().length);
   readonly routineCount = computed(() => this.routineService.routines().length);
@@ -38,10 +35,6 @@ export class SettingsComponent {
 
   enableNotifications(): void {
     void this.notifications.request();
-  }
-
-  setTheme(id: ThemeId): void {
-    this.themeService.setTheme(id);
   }
 
   /** Descarga pendientes y actividades constantes como archivo .json. */

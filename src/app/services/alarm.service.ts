@@ -5,8 +5,10 @@ import { SoundService } from './sound.service';
 import { NotificationService } from './notification.service';
 import { toDateKey } from '../utils/date.utils';
 import { toTimeKey } from '../utils/time.utils';
+import { AuthService } from './auth.service';
 
-const STORAGE_KEY = 'tdah-tracker:alarms';
+/** Clave vieja (antes las alarmas no estaban separadas por usuario). */
+const OLD_STORAGE_KEY = 'tdah-tracker:alarms';
 const SNOOZE_MS = 5 * 60_000;
 
 /**
@@ -14,14 +16,20 @@ const SNOOZE_MS = 5 * 60_000;
  *
  * IMPORTANTE: una página web solo puede sonar mientras está abierta (puede estar
  * minimizada o en otra pestaña). Si cierras la app, la alarma no suena.
+ *
+ * Se guardan en este dispositivo (localStorage) pero separadas por usuario:
+ * si otra persona entra con su cuenta en el mismo navegador, no ve ni oye tus alarmas.
  */
 @Injectable({ providedIn: 'root' })
 export class AlarmService {
   private readonly tick = inject(TickService);
   private readonly sound = inject(SoundService);
   private readonly notifications = inject(NotificationService);
+  private readonly auth = inject(AuthService);
 
-  private readonly _alarms = signal<Alarm[]>(load());
+  /** Usuario dueño de las alarmas cargadas (cada cuenta tiene las suyas en este dispositivo). */
+  private uid: string | null = null;
+  private readonly _alarms = signal<Alarm[]>([]);
   /** Alarmas ordenadas por hora. */
   readonly alarms = computed(() => [..._sorted(this._alarms())]);
 
@@ -34,16 +42,29 @@ export class AlarmService {
   private readonly lastFired = new Map<string, string>();
 
   constructor() {
+    // Al cambiar de usuario, cargar SUS alarmas (y apagar lo que estuviera sonando).
+    effect(() => {
+      const uid = this.auth.user()?.uid ?? null;
+      untracked(() => {
+        this.uid = uid;
+        this.snoozed = null;
+        if (this.ringing()) this.stop();
+        this._alarms.set(uid ? load(uid) : []);
+      });
+    });
+
     // Revisar en cada latido si toca sonar.
     effect(() => {
       const now = this.tick.now();
       untracked(() => this.check(now));
     });
 
-    // Guardar en cada cambio.
+    // Guardar en cada cambio (en la clave del usuario actual).
     effect(() => {
+      const alarms = this._alarms();
+      if (!this.uid) return;
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(this._alarms()));
+        localStorage.setItem(storageKey(this.uid), JSON.stringify(alarms));
       } catch {
         // sin localStorage
       }
@@ -128,9 +149,25 @@ export class AlarmService {
   }
 }
 
-function load(): Alarm[] {
+/** Clave de localStorage de las alarmas de un usuario. */
+function storageKey(uid: string): string {
+  return `${OLD_STORAGE_KEY}:${uid}`;
+}
+
+/**
+ * Lee las alarmas de un usuario. Si existen alarmas del formato viejo (sin usuario),
+ * se pasan a este usuario una sola vez.
+ */
+function load(uid: string): Alarm[] {
   try {
-    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]');
+    let raw = localStorage.getItem(storageKey(uid));
+    const old = localStorage.getItem(OLD_STORAGE_KEY);
+    if (raw === null && old !== null) {
+      raw = old;
+      localStorage.setItem(storageKey(uid), old);
+      localStorage.removeItem(OLD_STORAGE_KEY);
+    }
+    const data = JSON.parse(raw ?? '[]');
     return Array.isArray(data) ? data : [];
   } catch {
     return [];

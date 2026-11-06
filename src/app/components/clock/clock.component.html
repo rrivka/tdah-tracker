@@ -1,4 +1,7 @@
 <div class="clock">
+  @if (greeting(); as g) {
+    <p class="clock__greeting">{{ g }}</p>
+  }
   <button class="clock__button" type="button" title="Temporizador y alarmas" (click)="openTools.emit()">
     <time class="clock__time">{{ time() }}</time>
     <span class="visually-hidden">Abrir temporizador y alarmas</span>

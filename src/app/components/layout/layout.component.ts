@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -20,6 +20,9 @@ import { RoutineListComponent } from '../routine-list/routine-list.component';
 import { RoutineService } from '../../services/routine.service';
 import { StreakBoardComponent } from '../streak-board/streak-board.component';
 import { CreateDialogComponent, CreateRequest, CreateType } from '../create-dialog/create-dialog.component';
+import { AvatarComponent } from '../avatar/avatar.component';
+import { ProfileComponent } from '../profile/profile.component';
+import { ProfileService } from '../../services/profile.service';
 
 /** Secciones de la app (en el teléfono se ve una a la vez). */
 export type Section = 'clock' | 'calendar' | 'tasks' | 'streaks' | 'settings';
@@ -55,6 +58,8 @@ export type TimeTool = 'timer' | 'alarms';
     RoutineListComponent,
     StreakBoardComponent,
     CreateDialogComponent,
+    AvatarComponent,
+    ProfileComponent,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
@@ -68,17 +73,23 @@ export class LayoutComponent {
   private readonly alarms = inject(AlarmService);
   // Igual con los recordatorios de actividades constantes.
   private readonly routines = inject(RoutineService);
+  private readonly profile = inject(ProfileService);
 
   readonly appName = APP_NAME;
   readonly section = signal<Section>('tasks');
   readonly tool = signal<TimeTool>('timer');
   /** ¿Está abierta la ventana de temporizador/alarmas? (se abre tocando la hora) */
   readonly toolsOpen = signal(false);
+  /** ¿Está abierta la ventana "Mi perfil"? */
+  readonly profileOpen = signal(false);
+  /** true si un acceso directo ya eligió la sección (entonces no se aplica la pantalla de inicio). */
+  private sectionChosen = false;
   /** Último pedido de abrir la ventana "Agregar" (ver requestCreate). */
   readonly createRequest = signal<CreateRequest | null>(null);
 
   readonly error = this.tasks.error;
-  readonly userName = computed(() => this.auth.user()?.displayName ?? this.auth.user()?.email ?? '');
+  /** Nombre del perfil (apodo) o, si no hay, el de Google. */
+  readonly userName = this.profile.displayName;
   readonly timerLabel = computed(() =>
     this.timer.state() === 'finished' ? '¡Tiempo!' : formatDuration(this.timer.remaining()),
   );
@@ -92,6 +103,15 @@ export class LayoutComponent {
   ];
 
   constructor() {
+    // Pantalla de inicio del perfil (solo la primera vez que carga el perfil).
+    effect(() => {
+      if (!this.profile.loaded()) return;
+      untracked(() => {
+        if (!this.sectionChosen) this.section.set(this.profile.profile().startSection);
+        this.sectionChosen = true;
+      });
+    });
+
     inject(ActivatedRoute)
       .queryParamMap.pipe(takeUntilDestroyed())
       .subscribe((params) => {
@@ -104,6 +124,7 @@ export class LayoutComponent {
         } else {
           return;
         }
+        this.sectionChosen = true; // el acceso directo manda sobre la pantalla de inicio
         // Limpia la URL para que al recargar no se repita.
         void this.router.navigate([], { queryParams: {}, replaceUrl: true });
       });
@@ -130,6 +151,10 @@ export class LayoutComponent {
   }
 
   async logout(): Promise<void> {
+    // Que el temporizador no siga corriendo para la siguiente persona que entre.
+    this.timer.reset();
+    this.timer.closeFloating();
+    this.profileOpen.set(false);
     await this.auth.logout();
     await this.router.navigateByUrl('/login');
   }

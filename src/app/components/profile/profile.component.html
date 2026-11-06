@@ -1,0 +1,117 @@
+<div class="profile">
+  <!-- Encabezado: avatar y nombre actuales -->
+  <div class="profile__summary">
+    <app-avatar size="lg" />
+    <div class="profile__summary-text">
+      <span class="profile__summary-name">{{ profileService.displayName() }}</span>
+      <span class="profile__summary-email">{{ profileService.email() }}</span>
+    </div>
+  </div>
+
+  <!-- Nombre -->
+  <div class="profile__field">
+    <label class="profile__label" for="profile-name">Nombre para mostrar</label>
+    <input
+      id="profile-name"
+      class="profile__input"
+      type="text"
+      maxlength="40"
+      autocomplete="off"
+      [placeholder]="profileService.googleName() || 'Tu nombre o apodo'"
+      [ngModel]="name()"
+      (ngModelChange)="name.set($event)"
+      (blur)="saveName()"
+      (keydown.enter)="saveName()"
+    />
+    <p class="profile__help">Vacío = se usa el nombre de tu cuenta de Google.</p>
+  </div>
+
+  <!-- Avatar -->
+  <fieldset class="profile__group">
+    <legend class="profile__label">Avatar</legend>
+    <div class="profile__emojis">
+      <button
+        class="profile__emoji profile__emoji--google"
+        type="button"
+        [class.is-active]="!profile().avatarEmoji"
+        [attr.aria-pressed]="!profile().avatarEmoji"
+        (click)="setEmoji('')"
+      >
+        {{ profileService.googlePhoto() ? 'Foto de Google' : 'Inicial' }}
+      </button>
+      @for (e of emojis; track e) {
+        <button
+          class="profile__emoji"
+          type="button"
+          [class.is-active]="profile().avatarEmoji === e"
+          [attr.aria-pressed]="profile().avatarEmoji === e"
+          (click)="setEmoji(e)"
+        >
+          {{ e }}
+        </button>
+      }
+    </div>
+  </fieldset>
+
+  <!-- Color de acento -->
+  <fieldset class="profile__group">
+    <legend class="profile__label">Color</legend>
+    <div class="profile__accents">
+      @for (a of accents; track a.id) {
+        <button
+          class="profile__accent"
+          type="button"
+          [class.is-active]="accent() === a.id"
+          [attr.aria-pressed]="accent() === a.id"
+          (click)="setAccent(a.id)"
+        >
+          <!-- data-accent solo en la muestra: así su color es el de ese acento -->
+          <span class="profile__accent-swatch" [attr.data-accent]="a.id" aria-hidden="true"></span>
+          {{ a.label }}
+        </button>
+      }
+    </div>
+  </fieldset>
+
+  <!-- Tema -->
+  <fieldset class="profile__group">
+    <legend class="profile__label">Tema</legend>
+    <div class="profile__options">
+      @for (t of themes; track t.id) {
+        <label class="profile__option">
+          <input type="radio" name="profile-theme" [checked]="theme() === t.id" (change)="setTheme(t.id)" />
+          {{ t.label }}
+        </label>
+      }
+    </div>
+  </fieldset>
+
+  <!-- Pantalla de inicio y saludo -->
+  <div class="profile__field">
+    <label class="profile__label" for="profile-start">Pantalla de inicio en el teléfono</label>
+    <select
+      id="profile-start"
+      class="profile__input"
+      [ngModel]="profile().startSection"
+      (ngModelChange)="setStart($event)"
+    >
+      @for (s of startSections; track s.id) {
+        <option [value]="s.id">{{ s.label }}</option>
+      }
+    </select>
+  </div>
+
+  <label class="profile__option">
+    <input type="checkbox" [checked]="profile().showGreeting" (change)="setGreeting($any($event.target).checked)" />
+    Mostrar saludo en el reloj ("Buenas noches, {{ profileService.firstName() }}")
+  </label>
+
+  <!-- Cuenta -->
+  <div class="profile__account">
+    <p class="profile__help">
+      Cada persona entra con su propia cuenta de Google y solo ve sus datos. Tus cambios aquí se guardan solos y se
+      sincronizan en tus dispositivos.
+    </p>
+    <button class="profile__logout button-danger" type="button" (click)="logout.emit()">Cerrar sesión</button>
+  </div>
+</div>

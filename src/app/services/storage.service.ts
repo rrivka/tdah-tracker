@@ -12,6 +12,7 @@ import {
 import { Task } from '../models/task.model';
 import { Routine } from '../models/routine.model';
 import { Streak } from '../models/streak.model';
+import { Profile } from '../models/profile.model';
 
 /**
  * StorageService: la ÚNICA capa que habla con Firestore.
@@ -22,6 +23,7 @@ import { Streak } from '../models/streak.model';
  *   users/{uid}/tasks/{taskId}         ← pendientes
  *   users/{uid}/routines/{routineId}   ← actividades constantes
  *   users/{uid}/streaks/{streakId}     ← rachas
+ *   users/{uid}/profile/main           ← perfil (nombre, avatar, colores…)
  *
  * Nota sobre el modo sin conexión: con la persistencia offline activada,
  * las escrituras se aplican al instante en la caché local (y onSnapshot avisa),
@@ -85,6 +87,25 @@ export class StorageService {
 
   deleteRoutine(uid: string, id: string): Promise<void> {
     return deleteDoc(doc(this.routinesCollection(uid), id));
+  }
+
+  // ---- Perfil: users/{uid}/profile/main ----
+
+  private profileDoc(uid: string) {
+    return doc(this.firestore, 'users', uid, 'profile', 'main');
+  }
+
+  /** Escucha el perfil. `null` si todavía no existe (usuario nuevo). */
+  watchProfile(uid: string, onChange: (profile: Partial<Profile> | null) => void, onError: (e: Error) => void): Unsubscribe {
+    return onSnapshot(
+      this.profileDoc(uid),
+      (snap) => onChange(snap.exists() ? (snap.data() as Partial<Profile>) : null),
+      onError,
+    );
+  }
+
+  saveProfile(uid: string, profile: Profile): Promise<void> {
+    return setDoc(this.profileDoc(uid), clean(profile));
   }
 
   // ---- Rachas: users/{uid}/streaks/{streakId} ----

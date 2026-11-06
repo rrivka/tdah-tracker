@@ -2,15 +2,9 @@
   <h2 class="settings__title">Ajustes</h2>
 
   <fieldset class="settings__group">
-    <legend class="settings__group-title">Tema</legend>
-    <div class="settings__theme-options">
-      @for (t of themes; track t.id) {
-        <label class="settings__theme-option">
-          <input type="radio" name="theme" [value]="t.id" [checked]="theme() === t.id" (change)="setTheme(t.id)" />
-          {{ t.label }}
-        </label>
-      }
-    </div>
+    <legend class="settings__group-title">Perfil y apariencia</legend>
+    <p class="settings__help">Tu nombre, avatar, color, tema y pantalla de inicio están en "Mi perfil".</p>
+    <button class="settings__profile-button" type="button" (click)="openProfile.emit()">Abrir mi perfil</button>
   </fieldset>
 
   <fieldset class="settings__group">
