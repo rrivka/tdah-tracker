@@ -1,12 +1,17 @@
-import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, output, signal } from '@angular/core';
 
-/** Reloj: hora actual y fecha del día, actualizándose cada segundo. */
+/**
+ * Reloj: hora actual y fecha del día, actualizándose cada segundo.
+ * La hora es un botón: al tocarla emite `openTools` (el layout abre temporizador y alarmas).
+ */
 @Component({
   selector: 'app-clock',
   templateUrl: './clock.component.html',
   styleUrl: './clock.component.scss',
 })
 export class ClockComponent {
+  readonly openTools = output<void>();
+
   private readonly now = signal(new Date());
 
   readonly time = computed(() =>

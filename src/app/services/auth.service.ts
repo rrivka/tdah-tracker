@@ -3,11 +3,17 @@ import { Auth } from '@angular/fire/auth';
 import {
   GoogleAuthProvider,
   User,
+  browserLocalPersistence,
+  browserSessionPersistence,
   onAuthStateChanged,
+  setPersistence,
   signInWithPopup,
   signInWithRedirect,
   signOut,
 } from 'firebase/auth';
+
+/** Dónde se guarda la preferencia "Mantener la sesión iniciada". */
+const REMEMBER_KEY = 'tdah-tracker:remember-me';
 
 /**
  * AuthService: inicio y cierre de sesión con Google.
@@ -35,6 +41,31 @@ export class AuthService {
         resolve();
       });
     });
+  }
+
+  /** Última elección de "Mantener la sesión iniciada" en este dispositivo (por defecto: sí). */
+  rememberPreference(): boolean {
+    try {
+      return localStorage.getItem(REMEMBER_KEY) !== 'false';
+    } catch {
+      return true;
+    }
+  }
+
+  /**
+   * "Mantener la sesión iniciada":
+   *   true  = la sesión se guarda en el dispositivo (sigue abierta al volver).
+   *   false = la sesión se borra al cerrar el navegador.
+   * Se llama al cambiar la casilla (antes del clic en "Entrar"), para que la ventana
+   * de Google se abra sin esperas: algunos navegadores bloquean ventanas que tardan.
+   */
+  async setRemember(remember: boolean): Promise<void> {
+    try {
+      localStorage.setItem(REMEMBER_KEY, String(remember));
+    } catch {
+      // sin localStorage
+    }
+    await setPersistence(this.auth, remember ? browserLocalPersistence : browserSessionPersistence);
   }
 
   /** Abre la ventana de Google. Si el navegador bloquea la ventana emergente, usa redirección. */

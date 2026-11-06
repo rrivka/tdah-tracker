@@ -32,54 +32,69 @@
   }
 
   <main class="layout__main">
-    <section class="layout__section layout__section--clock" [class.is-active]="section() === 'clock'">
-      <app-clock />
-
-      <div class="layout__tools">
-        <div class="layout__tool-tabs" role="tablist" aria-label="Herramientas">
-          <button
-            class="layout__tool-tab"
-            type="button"
-            role="tab"
-            [class.is-active]="tool() === 'timer'"
-            [attr.aria-selected]="tool() === 'timer'"
-            (click)="tool.set('timer')"
-          >
-            Temporizador
-          </button>
-          <button
-            class="layout__tool-tab"
-            type="button"
-            role="tab"
-            [class.is-active]="tool() === 'alarms'"
-            [attr.aria-selected]="tool() === 'alarms'"
-            (click)="tool.set('alarms')"
-          >
-            Alarmas
-          </button>
-        </div>
-        <div class="layout__tool-panel" role="tabpanel">
-          @if (tool() === 'timer') {
-            <app-timer />
-          } @else {
-            <app-alarms />
-          }
-        </div>
-      </div>
+    <section
+      class="layout__section layout__section--clock"
+      [class.is-active]="section() === 'clock'"
+    >
+      <app-clock (openTools)="showTool(tool())" />
     </section>
 
-    <section class="layout__section layout__section--calendar" [class.is-active]="section() === 'calendar'">
+    <section
+      class="layout__section layout__section--calendar"
+      [class.is-active]="section() === 'calendar'"
+    >
       <app-calendar />
     </section>
 
-    <section class="layout__section layout__section--tasks" [class.is-active]="section() === 'tasks'">
+    <section
+      class="layout__section layout__section--tasks"
+      [class.is-active]="section() === 'tasks'"
+    >
       <app-task-list [focusNew]="focusNewTask()" />
     </section>
 
-    <section class="layout__section layout__section--settings" [class.is-active]="section() === 'settings'">
+    <section
+      class="layout__section layout__section--settings"
+      [class.is-active]="section() === 'settings'"
+    >
       <app-settings />
     </section>
   </main>
+
+  <!-- Temporizador y alarmas: se abren al tocar la hora del reloj -->
+  <app-modal [open]="toolsOpen()" title="Temporizador y alarmas" (closed)="toolsOpen.set(false)">
+    <div class="layout__tools">
+      <div class="layout__tool-tabs" role="tablist" aria-label="Herramientas">
+        <button
+          class="layout__tool-tab"
+          type="button"
+          role="tab"
+          [class.is-active]="tool() === 'timer'"
+          [attr.aria-selected]="tool() === 'timer'"
+          (click)="tool.set('timer')"
+        >
+          Temporizador
+        </button>
+        <button
+          class="layout__tool-tab"
+          type="button"
+          role="tab"
+          [class.is-active]="tool() === 'alarms'"
+          [attr.aria-selected]="tool() === 'alarms'"
+          (click)="tool.set('alarms')"
+        >
+          Alarmas
+        </button>
+      </div>
+      <div class="layout__tool-panel" role="tabpanel">
+        @if (tool() === 'timer') {
+          <app-timer />
+        } @else {
+          <app-alarms />
+        }
+      </div>
+    </div>
+  </app-modal>
 
   <!-- Navegación inferior: solo se ve en el teléfono -->
   <nav class="layout__bottom-nav" aria-label="Secciones">

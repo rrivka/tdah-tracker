@@ -1,16 +1,17 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal, untracked } from '@angular/core';
 import { TASK_FILTERS, TaskService } from '../../services/task.service';
 import { Task, TaskFilter, TaskInput } from '../../models/task.model';
 import { formatDateKey } from '../../utils/date.utils';
 import { TaskFormComponent } from '../task-form/task-form.component';
+import { ModalComponent } from '../modal/modal.component';
 
 /**
- * Lista de pendientes: formulario para agregar, filtros y la lista
- * (marcar como completado, editar y eliminar).
+ * Lista de pendientes: filtros, la lista (marcar como completado, editar y eliminar)
+ * y debajo un botón "+" que abre la ventana para crear un pendiente.
  */
 @Component({
   selector: 'app-task-list',
-  imports: [TaskFormComponent],
+  imports: [TaskFormComponent, ModalComponent],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
 })
@@ -30,14 +31,29 @@ export class TaskListComponent {
   /** Id del pendiente que se está editando (o null). */
   readonly editingId = signal<string | null>(null);
 
+  /** ¿Está abierta la ventana "Nuevo pendiente"? */
+  readonly creating = signal(false);
+
+  constructor() {
+    // El acceso directo "Nuevo pendiente" (focusNew aumenta) abre la ventana de crear.
+    effect(() => {
+      if (this.focusNew() > 0) untracked(() => this.openCreate());
+    });
+  }
+
   readonly formatDate = formatDateKey;
 
   setFilter(filter: TaskFilter): void {
     this.filter.set(filter);
   }
 
+  openCreate(): void {
+    this.creating.set(true);
+  }
+
   add(input: TaskInput): void {
     this.taskService.add(input);
+    this.creating.set(false);
   }
 
   startEdit(task: Task): void {

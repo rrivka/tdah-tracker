@@ -6,6 +6,23 @@
     {{ loading() ? 'Entrando…' : 'Entrar con Google' }}
   </button>
 
+  <label class="login__remember">
+    <input
+      class="login__remember-checkbox"
+      type="checkbox"
+      [checked]="remember()"
+      (change)="setRemember($any($event.target).checked)"
+    />
+    Mantener la sesión iniciada
+  </label>
+  <p class="login__remember-help">
+    {{
+      remember()
+        ? 'No tendrás que volver a entrar en este dispositivo.'
+        : 'La sesión se cerrará al cerrar el navegador (útil en equipos compartidos).'
+    }}
+  </p>
+
   @if (error()) {
     <p class="login__error" role="alert">{{ error() }}</p>
   }

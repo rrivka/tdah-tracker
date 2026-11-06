@@ -58,9 +58,12 @@
 
   --size-number-input: 5rem; // ancho de los campos de minutos/segundos
   --size-floating-width: 18rem; // ancho del temporizador flotante y del aviso de alarma
+  --size-modal-width: 32rem; // ancho máximo de las ventanas modales
+  --size-add-button: 3.5rem; // botón redondo "+" para crear pendiente
 
   // ---- Capas (qué queda encima de qué) ----
   --z-floating: 900; // temporizador flotante dentro de la app
+  --z-modal: 950; // ventanas modales (crear pendiente, temporizador/alarmas)
   --z-overlay: 1000; // aviso de alarma (encima de todo)
 
   // ---- Otros ----

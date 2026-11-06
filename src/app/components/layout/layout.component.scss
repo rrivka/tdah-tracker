@@ -47,15 +47,7 @@
   color: var(--color-danger);
 }
 
-// ---- Temporizador / Alarmas (debajo del reloj) ----
-
-.layout__tools {
-  margin-top: var(--space-4);
-  padding: var(--space-4);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-}
+// ---- Temporizador / Alarmas (dentro de la ventana modal) ----
 
 .layout__tool-tabs {
   display: grid;

@@ -6,7 +6,12 @@ funcionan sin internet.
 
 ## Temporizador, alarmas y accesos directos
 
-- **Temporizador** (Reloj → Temporizador): atajos (cambia la lista `presets` en `components/timer/timer.component.ts`),
+- **Cómo se abren:** el temporizador y las alarmas están en una ventana modal que se abre **tocando la hora** del
+  reloj (o el indicador ⏱ del encabezado). Crear un pendiente también es una ventana modal: botón **+** debajo de la
+  lista. Ambas usan el componente reutilizable `components/modal/`.
+- **Mantener la sesión iniciada:** casilla en el login. Si se desmarca, la sesión se borra al cerrar el navegador
+  (`setRemember()` en `services/auth.service.ts`).
+- **Temporizador**: atajos (cambia la lista `presets` en `components/timer/timer.component.ts`),
   pausa, +1 min. Su estado vive en `services/timer.service.ts` y sobrevive a recargas.
 - **Ventana flotante** (solo escritorio): usa la API *Document Picture-in-Picture* (Chrome, Edge, Opera), que abre una
   mini ventana encima de todos los programas. En otros navegadores se muestra como recuadro dentro de la app

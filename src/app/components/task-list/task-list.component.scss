@@ -8,11 +8,15 @@
   font-size: var(--font-size-lg);
 }
 
-.task-list__new {
-  padding: var(--space-4);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
+// Botón "+" (crear pendiente), centrado debajo de la lista.
+.task-list__add-button {
+  align-self: center;
+  width: var(--size-add-button);
+  height: var(--size-add-button);
+  padding: 0;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-tight);
 }
 
 .task-list__filters {

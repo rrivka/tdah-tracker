@@ -7,6 +7,15 @@
   text-align: center;
 }
 
+// La hora es un botón, pero sin apariencia de botón.
+.clock__button {
+  width: 100%;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
 .clock__time {
   display: block;
   font-family: var(--font-family-mono);
@@ -23,4 +32,10 @@
   &::first-letter {
     text-transform: uppercase;
   }
+}
+
+.clock__hint {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
 }

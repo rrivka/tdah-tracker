@@ -1,0 +1,13 @@
+@if (open()) {
+  <div class="modal" (click)="onBackdropClick($event)">
+    <div class="modal__box" role="dialog" aria-modal="true" [attr.aria-labelledby]="titleId">
+      <div class="modal__header">
+        <h2 class="modal__title" [id]="titleId">{{ title() }}</h2>
+        <button class="modal__close" type="button" aria-label="Cerrar" (click)="closed.emit()">✕</button>
+      </div>
+      <div class="modal__body">
+        <ng-content />
+      </div>
+    </div>
+  </div>
+}

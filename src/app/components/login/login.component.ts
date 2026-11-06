@@ -16,6 +16,18 @@ export class LoginComponent {
   readonly appName = APP_NAME;
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
+  /** Casilla "Mantener la sesión iniciada" (recuerda la última elección). */
+  readonly remember = signal(this.auth.rememberPreference());
+
+  constructor() {
+    // Aplica la preferencia guardada desde que se abre la pantalla.
+    void this.auth.setRemember(this.remember());
+  }
+
+  setRemember(value: boolean): void {
+    this.remember.set(value);
+    void this.auth.setRemember(value);
+  }
 
   async login(): Promise<void> {
     this.loading.set(true);

@@ -15,6 +15,7 @@ import { TimerComponent } from '../timer/timer.component';
 import { AlarmsComponent } from '../alarms/alarms.component';
 import { FloatingTimerComponent } from '../floating-timer/floating-timer.component';
 import { RingingOverlayComponent } from '../ringing-overlay/ringing-overlay.component';
+import { ModalComponent } from '../modal/modal.component';
 
 /** Secciones de la app (en el teléfono se ve una a la vez). */
 export type Section = 'clock' | 'calendar' | 'tasks' | 'settings';
@@ -24,8 +25,8 @@ export type TimeTool = 'timer' | 'alarms';
 /**
  * Estructura principal: encabezado, secciones y navegación inferior.
  *
- * - Escritorio: reloj (+ temporizador/alarmas), calendario y pendientes siempre visibles;
- *   Ajustes se abre con su botón.
+ * - Escritorio: reloj, calendario y pendientes siempre visibles; Ajustes se abre con su botón.
+ * - Temporizador y alarmas: ventana modal que se abre al tocar la hora del reloj.
  * - Teléfono: solo se ve la sección activa (por defecto, Pendientes) y se cambia con la barra de abajo.
  * Todo eso se decide en layout.component.scss con la clase "is-active".
  *
@@ -45,6 +46,7 @@ export type TimeTool = 'timer' | 'alarms';
     AlarmsComponent,
     FloatingTimerComponent,
     RingingOverlayComponent,
+    ModalComponent,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
@@ -60,6 +62,8 @@ export class LayoutComponent {
   readonly appName = APP_NAME;
   readonly section = signal<Section>('tasks');
   readonly tool = signal<TimeTool>('timer');
+  /** ¿Está abierta la ventana de temporizador/alarmas? (se abre tocando la hora) */
+  readonly toolsOpen = signal(false);
   /** Cada vez que aumenta, el formulario de nuevo pendiente recibe el cursor. */
   readonly focusNewTask = signal(0);
 
@@ -98,9 +102,10 @@ export class LayoutComponent {
     this.section.set(section);
   }
 
+  /** Abre la ventana de temporizador/alarmas en la pestaña indicada. */
   showTool(tool: TimeTool): void {
     this.tool.set(tool);
-    this.section.set('clock');
+    this.toolsOpen.set(true);
   }
 
   /** Botón "Ajustes" del encabezado (escritorio): abre o cierra el panel. */

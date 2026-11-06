@@ -18,6 +18,20 @@
   color: var(--color-text-muted);
 }
 
+.login__remember {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--size-touch);
+  cursor: pointer;
+}
+
+.login__remember-help {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
 .login__error {
   margin: 0;
   color: var(--color-danger);
