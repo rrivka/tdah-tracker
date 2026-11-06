@@ -19,6 +19,12 @@ Cada persona entra con **su propia cuenta de Google** y solo ve sus datos (regla
   Código: `src/app/cards.ts` (lista de tarjetas y acomodo por defecto) y `components/layout-editor/`.
 - **Ajustes:** respaldo (exportar/importar JSON) y notificaciones. Ya no hay tarjeta de Ajustes en el tablero.
 
+### Avatares Frutiger Aero
+
+En **Apariencia → Avatares Frutiger Aero** hay 23 avatares de gel brillante (20 colores + con cono, antenas y michi
+de gelatina). Se pueden usar con **cualquier tema**. Son SVG propios en `components/aero-avatar/`; la lista y sus
+colores están en `src/app/aero-avatars.ts` (agrega una línea para crear uno nuevo).
+
 ### Cómo funcionan los temas
 
 - Todas las tarjetas usan las clases globales `.card` y `.card-title` (`src/styles.scss`).

@@ -6,6 +6,8 @@ import { StartSection } from '../../models/profile.model';
 import { AccentId, THEME_GROUPS, ThemeId, usesAccent } from '../../themes';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { LayoutEditorComponent } from '../layout-editor/layout-editor.component';
+import { AeroAvatarComponent } from '../aero-avatar/aero-avatar.component';
+import { AERO_AVATARS } from '../../aero-avatars';
 import { SettingsComponent } from '../settings/settings.component';
 
 type Tab = 'profile' | 'appearance' | 'layout' | 'settings';
@@ -20,7 +22,7 @@ type Tab = 'profile' | 'appearance' | 'layout' | 'settings';
  */
 @Component({
   selector: 'app-profile',
-  imports: [FormsModule, AvatarComponent, LayoutEditorComponent, SettingsComponent],
+  imports: [FormsModule, AvatarComponent, LayoutEditorComponent, SettingsComponent, AeroAvatarComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
@@ -70,8 +72,16 @@ export class ProfileComponent {
     if (value !== this.profile().displayName) this.profileService.update({ displayName: value });
   }
 
+  /** Emoji como avatar (quita el avatar Aero). '' = foto de Google. */
   setEmoji(emoji: string): void {
-    this.profileService.update({ avatarEmoji: emoji });
+    this.profileService.update({ avatarEmoji: emoji, avatarAero: undefined });
+  }
+
+  /** Avatares de la línea Frutiger Aero (se pueden usar con cualquier tema). */
+  readonly aeroAvatars = AERO_AVATARS;
+
+  setAeroAvatar(id: string): void {
+    this.profileService.update({ avatarAero: id });
   }
 
   setAccent(id: AccentId): void {

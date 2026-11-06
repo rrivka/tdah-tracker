@@ -1,4 +1,9 @@
 @switch (avatar().kind) {
+  @case ('aero') {
+    @if (aero(); as a) {
+      <app-aero-avatar class="avatar__aero" [avatar]="a" />
+    }
+  }
   @case ('photo') {
     <!-- referrerpolicy: necesario para que Google muestre la foto fuera de sus páginas -->
     <img class="avatar__photo" [src]="avatar().value" alt="" referrerpolicy="no-referrer" />

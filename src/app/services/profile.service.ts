@@ -5,9 +5,14 @@ import { StorageService } from './storage.service';
 import { ThemeService } from './theme.service';
 import { ACCENTS, AccentId, THEMES, ThemeId } from '../themes';
 import { sanitizeLayout } from '../cards';
+import { findAeroAvatar } from '../aero-avatars';
 
 /** Qué mostrar como avatar. */
-export type Avatar = { kind: 'emoji'; value: string } | { kind: 'photo'; value: string } | { kind: 'initial'; value: string };
+export type Avatar =
+  | { kind: 'aero'; value: string }
+  | { kind: 'emoji'; value: string }
+  | { kind: 'photo'; value: string }
+  | { kind: 'initial'; value: string };
 
 /**
  * ProfileService: el perfil del usuario (nombre, avatar, color, tema, pantalla de inicio).
@@ -38,6 +43,9 @@ export class ProfileService {
   readonly firstName = computed(() => this.displayName().split(/\s+/)[0] ?? '');
 
   readonly avatar = computed<Avatar>(() => {
+    // Prioridad: avatar Aero → emoji → foto de Google → inicial.
+    const aero = this._profile().avatarAero;
+    if (findAeroAvatar(aero)) return { kind: 'aero', value: aero! };
     const emoji = this._profile().avatarEmoji.trim();
     if (emoji) return { kind: 'emoji', value: emoji };
     const photo = this.auth.user()?.photoURL;
@@ -91,6 +99,7 @@ function sanitize(data: Partial<Profile> | null): Profile {
   return {
     displayName: String(p.displayName ?? '').slice(0, 40),
     avatarEmoji: String(p.avatarEmoji ?? '').slice(0, 8),
+    avatarAero: findAeroAvatar(p.avatarAero) ? p.avatarAero : undefined,
     accent: ACCENTS.some((a) => a.id === p.accent) ? (p.accent as AccentId) : DEFAULT_PROFILE.accent,
     theme: THEMES.some((t) => t.id === p.theme) ? (p.theme as ThemeId) : undefined,
     startSection: ['today', 'tasks', 'streaks', 'calendar', 'clock'].includes(p.startSection)

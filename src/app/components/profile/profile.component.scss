@@ -101,6 +101,26 @@
   background: var(--color-primary);
 }
 
+// ---- Avatares Frutiger Aero ----
+.profile__aero-avatars {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--size-aero-avatar), 1fr));
+  gap: var(--space-2);
+}
+
+.profile__aero-avatar {
+  aspect-ratio: 1;
+  min-height: 0;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+}
+
+.profile__aero-avatar.is-active {
+  border-color: var(--color-primary);
+  border-width: var(--border-width-strong);
+  background: var(--color-selected-bg);
+}
+
 .profile__option {
   display: flex;
   align-items: center;

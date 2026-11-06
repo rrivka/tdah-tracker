@@ -45,12 +45,13 @@
 
       <fieldset class="profile__group">
         <legend class="profile__label">Avatar</legend>
+        <p class="profile__help">También hay avatares Frutiger Aero en la pestaña Apariencia.</p>
         <div class="profile__emojis">
           <button
             class="profile__emoji profile__emoji--google"
             type="button"
-            [class.is-active]="!profile().avatarEmoji"
-            [attr.aria-pressed]="!profile().avatarEmoji"
+            [class.is-active]="!profile().avatarEmoji && !profile().avatarAero"
+            [attr.aria-pressed]="!profile().avatarEmoji && !profile().avatarAero"
             (click)="setEmoji('')"
           >
             {{ profileService.googlePhoto() ? 'Foto de Google' : 'Inicial' }}
@@ -59,8 +60,8 @@
             <button
               class="profile__emoji"
               type="button"
-              [class.is-active]="profile().avatarEmoji === e"
-              [attr.aria-pressed]="profile().avatarEmoji === e"
+              [class.is-active]="!profile().avatarAero && profile().avatarEmoji === e"
+              [attr.aria-pressed]="!profile().avatarAero && profile().avatarEmoji === e"
               (click)="setEmoji(e)"
             >
               {{ e }}
@@ -122,6 +123,28 @@
           </div>
         </fieldset>
       }
+
+      <!-- Avatares Frutiger Aero: se pueden usar con cualquier tema -->
+      <fieldset class="profile__group">
+        <legend class="profile__label">Avatares Frutiger Aero</legend>
+        <p class="profile__help">Figuras de gel brillante. Funcionan con cualquier tema.</p>
+        <div class="profile__aero-avatars" role="radiogroup" aria-label="Avatares Frutiger Aero">
+          @for (a of aeroAvatars; track a.id) {
+            <button
+              class="profile__aero-avatar"
+              type="button"
+              role="radio"
+              [class.is-active]="profile().avatarAero === a.id"
+              [attr.aria-checked]="profile().avatarAero === a.id"
+              [attr.aria-label]="a.label"
+              [title]="a.label"
+              (click)="setAeroAvatar(a.id)"
+            >
+              <app-aero-avatar [avatar]="a" />
+            </button>
+          }
+        </div>
+      </fieldset>
 
       @if (accentApplies()) {
         <fieldset class="profile__group">

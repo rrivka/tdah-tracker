@@ -14,6 +14,8 @@ export interface Profile {
   displayName: string;
   /** Emoji como avatar. Vacío = foto de Google (o la inicial si no hay foto). */
   avatarEmoji: string;
+  /** Avatar de la línea Frutiger Aero (id de AERO_AVATARS). Tiene prioridad sobre el emoji. */
+  avatarAero?: string;
   /** Color principal de la interfaz (ver ACCENTS en src/app/themes.ts). */
   accent: AccentId;
   /** Tema guardado en el perfil. Sin valor = el de este dispositivo. */
