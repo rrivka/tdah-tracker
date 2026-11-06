@@ -1,0 +1,131 @@
+<form class="routine-form" (ngSubmit)="submit()">
+  <div class="routine-form__field">
+    <label class="routine-form__label" [for]="uid + '-title'">Actividad</label>
+    <input
+      #titleInput
+      class="routine-form__input"
+      type="text"
+      name="title"
+      required
+      autocomplete="off"
+      placeholder="Ej. Tomar medicamento"
+      [id]="uid + '-title'"
+      [ngModel]="title()"
+      (ngModelChange)="title.set($event)"
+    />
+  </div>
+
+  <div class="routine-form__field">
+    <label class="routine-form__label" [for]="uid + '-description'">Descripción (opcional)</label>
+    <textarea
+      class="routine-form__input routine-form__input--description"
+      name="description"
+      placeholder="Ej. 1 tableta con comida"
+      [id]="uid + '-description'"
+      [ngModel]="description()"
+      (ngModelChange)="description.set($event)"
+    ></textarea>
+  </div>
+
+  <!-- ¿Cada cuándo? -->
+  <fieldset class="routine-form__group">
+    <legend class="routine-form__label">¿Cada cuándo?</legend>
+    @for (f of frequencies; track f.id) {
+      <label class="routine-form__option">
+        <input
+          type="radio"
+          name="frequency"
+          [value]="f.id"
+          [checked]="frequency() === f.id"
+          (change)="frequency.set(f.id)"
+        />
+        {{ f.label }}
+      </label>
+    }
+
+    @if (frequency() === 'weekdays') {
+      <div class="routine-form__days" role="group" aria-label="Días de la semana">
+        @for (d of weekdays; track d.value) {
+          <button
+            class="routine-form__day"
+            type="button"
+            [class.is-active]="days().includes(d.value)"
+            [attr.aria-pressed]="days().includes(d.value)"
+            [attr.aria-label]="d.name"
+            (click)="toggleDay(d.value)"
+          >
+            {{ d.short }}
+          </button>
+        }
+      </div>
+      @if (days().length === 0) {
+        <p class="routine-form__error">Elige al menos un día.</p>
+      }
+    }
+
+    @if (frequency() === 'interval') {
+      <div class="routine-form__row">
+        <label class="routine-form__inline">
+          Cada
+          <input
+            class="routine-form__input routine-form__input--number"
+            type="number"
+            name="everyDays"
+            min="1"
+            max="365"
+            [ngModel]="everyDays()"
+            (ngModelChange)="everyDays.set($event)"
+          />
+          días
+        </label>
+        <label class="routine-form__inline">
+          desde
+          <input
+            class="routine-form__input"
+            type="date"
+            name="startDate"
+            [ngModel]="startDate()"
+            (ngModelChange)="startDate.set($event)"
+          />
+        </label>
+      </div>
+    }
+  </fieldset>
+
+  <!-- Horario opcional -->
+  <div class="routine-form__field">
+    <label class="routine-form__label" [for]="uid + '-time'">Horario (opcional)</label>
+    <div class="routine-form__row">
+      <input
+        class="routine-form__input routine-form__input--time"
+        type="time"
+        name="time"
+        [id]="uid + '-time'"
+        [ngModel]="time()"
+        (ngModelChange)="time.set($event)"
+      />
+      @if (time()) {
+        <button class="routine-form__clear-time" type="button" (click)="time.set(''); remind.set(false)">
+          Sin horario
+        </button>
+      }
+    </div>
+    @if (time()) {
+      <label class="routine-form__option">
+        <input type="checkbox" name="remind" [ngModel]="remind()" (ngModelChange)="remind.set($event)" />
+        Avisarme a esa hora si no lo he hecho
+      </label>
+    } @else {
+      <p class="routine-form__help">Sin horario: aparece en tu lista del día para hacerla cuando puedas.</p>
+    }
+  </div>
+
+  <div class="routine-form__actions">
+    <button class="routine-form__submit button-primary" type="submit" [disabled]="!valid()">
+      {{ isEditing ? 'Guardar' : 'Agregar actividad' }}
+    </button>
+    @if (isEditing) {
+      <button class="routine-form__cancel" type="button" (click)="cancelled.emit()">Cancelar</button>
+    }
+  </div>
+</form>

@@ -11,4 +11,6 @@ export interface Alarm {
   enabled: boolean;
   /** true = suena todos los días; false = una sola vez (se apaga sola al sonar). */
   repeat: boolean;
+  /** Si el aviso viene de una actividad constante, su id (para el botón "Ya lo hice"). */
+  routineId?: string;
 }

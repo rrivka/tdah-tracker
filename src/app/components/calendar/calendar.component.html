@@ -32,9 +32,24 @@
     }
   </div>
 
-  <!-- Pendientes del día seleccionado -->
+  <!-- Pendientes y actividades constantes del día seleccionado -->
   <div class="calendar__day-tasks">
     <h3 class="calendar__day-title">{{ selectedLabel() }}</h3>
+
+    @if (selectedRoutines().length > 0) {
+      <ul class="calendar__task-list calendar__routine-list">
+        @for (item of selectedRoutines(); track item.routine.id) {
+          <li class="calendar__task calendar__routine" [class.calendar__task--completed]="item.done">
+            <label class="calendar__task-label">
+              <input type="checkbox" [checked]="item.done" (change)="toggleRoutine(item.routine.id)" />
+              <span class="calendar__routine-time">{{ item.routine.time ?? '—' }}</span>
+              <span class="calendar__task-title">{{ item.routine.title }}</span>
+            </label>
+          </li>
+        }
+      </ul>
+    }
+
     @if (selectedTasks().length === 0) {
       <p class="calendar__empty">No hay pendientes este día.</p>
     } @else {

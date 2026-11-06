@@ -10,12 +10,16 @@ import {
   writeBatch,
 } from 'firebase/firestore';
 import { Task } from '../models/task.model';
+import { Routine } from '../models/routine.model';
 
 /**
  * StorageService: la ÚNICA capa que habla con Firestore.
- * Ningún componente debe importar Firebase; todo pasa por aquí (a través de TaskService).
+ * Ningún componente debe importar Firebase; todo pasa por aquí
+ * (a través de TaskService y RoutineService).
  *
- * Estructura de datos:  users/{uid}/tasks/{taskId}
+ * Estructura de datos:
+ *   users/{uid}/tasks/{taskId}         ← pendientes
+ *   users/{uid}/routines/{routineId}   ← actividades constantes
  *
  * Nota sobre el modo sin conexión: con la persistencia offline activada,
  * las escrituras se aplican al instante en la caché local (y onSnapshot avisa),
@@ -52,6 +56,42 @@ export class StorageService {
 
   deleteTask(uid: string, id: string): Promise<void> {
     return deleteDoc(doc(this.tasksCollection(uid), id));
+  }
+
+  // ---- Actividades constantes: users/{uid}/routines/{routineId} ----
+
+  private routinesCollection(uid: string) {
+    return collection(this.firestore, 'users', uid, 'routines');
+  }
+
+  newRoutineId(uid: string): string {
+    return doc(this.routinesCollection(uid)).id;
+  }
+
+  watchRoutines(uid: string, onChange: (routines: Routine[]) => void, onError: (e: Error) => void): Unsubscribe {
+    return onSnapshot(
+      this.routinesCollection(uid),
+      (snapshot) => onChange(snapshot.docs.map((d) => ({ ...(d.data() as Omit<Routine, 'id'>), id: d.id }))),
+      onError,
+    );
+  }
+
+  saveRoutine(uid: string, routine: Routine): Promise<void> {
+    const { id, ...data } = routine;
+    return setDoc(doc(this.routinesCollection(uid), id), clean(data));
+  }
+
+  deleteRoutine(uid: string, id: string): Promise<void> {
+    return deleteDoc(doc(this.routinesCollection(uid), id));
+  }
+
+  /** Guarda muchas actividades a la vez (para importar). */
+  saveManyRoutines(uid: string, routines: Routine[]): Promise<void> {
+    const batch = writeBatch(this.firestore);
+    for (const { id, ...data } of routines.slice(0, 450)) {
+      batch.set(doc(this.routinesCollection(uid), id), clean(data));
+    }
+    return batch.commit();
   }
 
   /** Guarda muchos pendientes a la vez (para importar). Firestore permite máx. 500 por lote. */

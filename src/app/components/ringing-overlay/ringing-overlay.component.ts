@@ -1,6 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
 import { AlarmService } from '../../services/alarm.service';
 import { TimerService } from '../../services/timer.service';
+import { RoutineService } from '../../services/routine.service';
+import { toDateKey } from '../../utils/date.utils';
 
 /**
  * Aviso a pantalla completa cuando suena una alarma o termina el temporizador.
@@ -17,4 +19,12 @@ export class RingingOverlayComponent {
 
   readonly alarm = this.alarmService.ringing;
   readonly timerFinished = computed(() => this.timer.state() === 'finished');
+
+  private readonly routines = inject(RoutineService);
+
+  /** "Ya lo hice": marca la actividad como hecha hoy y apaga el aviso. */
+  markDone(routineId: string): void {
+    this.routines.setDone(routineId, toDateKey(new Date()), true);
+    this.alarmService.stop();
+  }
 }

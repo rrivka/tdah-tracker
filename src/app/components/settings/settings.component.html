@@ -16,8 +16,8 @@
   <fieldset class="settings__group">
     <legend class="settings__group-title">Respaldo</legend>
     <p class="settings__help">
-      Descarga tus {{ taskCount() }} pendiente(s) como archivo JSON, o importa un respaldo. Al importar, los pendientes
-      que ya existen se actualizan y los nuevos se agregan; nunca se borra nada.
+      Descarga tus {{ taskCount() }} pendiente(s) y {{ routineCount() }} actividad(es) constante(s) como archivo JSON, o
+      importa un respaldo. Al importar, lo que ya existe se actualiza y lo nuevo se agrega; nunca se borra nada.
     </p>
     <div class="settings__backup-actions">
       <button class="settings__export-button" type="button" (click)="exportTasks()">Exportar JSON</button>

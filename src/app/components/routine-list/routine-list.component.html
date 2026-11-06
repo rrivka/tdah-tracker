@@ -1,0 +1,79 @@
+<div class="routine-list">
+  <div class="routine-list__header">
+    <h2 class="routine-list__title">Actividades constantes</h2>
+    @if (today().length > 0) {
+      <span class="routine-list__progress">{{ doneCount() }}/{{ today().length }} hoy</span>
+    }
+  </div>
+
+  <!-- Las que tocan hoy -->
+  @if (loading()) {
+    <p class="routine-list__status">Cargando…</p>
+  } @else if (all().length === 0) {
+    <p class="routine-list__status">
+      Aún no tienes actividades constantes. Agrega una con el botón + (por ejemplo, tu medicación).
+    </p>
+  } @else if (today().length === 0) {
+    <p class="routine-list__status">Hoy no te toca ninguna actividad constante.</p>
+  } @else {
+    <ul class="routine-list__items">
+      @for (item of today(); track item.routine.id) {
+        <li class="routine-item" [class.routine-item--done]="item.done">
+          <input
+            class="routine-item__checkbox"
+            type="checkbox"
+            [id]="'routine-' + item.routine.id"
+            [checked]="item.done"
+            (change)="toggle(item.routine.id)"
+          />
+          <label class="routine-item__content" [for]="'routine-' + item.routine.id">
+            <span class="routine-item__time">{{ item.routine.time ?? 'Sin horario' }}</span>
+            <span class="routine-item__title">{{ item.routine.title }}</span>
+            @if (item.routine.description) {
+              <span class="routine-item__description">{{ item.routine.description }}</span>
+            }
+          </label>
+          @if (item.routine.remind) {
+            <span class="routine-item__remind" title="Con aviso">🔔</span>
+          }
+        </li>
+      }
+    </ul>
+  }
+
+  @if (all().length > 0) {
+    <button class="routine-list__toggle-all" type="button" [attr.aria-expanded]="showAll()" (click)="showAll.set(!showAll())">
+      {{ showAll() ? 'Ocultar todas' : 'Ver todas (' + all().length + ')' }}
+    </button>
+  }
+
+  <!-- Todas las actividades (para editar o eliminar) -->
+  @if (showAll()) {
+    <ul class="routine-list__all">
+      @for (r of all(); track r.id) {
+        <li class="routine-row">
+          <div class="routine-row__content">
+            <span class="routine-row__title">{{ r.title }}</span>
+            <span class="routine-row__meta">
+              {{ frequencyLabel(r) }} · {{ r.time ?? 'sin horario' }}
+              @if (r.remind) {
+                · con aviso
+              }
+              · próxima: {{ nextLabel(r) }}
+            </span>
+          </div>
+          <div class="routine-row__actions">
+            <button class="routine-row__edit" type="button" (click)="editing.set(r)">Editar</button>
+            <button class="routine-row__delete button-danger" type="button" (click)="remove(r)">Eliminar</button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>
+
+<app-modal [open]="editing() !== null" title="Editar actividad" (closed)="editing.set(null)">
+  @if (editing(); as r) {
+    <app-routine-form [routine]="r" (save)="saveEdit($event)" (cancelled)="editing.set(null)" />
+  }
+</app-modal>

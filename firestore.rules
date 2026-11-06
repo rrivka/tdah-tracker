@@ -5,9 +5,16 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Cada usuario solo puede leer y escribir SUS propios pendientes:
-    // users/{uid}/tasks/{taskId}, donde {uid} debe ser su propio id de sesión.
+    // Cada usuario solo puede leer y escribir SUS propios datos,
+    // donde {uid} debe ser su propio id de sesión.
+
+    // Pendientes
     match /users/{uid}/tasks/{taskId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Actividades constantes (medicación, hábitos…)
+    match /users/{uid}/routines/{routineId} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
     }
   }

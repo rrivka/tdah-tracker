@@ -95,3 +95,19 @@
   color: var(--color-text-muted);
   text-decoration: line-through;
 }
+
+// Actividades constantes del día (con borde de su color).
+.calendar__routine-list {
+  margin-bottom: var(--space-2);
+}
+
+.calendar__routine {
+  padding-left: var(--space-2);
+  border-left: var(--border-width-strong) solid var(--color-routine);
+}
+
+.calendar__routine-time {
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+}

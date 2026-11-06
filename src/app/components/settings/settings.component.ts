@@ -2,6 +2,8 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 import { TaskService } from '../../services/task.service';
 import { AuthService } from '../../services/auth.service';
+import { BackupService } from '../../services/backup.service';
+import { RoutineService } from '../../services/routine.service';
 import { NotificationService } from '../../services/notification.service';
 import { ThemeId } from '../../themes';
 import { todayKey } from '../../utils/date.utils';
@@ -15,6 +17,8 @@ import { todayKey } from '../../utils/date.utils';
 export class SettingsComponent {
   private readonly themeService = inject(ThemeService);
   private readonly taskService = inject(TaskService);
+  private readonly backup = inject(BackupService);
+  private readonly routineService = inject(RoutineService);
   private readonly auth = inject(AuthService);
   private readonly notifications = inject(NotificationService);
 
@@ -24,6 +28,7 @@ export class SettingsComponent {
   readonly theme = this.themeService.theme;
   readonly email = computed(() => this.auth.user()?.email ?? '');
   readonly taskCount = computed(() => this.taskService.tasks().length);
+  readonly routineCount = computed(() => this.routineService.routines().length);
 
   /** Mensaje después de importar (éxito o error). */
   readonly message = signal<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -36,9 +41,9 @@ export class SettingsComponent {
     this.themeService.setTheme(id);
   }
 
-  /** Descarga todos los pendientes como archivo .json. */
+  /** Descarga pendientes y actividades constantes como archivo .json. */
   exportTasks(): void {
-    const blob = new Blob([this.taskService.exportJson()], { type: 'application/json' });
+    const blob = new Blob([this.backup.exportJson()], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -53,8 +58,11 @@ export class SettingsComponent {
     const file = inputEl.files?.[0];
     if (!file) return;
     try {
-      const count = this.taskService.importJson(await file.text());
-      this.message.set({ type: 'success', text: `Se importaron ${count} pendiente(s).` });
+      const r = this.backup.importJson(await file.text());
+      this.message.set({
+        type: 'success',
+        text: `Se importaron ${r.tasks} pendiente(s) y ${r.routines} actividad(es) constante(s).`,
+      });
     } catch (e) {
       this.message.set({ type: 'error', text: (e as Error).message });
     } finally {

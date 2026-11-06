@@ -155,30 +155,12 @@ export class TaskService {
     this.persist(this.storage.deleteTask(this.uid(), id));
   }
 
-  /** Genera el texto JSON del respaldo. */
-  exportJson(): string {
-    return JSON.stringify(
-      { app: 'tdah-tracker', version: 1, exportedAt: new Date().toISOString(), tasks: this.tasks() },
-      null,
-      2,
-    );
-  }
-
   /**
-   * Importa un respaldo JSON. Los pendientes con el mismo id se reemplazan;
-   * los demás se agregan. Nunca borra nada. Devuelve cuántos se importaron.
-   * Lanza un Error con un mensaje claro si el archivo no es válido.
+   * Importa pendientes de un respaldo (la lectura del archivo la hace BackupService).
+   * Los pendientes con el mismo id se reemplazan; los demás se agregan. Nunca borra nada.
+   * Devuelve cuántos se importaron.
    */
-  importJson(text: string): number {
-    let data: unknown;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      throw new Error('El archivo no es un JSON válido.');
-    }
-    const list = Array.isArray(data) ? data : (data as { tasks?: unknown } | null)?.tasks;
-    if (!Array.isArray(list)) throw new Error('El archivo no contiene una lista de pendientes.');
-
+  importList(list: unknown[]): number {
     const uid = this.uid();
     const now = new Date().toISOString();
     const tasks: Task[] = [];
@@ -196,8 +178,7 @@ export class TaskService {
       });
     }
 
-    if (tasks.length === 0) throw new Error('No se encontró ningún pendiente válido en el archivo.');
-    this.persist(this.storage.saveMany(uid, tasks));
+    if (tasks.length) this.persist(this.storage.saveMany(uid, tasks));
     return tasks.length;
   }
 

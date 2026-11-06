@@ -4,6 +4,19 @@ PWA personal para organizar pendientes: reloj, temporizador (con ventana flotant
 y lista de pendientes con fecha opcional. Inicio de sesión con Google; los pendientes se guardan en Firestore y
 funcionan sin internet.
 
+## Actividades constantes
+
+Cosas que se repiten (medicación, ejercicio…), separadas de los pendientes sueltos.
+
+- Se crean con el mismo botón **+** → pestaña "Actividad constante".
+- **Frecuencia:** todos los días, algunos días de la semana o cada N días (desde una fecha).
+- **Horario opcional.** Con horario se puede activar "Avisarme": a esa hora suena como alarma (con botón
+  "Ya lo hice") si aún no está marcada. Solo con la app abierta, igual que las alarmas.
+- El apartado muestra las de **hoy** con casilla de "hecho" (se reinicia cada día) y "Ver todas" para editar/eliminar.
+- Se guardan en Firestore (`users/{uid}/routines/{id}`) y se incluyen en el respaldo JSON.
+- Código: `services/routine.service.ts`, `utils/routine.utils.ts` (cálculo de "¿toca hoy?"),
+  `components/routine-list/` y `components/routine-form/`. Color distintivo: `--color-routine` en los tokens.
+
 ## Temporizador, alarmas y accesos directos
 
 - **Cómo se abren:** el temporizador y las alarmas están en una ventana modal que se abre **tocando la hora** del

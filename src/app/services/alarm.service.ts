@@ -116,6 +116,11 @@ export class AlarmService {
     }
   }
 
+  /** Hace sonar un aviso ahora mismo (lo usan los recordatorios de actividades constantes). */
+  ring(alarm: Alarm): void {
+    this.fire(alarm);
+  }
+
   private fire(alarm: Alarm): void {
     this.ringing.set(alarm);
     this.sound.startRinging();

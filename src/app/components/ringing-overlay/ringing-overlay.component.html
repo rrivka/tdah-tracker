@@ -5,7 +5,15 @@
       <h2 class="ringing-overlay__title" id="ringing-title">{{ a.time }}</h2>
       <p class="ringing-overlay__text">{{ a.label || 'Alarma' }}</p>
       <div class="ringing-overlay__actions">
-        <button class="ringing-overlay__stop button-primary" type="button" (click)="alarmService.stop()">Detener</button>
+        @if (a.routineId) {
+          <!-- Recordatorio de una actividad constante -->
+          <button class="ringing-overlay__done button-primary" type="button" (click)="markDone(a.routineId)">
+            Ya lo hice
+          </button>
+          <button class="ringing-overlay__stop" type="button" (click)="alarmService.stop()">Detener</button>
+        } @else {
+          <button class="ringing-overlay__stop button-primary" type="button" (click)="alarmService.stop()">Detener</button>
+        }
         <button class="ringing-overlay__snooze" type="button" (click)="alarmService.snooze()">Posponer 5 min</button>
       </div>
     </div>

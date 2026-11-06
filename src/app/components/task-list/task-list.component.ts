@@ -4,6 +4,9 @@ import { Task, TaskFilter, TaskInput } from '../../models/task.model';
 import { formatDateKey } from '../../utils/date.utils';
 import { TaskFormComponent } from '../task-form/task-form.component';
 import { ModalComponent } from '../modal/modal.component';
+import { RoutineFormComponent } from '../routine-form/routine-form.component';
+import { RoutineService } from '../../services/routine.service';
+import { RoutineInput } from '../../models/routine.model';
 
 /**
  * Lista de pendientes: filtros, la lista (marcar como completado, editar y eliminar)
@@ -11,12 +14,13 @@ import { ModalComponent } from '../modal/modal.component';
  */
 @Component({
   selector: 'app-task-list',
-  imports: [TaskFormComponent, ModalComponent],
+  imports: [TaskFormComponent, ModalComponent, RoutineFormComponent],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss',
 })
 export class TaskListComponent {
   private readonly taskService = inject(TaskService);
+  private readonly routineService = inject(RoutineService);
 
   /** Cuando aumenta, el campo "Nuevo pendiente" recibe el cursor (acceso directo del ícono). */
   readonly focusNew = input(0);
@@ -31,8 +35,10 @@ export class TaskListComponent {
   /** Id del pendiente que se está editando (o null). */
   readonly editingId = signal<string | null>(null);
 
-  /** ¿Está abierta la ventana "Nuevo pendiente"? */
+  /** ¿Está abierta la ventana "Agregar"? */
   readonly creating = signal(false);
+  /** Qué se va a agregar en esa ventana. */
+  readonly createType = signal<'task' | 'routine'>('task');
 
   constructor() {
     // El acceso directo "Nuevo pendiente" (focusNew aumenta) abre la ventana de crear.
@@ -48,11 +54,17 @@ export class TaskListComponent {
   }
 
   openCreate(): void {
+    this.createType.set('task');
     this.creating.set(true);
   }
 
   add(input: TaskInput): void {
     this.taskService.add(input);
+    this.creating.set(false);
+  }
+
+  addRoutine(input: RoutineInput): void {
+    this.routineService.add(input);
     this.creating.set(false);
   }
 

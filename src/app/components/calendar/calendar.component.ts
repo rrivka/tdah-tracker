@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { TaskService } from '../../services/task.service';
+import { RoutineService } from '../../services/routine.service';
 import { formatDateKey, toDateKey, todayKey } from '../../utils/date.utils';
 
 /** Una casilla del calendario. */
@@ -16,7 +17,7 @@ interface CalendarCell {
  * Calendario mensual.
  * - Flechas para cambiar de mes y botón "Hoy".
  * - Marca el día de hoy y los días que tienen pendientes.
- * - Al tocar un día, muestra abajo los pendientes de ese día.
+ * - Al tocar un día, muestra abajo las actividades constantes y los pendientes de ese día.
  */
 @Component({
   selector: 'app-calendar',
@@ -25,6 +26,7 @@ interface CalendarCell {
 })
 export class CalendarComponent {
   private readonly taskService = inject(TaskService);
+  private readonly routineService = inject(RoutineService);
 
   /** Mes que se está viendo. */
   readonly viewYear = signal(new Date().getFullYear());
@@ -107,6 +109,17 @@ export class CalendarComponent {
 
   toggle(id: string): void {
     this.taskService.toggle(id);
+  }
+
+  /** Actividades constantes que tocan el día seleccionado. */
+  readonly selectedRoutines = computed(() => {
+    this.routineService.routines(); // se recalcula cuando cambian
+    return this.routineService.forDate(this.selected());
+  });
+
+  /** Marca/desmarca una actividad como hecha en el día seleccionado. */
+  toggleRoutine(id: string): void {
+    this.routineService.toggleDone(id, this.selected());
   }
 
   /** Texto para lectores de pantalla, p. ej. "5 de noviembre, 2 pendientes". */

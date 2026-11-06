@@ -1,0 +1,122 @@
+.routine-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.routine-list__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.routine-list__title {
+  font-size: var(--font-size-lg);
+}
+
+.routine-list__progress,
+.routine-list__status {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.routine-list__status {
+  margin: 0;
+}
+
+.routine-list__items,
+.routine-list__all {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.routine-list__toggle-all {
+  align-self: flex-start;
+  font-size: var(--font-size-sm);
+}
+
+// ---- Una actividad de hoy ----
+
+.routine-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-left: var(--border-width-strong) solid var(--color-routine);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.routine-item__checkbox {
+  flex-shrink: 0;
+}
+
+.routine-item__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.routine-item__time {
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+}
+
+.routine-item__title {
+  font-weight: var(--font-weight-bold);
+  overflow-wrap: anywhere;
+}
+
+.routine-item__description {
+  font-size: var(--font-size-sm);
+  overflow-wrap: anywhere;
+}
+
+.routine-item--done .routine-item__title {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+// ---- Fila en "Ver todas" ----
+
+.routine-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.routine-row__content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.routine-row__title {
+  font-weight: var(--font-weight-bold);
+  overflow-wrap: anywhere;
+}
+
+.routine-row__meta {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.routine-row__actions {
+  display: flex;
+  gap: var(--space-2);
+}

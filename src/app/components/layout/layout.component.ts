@@ -16,6 +16,8 @@ import { AlarmsComponent } from '../alarms/alarms.component';
 import { FloatingTimerComponent } from '../floating-timer/floating-timer.component';
 import { RingingOverlayComponent } from '../ringing-overlay/ringing-overlay.component';
 import { ModalComponent } from '../modal/modal.component';
+import { RoutineListComponent } from '../routine-list/routine-list.component';
+import { RoutineService } from '../../services/routine.service';
 
 /** Secciones de la app (en el teléfono se ve una a la vez). */
 export type Section = 'clock' | 'calendar' | 'tasks' | 'settings';
@@ -47,6 +49,7 @@ export type TimeTool = 'timer' | 'alarms';
     FloatingTimerComponent,
     RingingOverlayComponent,
     ModalComponent,
+    RoutineListComponent,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
@@ -58,6 +61,8 @@ export class LayoutComponent {
   readonly timer = inject(TimerService);
   // Se inyecta aquí para que las alarmas funcionen aunque no abras su pestaña.
   private readonly alarms = inject(AlarmService);
+  // Igual con los recordatorios de actividades constantes.
+  private readonly routines = inject(RoutineService);
 
   readonly appName = APP_NAME;
   readonly section = signal<Section>('tasks');
