@@ -13,6 +13,7 @@ export interface DaySummary {
 /** Todos los filtros, en el orden en que aparecen en pantalla. */
 export const TASK_FILTERS: { id: TaskFilter; label: string }[] = [
   { id: 'all', label: 'Pendientes' },
+  { id: 'inbox', label: '📥 Por clasificar' },
   { id: 'today', label: 'Hoy' },
   { id: 'upcoming', label: 'Próximos' },
   { id: 'overdue', label: 'Vencidos' },
@@ -109,6 +110,30 @@ export class TaskService {
   /** Pendientes de un día concreto. */
   tasksForDate(dateKey: string): Task[] {
     return this.tasks().filter((t) => t.dueDate === dateKey);
+  }
+
+  /** Cuántas notas hay "por clasificar" (para el globito del botón ⚡). */
+  readonly inboxCount = computed(() => this._tasks().filter((t) => !t.completed && t.inbox).length);
+
+  /**
+   * Captura rápida: guarda una idea solo con su texto, en la bandeja "Por clasificar".
+   * Después se clasifica (fecha, constante o racha) con el botón "Clasificar".
+   */
+  capture(title: string): void {
+    const text = title.trim();
+    if (!text) return;
+    const uid = this.uid();
+    const now = new Date().toISOString();
+    this.persist(
+      this.storage.saveTask(uid, {
+        id: this.storage.newTaskId(uid),
+        title: text,
+        completed: false,
+        inbox: true,
+        createdAt: now,
+        updatedAt: now,
+      }),
+    );
   }
 
   add(input: TaskInput): void {
@@ -224,6 +249,8 @@ function matchesFilter(t: Task, filter: TaskFilter, today: string): boolean {
   switch (filter) {
     case 'all':
       return !t.completed;
+    case 'inbox':
+      return !t.completed && !!t.inbox;
     case 'no-date':
       return !t.completed && !t.dueDate;
     case 'today':

@@ -15,6 +15,8 @@ import { todayKey } from '../../utils/date.utils';
 export class StreakFormComponent implements OnInit {
   readonly streak = input<Streak | null>(null);
   readonly focusTrigger = input(0);
+  /** Título con el que empieza (p. ej. al clasificar una nota de la bandeja). */
+  readonly initialTitle = input('');
 
   readonly save = output<StreakInput>();
   readonly cancelled = output<void>();
@@ -44,6 +46,7 @@ export class StreakFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!this.streak() && this.initialTitle()) this.title.set(this.initialTitle());
     const s = this.streak();
     if (!s) return;
     this.title.set(s.title);

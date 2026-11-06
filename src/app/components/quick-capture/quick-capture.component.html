@@ -1,0 +1,30 @@
+<form class="quick-capture" (ngSubmit)="save()">
+  <label class="visually-hidden" for="quick-capture-input">Anotar algo rápido</label>
+  <div class="quick-capture__row">
+    <input
+      #captureInput
+      id="quick-capture-input"
+      class="quick-capture__input"
+      type="text"
+      name="capture"
+      autocomplete="off"
+      enterkeyhint="done"
+      placeholder="¿Qué se te ocurrió?"
+      [ngModel]="text()"
+      (ngModelChange)="text.set($event)"
+    />
+    <button class="quick-capture__save button-primary" type="submit" [disabled]="!text().trim()">Guardar</button>
+  </div>
+  <p class="quick-capture__help">
+    Enter para guardar y seguir anotando. Lo clasificas después en Pendientes → 📥 Por clasificar
+    ({{ inboxCount() }}).
+  </p>
+
+  @if (saved().length > 0) {
+    <ul class="quick-capture__saved" aria-label="Recién anotado">
+      @for (item of saved(); track $index) {
+        <li class="quick-capture__saved-item">✓ {{ item }}</li>
+      }
+    </ul>
+  }
+</form>

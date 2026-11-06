@@ -19,6 +19,8 @@ export class RoutineFormComponent implements OnInit {
   readonly routine = input<Routine | null>(null);
   /** Cuando es > 0, el título recibe el cursor al abrir. */
   readonly focusTrigger = input(0);
+  /** Título con el que empieza (p. ej. al clasificar una nota de la bandeja). */
+  readonly initialTitle = input('');
 
   readonly save = output<RoutineInput>();
   readonly cancelled = output<void>();
@@ -58,6 +60,7 @@ export class RoutineFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!this.routine() && this.initialTitle()) this.title.set(this.initialTitle());
     const r = this.routine();
     if (!r) return;
     this.title.set(r.title);

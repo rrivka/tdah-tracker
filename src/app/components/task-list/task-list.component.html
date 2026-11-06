@@ -39,7 +39,12 @@
                 (change)="toggle(task.id)"
               />
               <div class="task-item__content">
-                <label class="task-item__title" [for]="'task-' + task.id">{{ task.title }}</label>
+                <label class="task-item__title" [for]="'task-' + task.id">
+                  @if (task.inbox) {
+                    <span class="task-item__inbox" title="Por clasificar">📥</span>
+                  }
+                  {{ task.title }}
+                </label>
                 @if (task.description) {
                   <p class="task-item__description">{{ task.description }}</p>
                 }
@@ -54,6 +59,12 @@
               </div>
             </div>
             <div class="task-item__actions">
+              @if (task.inbox && !task.completed) {
+                <!-- Nota de la captura rápida: decide qué es -->
+                <button class="task-item__classify button-primary" type="button" (click)="classifyRequested.emit(task)">
+                  📥 Clasificar
+                </button>
+              }
               @if (!task.completed) {
                 <!-- Modo enfoque: abre el temporizador ligado a este pendiente -->
                 <button class="task-item__focus" type="button" [attr.aria-label]="'Enfocarme en ' + task.title" (click)="focusRequested.emit(task)">

@@ -24,6 +24,8 @@ export class TaskListComponent {
   readonly createRequested = output<void>();
   /** Botón "🎯 Enfocar": pide al layout abrir el temporizador ligado a este pendiente. */
   readonly focusRequested = output<Task>();
+  /** Botón "📥 Clasificar" (notas de la captura rápida). */
+  readonly classifyRequested = output<Task>();
 
   readonly filters = TASK_FILTERS;
   readonly filter = this.taskService.filter;

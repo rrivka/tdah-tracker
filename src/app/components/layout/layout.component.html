@@ -14,6 +14,13 @@
           {{ timer.focus() ? '🎯' : '⏱' }} {{ timerLabel() }}
         </button>
       }
+      <!-- Captura rápida (también con la tecla N). El globito cuenta lo "por clasificar". -->
+      <button class="layout__capture-button" type="button" aria-label="Anotar algo rápido (tecla N)" title="Anotar rápido (N)" (click)="captureOpen.set(true)">
+        ⚡
+        @if (inboxCount() > 0) {
+          <span class="layout__capture-badge" [attr.aria-label]="inboxCount() + ' por clasificar'">{{ inboxCount() }}</span>
+        }
+      </button>
       <!-- Avatar + nombre: abre "Personalización" (perfil, apariencia, acomodo, ajustes y cerrar sesión). -->
       <button class="layout__profile-button" type="button" aria-label="Personalización" (click)="profileOpen.set(true)">
         <app-avatar />
@@ -21,6 +28,12 @@
       </button>
     </div>
   </header>
+
+  <app-modal [open]="captureOpen()" title="⚡ Anotar rápido" (closed)="captureOpen.set(false)">
+    @if (captureOpen()) {
+      <app-quick-capture />
+    }
+  </app-modal>
 
   <app-modal [open]="profileOpen()" title="Personalización" (closed)="profileOpen.set(false)">
     @if (profileOpen()) {
@@ -58,7 +71,11 @@
                 <app-routine-list />
               }
               @case ('tasks') {
-                <app-task-list (createRequested)="requestCreate('task')" (focusRequested)="startFocus($event)" />
+                <app-task-list
+                  (createRequested)="requestCreate('task')"
+                  (focusRequested)="startFocus($event)"
+                  (classifyRequested)="classify($event)"
+                />
               }
             }
           </div>

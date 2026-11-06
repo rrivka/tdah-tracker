@@ -11,6 +11,11 @@ export interface Task {
   description?: string;
   dueDate?: string;
   completed: boolean;
+  /**
+   * true = se anotó con la captura rápida (⚡) y todavía no se clasifica.
+   * Al clasificarlo (editarlo o convertirlo) se quita.
+   */
+  inbox?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -23,4 +28,4 @@ export interface TaskInput {
 }
 
 /** Filtros disponibles en la lista de pendientes. */
-export type TaskFilter = 'all' | 'no-date' | 'today' | 'upcoming' | 'overdue' | 'completed';
+export type TaskFilter = 'all' | 'inbox' | 'no-date' | 'today' | 'upcoming' | 'overdue' | 'completed';

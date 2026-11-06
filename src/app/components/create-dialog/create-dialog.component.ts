@@ -26,6 +26,8 @@ export interface CreateRequest {
   n: number;
   /** Fecha para el nuevo pendiente ("YYYY-MM-DD"), p. ej. al agregar desde el calendario. */
   date?: string;
+  /** Clasificar una nota de la bandeja: su texto y el pendiente que se reemplaza. */
+  classify?: { taskId: string; title: string };
 }
 
 /**
@@ -51,6 +53,10 @@ export class CreateDialogComponent {
   readonly help = computed(() => CREATE_TYPES.find((t) => t.id === this.type())?.help ?? '');
   /** Fecha sugerida para el pendiente (viene del pedido). */
   readonly date = computed(() => this.request()?.date ?? '');
+  /** Si se está clasificando una nota de la bandeja. */
+  readonly classify = computed(() => this.request()?.classify ?? null);
+  readonly initialTitle = computed(() => this.classify()?.title ?? '');
+  readonly dialogTitle = computed(() => (this.classify() ? 'Clasificar' : 'Agregar'));
 
   constructor() {
     effect(() => {
@@ -64,17 +70,28 @@ export class CreateDialogComponent {
   }
 
   addTask(input: TaskInput): void {
-    this.tasks.add(input);
+    const c = this.classify();
+    // Al clasificar como pendiente se actualiza la misma nota (deja de estar "por clasificar").
+    if (c) this.tasks.update(c.taskId, input);
+    else this.tasks.add(input);
     this.open.set(false);
   }
 
   addRoutine(input: RoutineInput): void {
     this.routines.add(input);
+    this.removeClassified();
     this.open.set(false);
   }
 
   addStreak(input: StreakInput): void {
     this.streaks.add(input);
+    this.removeClassified();
     this.open.set(false);
+  }
+
+  /** Si era una nota de la bandeja convertida en constante o racha, la nota ya no hace falta. */
+  private removeClassified(): void {
+    const c = this.classify();
+    if (c) this.tasks.remove(c.taskId);
   }
 }

@@ -1,0 +1,40 @@
+.quick-capture {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.quick-capture__row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.quick-capture__input {
+  flex: 1;
+  font-size: var(--font-size-lg);
+}
+
+.quick-capture__save {
+  flex-shrink: 0;
+}
+
+.quick-capture__help {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.quick-capture__saved {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quick-capture__saved-item {
+  color: var(--color-success);
+  font-size: var(--font-size-sm);
+  overflow-wrap: anywhere;
+}

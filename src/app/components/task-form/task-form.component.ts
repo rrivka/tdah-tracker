@@ -21,6 +21,8 @@ export class TaskFormComponent implements OnInit {
   readonly task = input<Task | null>(null);
   /** Fecha con la que empieza un pendiente nuevo (p. ej. el día elegido en el calendario). */
   readonly initialDate = input('');
+  /** Título con el que empieza (p. ej. al clasificar una nota de la bandeja). */
+  readonly initialTitle = input('');
 
   readonly save = output<TaskInput>();
   readonly cancelled = output<void>();
@@ -48,6 +50,7 @@ export class TaskFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.task() && this.initialDate()) this.dueDate.set(this.initialDate());
+    if (!this.task() && this.initialTitle()) this.title.set(this.initialTitle());
     const t = this.task();
     if (t) {
       this.title.set(t.title);

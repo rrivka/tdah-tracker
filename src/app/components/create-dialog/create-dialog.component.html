@@ -1,4 +1,4 @@
-<app-modal [open]="open()" title="Agregar" (closed)="open.set(false)">
+<app-modal [open]="open()" [title]="dialogTitle()" (closed)="open.set(false)">
   @if (open()) {
     <!-- ¿Qué quieres agregar? Tres tipos, cada uno con su explicación -->
     <div class="create-dialog__tabs" role="tablist" aria-label="Tipo">
@@ -16,17 +16,20 @@
       }
     </div>
     <p class="create-dialog__help">{{ help() }}</p>
+    @if (classify(); as c) {
+      <p class="create-dialog__classify">📥 Clasificando: <strong>{{ c.title }}</strong>. Elige qué es y completa los datos.</p>
+    }
 
     <!-- focusTrigger=1: el cursor queda listo en el título al abrir -->
     @switch (type()) {
       @case ('task') {
-        <app-task-form [focusTrigger]="1" [initialDate]="date()" (save)="addTask($event)" (cancelled)="open.set(false)" />
+        <app-task-form [focusTrigger]="1" [initialDate]="date()" [initialTitle]="initialTitle()" (save)="addTask($event)" (cancelled)="open.set(false)" />
       }
       @case ('routine') {
-        <app-routine-form [focusTrigger]="1" (save)="addRoutine($event)" (cancelled)="open.set(false)" />
+        <app-routine-form [focusTrigger]="1" [initialTitle]="initialTitle()" (save)="addRoutine($event)" (cancelled)="open.set(false)" />
       }
       @case ('streak') {
-        <app-streak-form [focusTrigger]="1" (save)="addStreak($event)" (cancelled)="open.set(false)" />
+        <app-streak-form [focusTrigger]="1" [initialTitle]="initialTitle()" (save)="addStreak($event)" (cancelled)="open.set(false)" />
       }
     }
   }

@@ -59,6 +59,19 @@
   "background_color": "#ffffff",
   "shortcuts": [
     {
+      "name": "Anotar rápido",
+      "short_name": "Anotar",
+      "description": "Anotar una idea en un segundo",
+      "url": "./#/?anotar=1",
+      "icons": [
+        {
+          "src": "icons/icon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "Nuevo pendiente",
       "short_name": "Nuevo",
       "description": "Anotar algo rápido",

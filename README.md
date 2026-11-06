@@ -50,6 +50,15 @@ Las **alarmas** se guardan en el dispositivo pero **separadas por usuario**, as�
   se borra al instante y aparece un aviso con **Deshacer** durante 6 segundos. También al marcar algo en "Hoy".
   Para usarlo en otro lugar: `undo.show("mensaje", () => { /* cómo revertir */ })`.
 
+## Captura rápida (⚡)
+
+- Botón **⚡** en el encabezado (o tecla **N** en la computadora, o el acceso directo "Anotar rápido" del ícono):
+  un solo campo; Enter guarda y deja el campo listo para la siguiente idea.
+- Lo anotado va a **Pendientes → 📥 Por clasificar** (el globito del ⚡ cuenta cuántas hay). El botón
+  **📥 Clasificar** abre Agregar con el texto puesto: como pendiente (con o sin fecha), constante o racha.
+- Código: `capture()` e `inbox` en `services/task.service.ts` / `models/task.model.ts`,
+  `components/quick-capture/` y `classify` en `components/create-dialog/`.
+
 ## Modo enfoque
 
 - Botón **🎯 Enfocar** en cada pendiente (tarjeta Pendientes y tarjeta Hoy): abre el temporizador ligado a ese

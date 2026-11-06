@@ -24,6 +24,7 @@ import { ProfileComponent } from '../profile/profile.component';
 import { ProfileService } from '../../services/profile.service';
 import { TodayCardComponent } from '../today-card/today-card.component';
 import { UndoToastComponent } from '../undo-toast/undo-toast.component';
+import { QuickCaptureComponent } from '../quick-capture/quick-capture.component';
 import { CardId, SECTION_LABELS, Section, cardInfo } from '../../cards';
 
 /** Herramientas debajo del reloj. */
@@ -62,9 +63,14 @@ export type TimeTool = 'timer' | 'alarms';
     ProfileComponent,
     TodayCardComponent,
     UndoToastComponent,
+    QuickCaptureComponent,
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
+  host: {
+    // Tecla N = captura rápida (si no estás escribiendo en un campo ni hay una ventana abierta).
+    '(document:keydown)': 'onKeydown($event)',
+  },
 })
 export class LayoutComponent {
   private readonly auth = inject(AuthService);
@@ -82,6 +88,10 @@ export class LayoutComponent {
   readonly tool = signal<TimeTool>('timer');
   /** ¿Está abierta la ventana de temporizador/alarmas? (se abre tocando la hora) */
   readonly toolsOpen = signal(false);
+  /** ¿Está abierta la captura rápida (⚡)? */
+  readonly captureOpen = signal(false);
+  /** Notas "por clasificar" (globito del botón ⚡). */
+  readonly inboxCount = this.tasks.inboxCount;
   /** ¿Está abierta la ventana "Mi perfil"? */
   readonly profileOpen = signal(false);
   /** true si un acceso directo ya eligió la sección (entonces no se aplica la pantalla de inicio). */
@@ -144,7 +154,9 @@ export class LayoutComponent {
       .queryParamMap.pipe(takeUntilDestroyed())
       .subscribe((params) => {
         const seccion = params.get('seccion');
-        if (params.get('nuevo')) {
+        if (params.get('anotar')) {
+          this.captureOpen.set(true);
+        } else if (params.get('nuevo')) {
           this.section.set('tasks');
           this.requestCreate('task');
         } else if (seccion === 'temporizador' || seccion === 'alarmas') {
@@ -156,6 +168,26 @@ export class LayoutComponent {
         // Limpia la URL para que al recargar no se repita.
         void this.router.navigate([], { queryParams: {}, replaceUrl: true });
       });
+  }
+
+  /** Tecla N: abre la captura rápida desde cualquier parte. */
+  onKeydown(event: KeyboardEvent): void {
+    if (event.key.toLowerCase() !== 'n' || event.ctrlKey || event.metaKey || event.altKey) return;
+    const target = event.target as HTMLElement | null;
+    const typing = !!target?.closest('input, textarea, select, [contenteditable="true"]');
+    const dialogOpen = !!document.querySelector('.modal, .ringing-overlay');
+    if (typing || dialogOpen) return;
+    event.preventDefault();
+    this.captureOpen.set(true);
+  }
+
+  /** "📥 Clasificar": abre Agregar con el texto de la nota para elegir qué es. */
+  classify(task: { id: string; title: string }): void {
+    this.createRequest.set({
+      type: 'task',
+      n: (this.createRequest()?.n ?? 0) + 1,
+      classify: { taskId: task.id, title: task.title },
+    });
   }
 
   /** Abre la ventana "Agregar" en la pestaña indicada. */
