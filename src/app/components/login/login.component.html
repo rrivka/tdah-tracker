@@ -1,0 +1,12 @@
+<main class="login">
+  <h1 class="login__title">{{ appName }}</h1>
+  <p class="login__text">Inicia sesión para ver tus pendientes en todos tus dispositivos.</p>
+
+  <button class="login__google-button button-primary" type="button" [disabled]="loading()" (click)="login()">
+    {{ loading() ? 'Entrando…' : 'Entrar con Google' }}
+  </button>
+
+  @if (error()) {
+    <p class="login__error" role="alert">{{ error() }}</p>
+  }
+</main>

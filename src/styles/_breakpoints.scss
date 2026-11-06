@@ -1,0 +1,9 @@
+// Puntos de quiebre (responsive).
+// Son variables SCSS (no CSS) porque las variables CSS no funcionan dentro de @media.
+// Este archivo NO genera CSS, así que se puede importar en cualquier componente:
+//   @use 'breakpoints' as bp;
+//   @media (min-width: bp.$desktop) { ... }
+
+// A partir de este ancho se muestra la vista de escritorio
+// (reloj, calendario y pendientes a la vez). Abajo: vista de teléfono.
+$desktop: 768px;

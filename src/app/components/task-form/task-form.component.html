@@ -1,0 +1,53 @@
+<form class="task-form" [class.task-form--editing]="isEditing" (ngSubmit)="submit()">
+  <div class="task-form__field">
+    <label class="task-form__label" [for]="uid + '-title'">{{ isEditing ? 'Título' : 'Nuevo pendiente' }}</label>
+    <input
+      class="task-form__input task-form__input--title"
+      type="text"
+      name="title"
+      required
+      autocomplete="off"
+      placeholder="¿Qué tienes que hacer?"
+      [id]="uid + '-title'"
+      [ngModel]="title()"
+      (ngModelChange)="title.set($event)"
+    />
+  </div>
+
+  <div class="task-form__field">
+    <label class="task-form__label" [for]="uid + '-description'">Descripción (opcional)</label>
+    <textarea
+      class="task-form__input task-form__input--description"
+      name="description"
+      [id]="uid + '-description'"
+      [ngModel]="description()"
+      (ngModelChange)="description.set($event)"
+    ></textarea>
+  </div>
+
+  <div class="task-form__field">
+    <label class="task-form__label" [for]="uid + '-date'">Fecha (opcional)</label>
+    <div class="task-form__date-row">
+      <input
+        class="task-form__input task-form__input--date"
+        type="date"
+        name="dueDate"
+        [id]="uid + '-date'"
+        [ngModel]="dueDate()"
+        (ngModelChange)="dueDate.set($event)"
+      />
+      @if (dueDate()) {
+        <button class="task-form__clear-date" type="button" (click)="dueDate.set('')">Quitar fecha</button>
+      }
+    </div>
+  </div>
+
+  <div class="task-form__actions">
+    <button class="task-form__submit button-primary" type="submit" [disabled]="!title().trim()">
+      {{ isEditing ? 'Guardar' : 'Agregar' }}
+    </button>
+    @if (isEditing) {
+      <button class="task-form__cancel" type="button" (click)="cancelled.emit()">Cancelar</button>
+    }
+  </div>
+</form>

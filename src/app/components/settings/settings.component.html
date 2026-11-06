@@ -1,0 +1,38 @@
+<div class="settings">
+  <h2 class="settings__title">Ajustes</h2>
+
+  <fieldset class="settings__group">
+    <legend class="settings__group-title">Tema</legend>
+    <div class="settings__theme-options">
+      @for (t of themes; track t.id) {
+        <label class="settings__theme-option">
+          <input type="radio" name="theme" [value]="t.id" [checked]="theme() === t.id" (change)="setTheme(t.id)" />
+          {{ t.label }}
+        </label>
+      }
+    </div>
+  </fieldset>
+
+  <fieldset class="settings__group">
+    <legend class="settings__group-title">Respaldo</legend>
+    <p class="settings__help">
+      Descarga tus {{ taskCount() }} pendiente(s) como archivo JSON, o importa un respaldo. Al importar, los pendientes
+      que ya existen se actualizan y los nuevos se agregan; nunca se borra nada.
+    </p>
+    <div class="settings__backup-actions">
+      <button class="settings__export-button" type="button" (click)="exportTasks()">Exportar JSON</button>
+      <label class="settings__import-label">
+        Importar JSON
+        <input class="settings__import-input" type="file" accept="application/json,.json" (change)="importTasks($event)" />
+      </label>
+    </div>
+    @if (message(); as m) {
+      <p class="settings__message" [class.settings__message--error]="m.type === 'error'" role="status">{{ m.text }}</p>
+    }
+  </fieldset>
+
+  <fieldset class="settings__group">
+    <legend class="settings__group-title">Cuenta</legend>
+    <p class="settings__help">Sesión iniciada como {{ email() }}</p>
+  </fieldset>
+</div>

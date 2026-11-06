@@ -1,0 +1,110 @@
+// =============================================================================
+// TOKENS DE DISEÑO
+// -----------------------------------------------------------------------------
+// Aquí viven TODOS los valores visuales de la app como variables CSS.
+// Los componentes solo usan estas variables (var(--...)); nunca colores ni
+// medidas fijas. Cambia un valor aquí y cambia en toda la app.
+//
+// Hay dos tipos:
+//   1. Tokens generales (fuentes, tamaños, espacios, bordes, radios): en :root.
+//   2. Tokens de tema (colores y sombras): un bloque por tema, [data-theme='...'].
+//
+// CÓMO AGREGAR UN TEMA NUEVO
+//   1. Copia el bloque [data-theme='dark'] de abajo, cambia el nombre y los colores.
+//   2. Agrega el tema en src/app/themes.ts para que aparezca en Ajustes.
+// =============================================================================
+
+:root {
+  // ---- Fuentes ----
+  --font-family-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+  --line-height-base: 1.5;
+  --line-height-tight: 1.2;
+
+  // ---- Tamaños de texto ----
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-clock: 3rem; // la hora del reloj
+
+  // ---- Espacios (márgenes, paddings, separaciones) ----
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  // ---- Bordes y radios ----
+  --border-width: 1px;
+  --border-width-strong: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+
+  // ---- Medidas de la interfaz ----
+  --size-touch: 2.75rem; // alto mínimo de botones (cómodo para el dedo)
+  --size-marker: 0.375rem; // puntito de "hay pendientes" en el calendario
+  --size-content-max: 72rem; // ancho máximo del contenido en escritorio
+  --size-column-side: 22rem; // ancho de la columna de reloj + calendario
+  --size-textarea-rows: 4.5rem; // alto mínimo de la descripción
+
+  // ---- Otros ----
+  --opacity-disabled: 0.6; // botones deshabilitados
+}
+
+// =============================================================================
+// TEMA CLARO (también es el tema por defecto)
+// =============================================================================
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+
+  --color-bg: #ffffff; // fondo de la página
+  --color-surface: #f4f4f5; // fondo de tarjetas/secciones
+  --color-text: #18181b; // texto principal
+  --color-text-muted: #71717a; // texto secundario
+  --color-border: #d4d4d8;
+
+  --color-primary: #2563eb; // botones principales, enlaces
+  --color-on-primary: #ffffff; // texto sobre --color-primary
+  --color-danger: #dc2626; // eliminar, vencidos
+  --color-success: #16a34a; // completados
+
+  --color-today: #2563eb; // borde del día de hoy en el calendario
+  --color-selected-bg: #dbeafe; // fondo del día seleccionado / filtro activo
+  --color-marker: #f59e0b; // puntito de días con pendientes
+
+  --shadow-sm: none;
+  --shadow-md: 0 1px 3px rgb(0 0 0 / 0.15);
+}
+
+// =============================================================================
+// TEMA OSCURO
+// =============================================================================
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg: #18181b;
+  --color-surface: #27272a;
+  --color-text: #f4f4f5;
+  --color-text-muted: #a1a1aa;
+  --color-border: #3f3f46;
+
+  --color-primary: #60a5fa;
+  --color-on-primary: #0b1220;
+  --color-danger: #f87171;
+  --color-success: #4ade80;
+
+  --color-today: #60a5fa;
+  --color-selected-bg: #1e3a5f;
+  --color-marker: #fbbf24;
+
+  --shadow-sm: none;
+  --shadow-md: 0 1px 3px rgb(0 0 0 / 0.6);
+}

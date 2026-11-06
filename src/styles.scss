@@ -1,0 +1,100 @@
+// =============================================================================
+// ESTILOS GLOBALES
+// Solo estilos base de elementos HTML. Los valores salen de styles/_tokens.scss.
+// Los estilos de cada pantalla están en el .scss de su componente.
+// =============================================================================
+@use 'tokens';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-base);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  min-height: var(--size-touch);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+input[type='text'],
+input[type='date'],
+textarea,
+select {
+  width: 100%;
+  min-height: var(--size-touch);
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  width: var(--font-size-lg);
+  height: var(--font-size-lg);
+  accent-color: var(--color-primary);
+}
+
+:focus-visible {
+  outline: var(--border-width-strong) solid var(--color-primary);
+  outline-offset: var(--border-width-strong);
+}
+
+// Botón principal y botón de peligro (se pueden usar en cualquier componente).
+.button-primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.button-danger {
+  color: var(--color-danger);
+}
+
+// Oculta algo visualmente pero lo deja para lectores de pantalla.
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

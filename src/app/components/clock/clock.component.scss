@@ -1,0 +1,25 @@
+.clock {
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.clock__time {
+  display: block;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-clock);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
+
+.clock__date {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-muted);
+  // Primera letra en mayúscula ("Jueves, 5 de noviembre…").
+  &::first-letter {
+    text-transform: uppercase;
+  }
+}

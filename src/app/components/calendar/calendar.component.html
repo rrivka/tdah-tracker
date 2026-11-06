@@ -1,0 +1,53 @@
+<div class="calendar">
+  <div class="calendar__header">
+    <button class="calendar__nav-button" type="button" aria-label="Mes anterior" (click)="previousMonth()">‹</button>
+    <h2 class="calendar__month">{{ monthLabel() }}</h2>
+    <button class="calendar__nav-button" type="button" aria-label="Mes siguiente" (click)="nextMonth()">›</button>
+    <button class="calendar__today-button" type="button" (click)="goToToday()">Hoy</button>
+  </div>
+
+  <div class="calendar__grid">
+    @for (w of weekdays; track $index) {
+      <span class="calendar__weekday">{{ w }}</span>
+    }
+
+    @for (cell of cells(); track cell.key) {
+      <button
+        class="calendar__day"
+        type="button"
+        [class.calendar__day--outside]="!cell.inMonth"
+        [class.calendar__day--today]="cell.isToday"
+        [class.calendar__day--selected]="cell.key === selected()"
+        [class.calendar__day--has-pending]="cell.pending > 0"
+        [class.calendar__day--has-completed]="cell.completed > 0"
+        [attr.aria-label]="cellLabel(cell)"
+        [attr.aria-pressed]="cell.key === selected()"
+        (click)="select(cell)"
+      >
+        <span class="calendar__day-number">{{ cell.day }}</span>
+        @if (cell.pending > 0) {
+          <span class="calendar__marker" aria-hidden="true"></span>
+        }
+      </button>
+    }
+  </div>
+
+  <!-- Pendientes del día seleccionado -->
+  <div class="calendar__day-tasks">
+    <h3 class="calendar__day-title">{{ selectedLabel() }}</h3>
+    @if (selectedTasks().length === 0) {
+      <p class="calendar__empty">No hay pendientes este día.</p>
+    } @else {
+      <ul class="calendar__task-list">
+        @for (task of selectedTasks(); track task.id) {
+          <li class="calendar__task" [class.calendar__task--completed]="task.completed">
+            <label class="calendar__task-label">
+              <input type="checkbox" [checked]="task.completed" (change)="toggle(task.id)" />
+              <span class="calendar__task-title">{{ task.title }}</span>
+            </label>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</div>

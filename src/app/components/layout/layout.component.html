@@ -1,0 +1,54 @@
+<div class="layout">
+  <header class="layout__header">
+    <h1 class="layout__title">{{ appName }}</h1>
+    <div class="layout__header-actions">
+      <span class="layout__user-name">{{ userName() }}</span>
+      <button
+        class="layout__settings-button"
+        type="button"
+        [attr.aria-pressed]="section() === 'settings'"
+        (click)="toggleSettings()"
+      >
+        Ajustes
+      </button>
+      <button class="layout__logout-button" type="button" (click)="logout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p class="layout__error" role="alert">{{ error() }}</p>
+  }
+
+  <main class="layout__main">
+    <section class="layout__section layout__section--clock" [class.is-active]="section() === 'clock'">
+      <app-clock />
+    </section>
+
+    <section class="layout__section layout__section--calendar" [class.is-active]="section() === 'calendar'">
+      <app-calendar />
+    </section>
+
+    <section class="layout__section layout__section--tasks" [class.is-active]="section() === 'tasks'">
+      <app-task-list />
+    </section>
+
+    <section class="layout__section layout__section--settings" [class.is-active]="section() === 'settings'">
+      <app-settings />
+    </section>
+  </main>
+
+  <!-- Navegación inferior: solo se ve en el teléfono -->
+  <nav class="layout__bottom-nav" aria-label="Secciones">
+    @for (item of navItems; track item.id) {
+      <button
+        class="layout__nav-button"
+        type="button"
+        [class.is-active]="section() === item.id"
+        [attr.aria-current]="section() === item.id ? 'page' : null"
+        (click)="show(item.id)"
+      >
+        {{ item.label }}
+      </button>
+    }
+  </nav>
+</div>

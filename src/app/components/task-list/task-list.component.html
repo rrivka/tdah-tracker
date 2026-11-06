@@ -1,0 +1,69 @@
+<div class="task-list">
+  <h2 class="task-list__title">Pendientes</h2>
+
+  <div class="task-list__new">
+    <app-task-form (save)="add($event)" />
+  </div>
+
+  <div class="task-list__filters" role="group" aria-label="Filtros">
+    @for (f of filters; track f.id) {
+      <button
+        class="task-list__filter-button"
+        type="button"
+        [class.is-active]="filter() === f.id"
+        [attr.aria-pressed]="filter() === f.id"
+        (click)="setFilter(f.id)"
+      >
+        {{ f.label }} <span class="task-list__filter-count">{{ counts()[f.id] }}</span>
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <p class="task-list__status">Cargando…</p>
+  } @else if (tasks().length === 0) {
+    <p class="task-list__status">{{ emptyMessage() }}</p>
+  } @else {
+    <ul class="task-list__items">
+      @for (task of tasks(); track task.id) {
+        <li
+          class="task-item"
+          [class.task-item--completed]="task.completed"
+          [class.task-item--overdue]="isOverdue(task)"
+        >
+          @if (editingId() === task.id) {
+            <app-task-form [task]="task" (save)="saveEdit(task.id, $event)" (cancelled)="editingId.set(null)" />
+          } @else {
+            <div class="task-item__main">
+              <input
+                class="task-item__checkbox"
+                type="checkbox"
+                [id]="'task-' + task.id"
+                [checked]="task.completed"
+                (change)="toggle(task.id)"
+              />
+              <div class="task-item__content">
+                <label class="task-item__title" [for]="'task-' + task.id">{{ task.title }}</label>
+                @if (task.description) {
+                  <p class="task-item__description">{{ task.description }}</p>
+                }
+                @if (task.dueDate) {
+                  <p class="task-item__date">
+                    {{ formatDate(task.dueDate) }}
+                    @if (isOverdue(task)) {
+                      <span class="task-item__overdue-label">· vencido</span>
+                    }
+                  </p>
+                }
+              </div>
+            </div>
+            <div class="task-item__actions">
+              <button class="task-item__edit" type="button" (click)="startEdit(task)">Editar</button>
+              <button class="task-item__delete button-danger" type="button" (click)="remove(task)">Eliminar</button>
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

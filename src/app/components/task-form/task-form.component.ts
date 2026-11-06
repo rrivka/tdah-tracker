@@ -1,0 +1,60 @@
+import { Component, OnInit, input, output, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Task, TaskInput } from '../../models/task.model';
+
+/**
+ * Formulario para crear o editar un pendiente.
+ * No guarda nada por sí mismo: emite `save` con los datos y el componente padre decide qué hacer.
+ *
+ * Uso:
+ *   <app-task-form (save)="crear($event)" />                         → modo crear
+ *   <app-task-form [task]="t" (save)="..." (cancelled)="..." />         → modo editar
+ */
+@Component({
+  selector: 'app-task-form',
+  imports: [FormsModule],
+  templateUrl: './task-form.component.html',
+  styleUrl: './task-form.component.scss',
+})
+export class TaskFormComponent implements OnInit {
+  /** Si se pasa, el formulario está en modo edición. */
+  readonly task = input<Task | null>(null);
+
+  readonly save = output<TaskInput>();
+  readonly cancelled = output<void>();
+
+  readonly title = signal('');
+  readonly description = signal('');
+  readonly dueDate = signal('');
+
+  /** Id único para conectar <label for> con su <input>. */
+  readonly uid = 'task-form-' + Math.random().toString(36).slice(2, 8);
+
+  ngOnInit(): void {
+    const t = this.task();
+    if (t) {
+      this.title.set(t.title);
+      this.description.set(t.description ?? '');
+      this.dueDate.set(t.dueDate ?? '');
+    }
+  }
+
+  get isEditing(): boolean {
+    return this.task() !== null;
+  }
+
+  submit(): void {
+    if (!this.title().trim()) return;
+    this.save.emit({
+      title: this.title(),
+      description: this.description() || undefined,
+      dueDate: this.dueDate() || undefined,
+    });
+    // En modo crear, limpiamos el formulario para el siguiente pendiente.
+    if (!this.isEditing) {
+      this.title.set('');
+      this.description.set('');
+      this.dueDate.set('');
+    }
+  }
+}

@@ -1,0 +1,72 @@
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.settings__title {
+  font-size: var(--font-size-lg);
+}
+
+.settings__group {
+  margin: 0;
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.settings__group-title {
+  padding: 0 var(--space-2);
+  font-weight: var(--font-weight-bold);
+}
+
+.settings__theme-options,
+.settings__backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.settings__theme-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--size-touch);
+}
+
+.settings__help {
+  margin: 0 0 var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+// El <input type="file"> se oculta y la etiqueta se ve como botón.
+.settings__import-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-touch);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  cursor: pointer;
+}
+
+.settings__import-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.settings__message {
+  margin: var(--space-3) 0 0;
+  color: var(--color-success);
+}
+
+.settings__message--error {
+  color: var(--color-danger);
+}

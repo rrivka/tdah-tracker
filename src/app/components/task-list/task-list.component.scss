@@ -1,0 +1,117 @@
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.task-list__title {
+  font-size: var(--font-size-lg);
+}
+
+.task-list__new {
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.task-list__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.task-list__filter-button {
+  font-size: var(--font-size-sm);
+}
+
+.task-list__filter-button.is-active {
+  background: var(--color-selected-bg);
+  border-color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
+
+.task-list__filter-count {
+  color: var(--color-text-muted);
+}
+
+.task-list__status {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.task-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// ---- Un pendiente ----
+
+.task-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.task-item--overdue {
+  border-color: var(--color-danger);
+}
+
+.task-item__main {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.task-item__checkbox {
+  flex-shrink: 0;
+  margin-top: var(--space-1);
+}
+
+.task-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-item__title {
+  display: block;
+  font-weight: var(--font-weight-bold);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.task-item--completed .task-item__title {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.task-item__description {
+  margin: var(--space-1) 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.task-item__date {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.task-item__overdue-label {
+  color: var(--color-danger);
+}
+
+.task-item__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
